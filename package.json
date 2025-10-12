@@ -1,3 +1,5 @@
+
+
 {
   "name": "citizenship-test",
   "version": "0.1.0",
@@ -6,7 +8,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify-data": "node scripts/sync-uscis-data.js",
+    "monthly-check": "node scripts/sync-uscis-data.js"
   },
   "dependencies": {
     "react": "19.1.0",
@@ -21,3 +25,5 @@
     "@eslint/eslintrc": "^3"
   }
 }
+
+
