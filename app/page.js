@@ -1,49 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useState, useEffect, useReducer } from 'react';
 import Link from 'next/link';
 import Question from '@/components/Question';
 import QuitModal from '@/components/QuitModal';
+import ResultsScreen from '@/components/ResultsScreen';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
 
-const initialState = {
-  testStarted: false,
-  currentScreen: 'home', // 'home', 'version', 'zip', 'options'
-  testVersion: '2025',
-  zipCode: '',
-  userInfo: null,
-  loadingZip: false,
-  zipError: '',
-  testSize: 10,
-  selectedCategory: 'all',
-  currentIndex: 0,
-  selectedAnswer: null,
-  hasSubmitted: false,
-  isCorrect: null,
-  explanation: '',
-  answers: [],
-  score: 0,
-  testQuestions: [],
-  showQuitModal: false,
-};
-
-function testReducer(state, action) {
-  switch (action.type) {
-    case 'START_TEST_SETUP':
-      return { ...state, currentScreen: 'version' };
-    case 'SELECT_VERSION':
-      return { ...state, testVersion: action.payload, currentScreen: 'zip' };
-    // ... other actions for each state transition
-    default:
-      return state;
-  }
-}
-
 export default function Home() {
   const [testStarted, setTestStarted] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [testResults, setTestResults] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [showVersionSelect, setShowVersionSelect] = useState(false);
   const [showZipPrompt, setShowZipPrompt] = useState(false);
@@ -63,8 +32,6 @@ export default function Home() {
   const [score, setScore] = useState(0);
   const [testQuestions, setTestQuestions] = useState([]);
   const [showQuitModal, setShowQuitModal] = useState(false);
-  const [state, dispatch] = useReducer(testReducer, initialState);
-  const { testStarted, currentScreen, testVersion, zipCode, userInfo, loadingZip, zipError, testSize, selectedCategory, currentIndex, selectedAnswer, hasSubmitted, isCorrect, explanation, answers, score, testQuestions, showQuitModal } = state;
 
   // Get the appropriate question set based on test version
   const questionSet = testVersion === '2008' ? questions2008 : questions2025;
@@ -206,8 +173,20 @@ export default function Home() {
         const finalScore = score + (isCorrect ? 1 : 0);
         const passingScore = testVersion === '2025' ? 12 : 6;
         const passed = finalScore >= passingScore;
-        
-        saveTestResult({
+
+        // Ensure all answers are saved including the last one
+        const finalAnswers = [...answers];
+        if (!finalAnswers[currentIndex]) {
+          finalAnswers[currentIndex] = {
+            question: testQuestions[currentIndex].question,
+            selected: selectedAnswer,
+            correct: testQuestions[currentIndex].correctAnswer,
+            isCorrect: isCorrect,
+            explanation: explanation
+          };
+        }
+
+        const results = {
           date: new Date().toISOString(),
           score: finalScore,
           total: testQuestions.length,
@@ -215,15 +194,13 @@ export default function Home() {
           passed: passed,
           category: selectedCategory,
           testVersion: testVersion,
-          answers: answers
-        });
+          answers: finalAnswers
+        };
 
-        alert(`Test complete!\n\nScore: ${finalScore}/${testQuestions.length} (${Math.round((finalScore/testQuestions.length)*100)}%)\n${passed ? '✓ PASSED' : '✗ Need more practice'}\n\nVersion: ${testVersion === '2025' ? '2025 Test (need 12/20)' : '2008 Test (need 6/10)'}`);
-        
+        saveTestResult(results);
+        setTestResults(results);
         setTestStarted(false);
-        setShowOptions(false);
-        setShowVersionSelect(false);
-        setShowZipPrompt(false);
+        setShowResults(true);
       }
     }
   };
@@ -248,6 +225,8 @@ export default function Home() {
   const confirmQuit = () => {
     setShowQuitModal(false);
     setTestStarted(false);
+    setShowResults(false);
+    setTestResults(null);
     setShowOptions(false);
     setShowVersionSelect(false);
     setShowZipPrompt(false);
@@ -266,8 +245,31 @@ export default function Home() {
     localStorage.setItem('testResults', JSON.stringify(existing));
   };
 
+  // Results screen
+  if (showResults && testResults) {
+    return (
+      <ResultsScreen
+        score={testResults.score}
+        total={testResults.total}
+        percentage={testResults.percentage}
+        passed={testResults.passed}
+        answers={testResults.answers}
+        testVersion={testResults.testVersion}
+        onRetake={() => {
+          setShowResults(false);
+          setTestResults(null);
+          setShowVersionSelect(true);
+        }}
+        onGoHome={() => {
+          setShowResults(false);
+          setTestResults(null);
+        }}
+      />
+    );
+  }
+
   // Home screen
-  if (!testStarted && !showOptions && !showVersionSelect && !showZipPrompt) {
+  if (!testStarted && !showResults && !showOptions && !showVersionSelect && !showZipPrompt) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8">
         <div className="text-center max-w-2xl w-full">
@@ -300,8 +302,26 @@ export default function Home() {
           </div>
 
           <div className="space-y-3">
-            <Link 
-              href="/stats" 
+            <Link
+              href="/study"
+              className="block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white p-5 rounded-xl transition-all shadow-lg hover:shadow-xl"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="text-3xl mr-3">📚</span>
+                  <div>
+                    <span className="font-bold text-white text-lg block">Study Mode</span>
+                    <span className="text-blue-100 text-sm">Learn all questions first</span>
+                  </div>
+                </div>
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+
+            <Link
+              href="/stats"
               className="block bg-white hover:bg-gray-50 text-gray-900 p-4 rounded-xl transition-all shadow-md hover:shadow-lg"
             >
               <div className="flex items-center justify-between">
@@ -315,8 +335,8 @@ export default function Home() {
               </div>
             </Link>
 
-            <Link 
-              href="/personalize" 
+            <Link
+              href="/personalize"
               className="block bg-white hover:bg-gray-50 text-gray-900 p-4 rounded-xl transition-all shadow-md hover:shadow-lg"
             >
               <div className="flex items-center justify-between">
@@ -425,8 +445,8 @@ export default function Home() {
 
             <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded-r-lg">
               <p className="text-sm text-blue-900">
-                <strong>Not sure when you filed?</strong> Check your N-400 receipt notice or contact USCIS. 
-                If you haven't filed yet, you'll likely take the 2025 test.
+                <strong>Not sure when you filed?</strong> Check your N-400 receipt notice or contact USCIS.
+                If you haven&apos;t filed yet, you&apos;ll likely take the 2025 test.
               </p>
             </div>
           </div>
@@ -468,8 +488,8 @@ export default function Home() {
 
             <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded-r-lg">
               <p className="text-sm text-blue-900">
-                <strong>Why provide your ZIP code?</strong> Some questions ask about YOUR specific senators, 
-                representative, and governor. We'll automatically fill in the correct answers for your location!
+                <strong>Why provide your ZIP code?</strong> Some questions ask about YOUR specific senators,
+                representative, and governor. We&apos;ll automatically fill in the correct answers for your location!
               </p>
             </div>
 

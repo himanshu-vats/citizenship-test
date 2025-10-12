@@ -239,13 +239,13 @@ export default function Stats() {
                   <p>• Your average is below passing. Focus on studying all questions first.</p>
                 )}
                 {stats.averageScore >= 60 && stats.averageScore < 80 && (
-                  <p>• You're close! Review the questions you got wrong and practice more.</p>
+                  <p>• You&apos;re close! Review the questions you got wrong and practice more.</p>
                 )}
                 {stats.averageScore >= 80 && stats.averageScore < 95 && (
                   <p>• Great progress! Focus on the categories where you struggle most.</p>
                 )}
                 {stats.averageScore >= 95 && (
-                  <p>• Excellent! You're ready for the real test. Keep practicing!</p>
+                  <p>• Excellent! You&apos;re ready for the real test. Keep practicing!</p>
                 )}
                 <p>• Practice daily to build a streak and improve retention.</p>
                 <p>• Take tests of different lengths to build stamina.</p>
