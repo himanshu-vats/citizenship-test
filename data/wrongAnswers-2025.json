@@ -1,0 +1,770 @@
+{
+  "1": [
+    "Democracy",
+    "Monarchy",
+    "Dictatorship",
+    "Parliamentary system"
+  ],
+  "2": [
+    "The Declaration of Independence",
+    "The Bill of Rights",
+    "The Federalist Papers",
+    "The Emancipation Proclamation"
+  ],
+  "3": [
+    "Creates the states",
+    "Establishes the military",
+    "Prints money",
+    "Collects taxes"
+  ],
+  "4": [
+    "The government is in charge",
+    "The President has power",
+    "Congress makes laws",
+    "The courts decide everything"
+  ],
+  "5": [
+    "The President changes it",
+    "Congress votes on it",
+    "The Supreme Court updates it",
+    "The states rewrite it"
+  ],
+  "6": [
+    "State governments",
+    "The President",
+    "Congress",
+    "The military"
+  ],
+  "7": [
+    "Ten (10)",
+    "Fifty (50)",
+    "Thirteen (13)",
+    "One hundred (100)"
+  ],
+  "8": [
+    "It created the Constitution",
+    "It ended slavery",
+    "It started the Civil War",
+    "It made George Washington president"
+  ],
+  "9": [
+    "The Constitution",
+    "The Bill of Rights",
+    "The Emancipation Proclamation",
+    "The Federalist Papers"
+  ],
+  "10": [
+    "Freedom",
+    "Democracy",
+    "Independence",
+    "Justice"
+  ],
+  "11": [
+    "The Constitution",
+    "The Bill of Rights",
+    "The Gettysburg Address",
+    "The Federalist Papers"
+  ],
+  "12": [
+    "Socialism",
+    "Communism",
+    "Mixed economy",
+    "Command economy"
+  ],
+  "13": [
+    "Leaders are above the law",
+    "Only Congress follows laws",
+    "The President makes all laws",
+    "States don't have to follow federal law"
+  ],
+  "14": [
+    "The Bible",
+    "Common Sense",
+    "The Gettysburg Address",
+    "The Treaty of Paris"
+  ],
+  "15": [
+    "To make government faster",
+    "To give more power to states",
+    "To create more jobs",
+    "To confuse people"
+  ],
+  "16": [
+    "Federal, state, and local",
+    "President, Congress, and states",
+    "Senate, House, and President",
+    "Military, civilian, and judicial"
+  ],
+  "17": [
+    "Legislative branch",
+    "Judicial branch",
+    "Congressional branch",
+    "Military branch"
+  ],
+  "18": [
+    "The President",
+    "The Supreme Court",
+    "The states",
+    "The Cabinet"
+  ],
+  "19": [
+    "Congress and the President",
+    "The House and the Supreme Court",
+    "Democrats and Republicans",
+    "Federal and state"
+  ],
+  "20": [
+    "Appoints judges",
+    "Vetoes bills",
+    "Commands the military",
+    "Runs elections"
+  ],
+  "21": [
+    "Fifty (50)",
+    "Four hundred thirty-five (435)",
+    "Two hundred (200)",
+    "Five hundred (500)"
+  ],
+  "22": [
+    "Two (2) years",
+    "Four (4) years",
+    "Eight (8) years",
+    "Ten (10) years"
+  ],
+  "23": [
+    "The President",
+    "Your governor",
+    "Your mayor",
+    "Check senate.gov for your state"
+  ],
+  "24": [
+    "One hundred (100)",
+    "Five hundred (500)",
+    "Three hundred (300)",
+    "Two hundred (200)"
+  ],
+  "25": [
+    "Four (4) years",
+    "Six (6) years",
+    "Eight (8) years",
+    "Ten (10) years"
+  ],
+  "26": [
+    "They have less power",
+    "They represent fewer people",
+    "It costs less money",
+    "The Constitution requires it"
+  ],
+  "27": [
+    "It depends on population",
+    "One (1)",
+    "Four (4)",
+    "Ten (10)"
+  ],
+  "28": [
+    "Because of population",
+    "To give them more power",
+    "The Constitution requires it",
+    "To make voting easier"
+  ],
+  "29": [
+    "Your senator",
+    "The President",
+    "Your governor",
+    "Check house.gov for your district"
+  ],
+  "30": [
+    "Nancy Pelosi",
+    "Kevin McCarthy",
+    "Paul Ryan",
+    "Mitch McConnell"
+  ],
+  "31": [
+    "Only their district",
+    "Only their party",
+    "The whole country",
+    "The President"
+  ],
+  "32": [
+    "The President",
+    "Congress",
+    "The state legislature",
+    "The governor"
+  ],
+  "33": [
+    "The whole state",
+    "All Americans",
+    "Their party",
+    "The President"
+  ],
+  "34": [
+    "All Americans",
+    "The President",
+    "The Senate",
+    "The state legislature"
+  ],
+  "35": [
+    "They have more money",
+    "They are larger in size",
+    "They have more senators",
+    "The Constitution says so"
+  ],
+  "36": [
+    "Two (2) years",
+    "Six (6) years",
+    "Eight (8) years",
+    "Ten (10) years"
+  ],
+  "37": [
+    "To save money",
+    "Because voters want change",
+    "To prevent dynasty",
+    "The 25th Amendment"
+  ],
+  "38": [
+    "Joe Biden",
+    "Barack Obama",
+    "George W. Bush",
+    "Bill Clinton"
+  ],
+  "39": [
+    "Kamala Harris",
+    "Mike Pence",
+    "Tim Walz",
+    "Mike Johnson"
+  ],
+  "40": [
+    "The Speaker of the House",
+    "The Chief Justice",
+    "The Secretary of State",
+    "A new election is held"
+  ],
+  "41": [
+    "Makes laws",
+    "Declares war",
+    "Approves treaties",
+    "Confirms judges"
+  ],
+  "42": [
+    "The Secretary of Defense",
+    "The Joint Chiefs of Staff",
+    "Congress",
+    "The Vice President"
+  ],
+  "43": [
+    "Congress",
+    "The Supreme Court",
+    "The Vice President",
+    "The Speaker of the House"
+  ],
+  "44": [
+    "Congress",
+    "The Supreme Court",
+    "The Vice President",
+    "The Senate"
+  ],
+  "45": [
+    "Congress",
+    "The Supreme Court",
+    "The Senate",
+    "The states"
+  ],
+  "46": [
+    "Congress",
+    "The Senate",
+    "The House",
+    "The Supreme Court"
+  ],
+  "47": [
+    "Makes laws",
+    "Approves budgets",
+    "Confirms judges",
+    "Vetoes bills"
+  ],
+  "48": [
+    "Speaker of the House",
+    "Senate Majority Leader",
+    "White House Chief of Staff",
+    "National Security Advisor"
+  ],
+  "49": [
+    "It counts all votes",
+    "It registers voters",
+    "It runs elections",
+    "It has no purpose anymore"
+  ],
+  "50": [
+    "Congress",
+    "The President",
+    "The Cabinet",
+    "The states"
+  ],
+  "51": [
+    "Makes laws",
+    "Enforces laws",
+    "Vetoes laws",
+    "Proposes laws"
+  ],
+  "52": [
+    "The Federal Court",
+    "The Court of Appeals",
+    "The District Court",
+    "The Constitutional Court"
+  ],
+  "53": [
+    "Seven (7)",
+    "Eleven (11)",
+    "Twelve (12)",
+    "Thirteen (13)"
+  ],
+  "54": [
+    "All nine (9)",
+    "Seven (7)",
+    "Six (6)",
+    "Three (3)"
+  ],
+  "55": [
+    "Four (4) years",
+    "Ten (10) years",
+    "Twenty (20) years",
+    "Until age 70"
+  ],
+  "56": [
+    "To gain experience",
+    "To save money",
+    "Because the Constitution requires it",
+    "To prevent corruption"
+  ],
+  "57": [
+    "Ketanji Brown Jackson",
+    "Sonia Sotomayor",
+    "Samuel Alito",
+    "Clarence Thomas"
+  ],
+  "58": [
+    "Provide education",
+    "Provide police",
+    "Issue driver's licenses",
+    "Regulate marriage"
+  ],
+  "59": [
+    "Print money",
+    "Declare war",
+    "Make treaties",
+    "Create an army"
+  ],
+  "60": [
+    "States have no power",
+    "Federal government has all power",
+    "The President controls states",
+    "Congress controls states"
+  ],
+  "61": [
+    "The President",
+    "Your senator",
+    "Your representative",
+    "Check usa.gov for your state"
+  ],
+  "62": [
+    "Washington, D.C.",
+    "The largest city",
+    "Where the governor lives",
+    "The oldest city"
+  ],
+  "63": [
+    "Only men can vote",
+    "Only property owners can vote",
+    "Only educated people can vote",
+    "Only taxpayers can vote"
+  ],
+  "64": [
+    "Anyone living in the U.S.",
+    "Legal residents",
+    "Green card holders",
+    "Anyone over 18"
+  ],
+  "65": [
+    "Right to vote",
+    "Right to run for office",
+    "Right to serve on a jury",
+    "Right to healthcare"
+  ],
+  "66": [
+    "The President",
+    "The Constitution",
+    "Congress",
+    "Democracy"
+  ],
+  "67": [
+    "Pay taxes",
+    "Learn English",
+    "Get a job",
+    "Buy property"
+  ],
+  "68": [
+    "Live here for 10 years",
+    "Marry a citizen",
+    "Serve in the military",
+    "Own property"
+  ],
+  "69": [
+    "Pay taxes",
+    "Obey laws",
+    "Go to school",
+    "Get a job"
+  ],
+  "70": [
+    "Buy American products",
+    "Learn history",
+    "Donate to charity",
+    "Attend church"
+  ],
+  "71": [
+    "To help poor people",
+    "To build roads only",
+    "To pay politicians",
+    "It's optional"
+  ],
+  "72": [
+    "To join the military",
+    "To vote",
+    "To get a driver's license",
+    "To go to college"
+  ],
+  "73": [
+    "Better weather",
+    "Gold",
+    "Adventure",
+    "Family reunification"
+  ],
+  "74": [
+    "The Spanish",
+    "The French",
+    "The British",
+    "Nobody"
+  ],
+  "75": [
+    "Europeans",
+    "Native Americans",
+    "Asians",
+    "Irish people"
+  ],
+  "76": [
+    "Civil War",
+    "War of 1812",
+    "French and Indian War",
+    "Mexican-American War"
+  ],
+  "77": [
+    "Religious freedom",
+    "Economic opportunity",
+    "Better land",
+    "King George was mean"
+  ],
+  "78": [
+    "George Washington",
+    "Benjamin Franklin",
+    "John Adams",
+    "James Madison"
+  ],
+  "79": [
+    "July 4, 1787",
+    "July 4, 1789",
+    "July 1, 1776",
+    "July 14, 1776"
+  ],
+  "80": [
+    "Battle of New Orleans",
+    "Louisiana Purchase",
+    "Boston Massacre",
+    "Constitutional Convention"
+  ],
+  "81": [
+    "California",
+    "Texas",
+    "Florida",
+    "Ohio"
+  ],
+  "82": [
+    "Declaration of Independence",
+    "Bill of Rights",
+    "Articles of Confederation",
+    "Emancipation Proclamation"
+  ],
+  "83": [
+    "George Washington",
+    "Thomas Jefferson",
+    "Benjamin Franklin",
+    "John Adams"
+  ],
+  "84": [
+    "They opposed the Constitution",
+    "They explained British law",
+    "They declared independence",
+    "They ended slavery"
+  ],
+  "85": [
+    "President of the United States",
+    "Wrote the Constitution",
+    "General in the Revolutionary War",
+    "Discovered electricity"
+  ],
+  "86": [
+    "Wrote the Declaration of Independence",
+    "Invented the light bulb",
+    "Ended slavery",
+    "Discovered America"
+  ],
+  "87": [
+    "First president",
+    "Father of the Constitution",
+    "Wrote the Bill of Rights",
+    "General in the Civil War"
+  ],
+  "88": [
+    "President during the Civil War",
+    "First Secretary of State",
+    "General in the Revolutionary War",
+    "Wrote the Declaration of Independence"
+  ],
+  "89": [
+    "President of the United States",
+    "Vice President",
+    "Speaker of the House",
+    "Chief Justice"
+  ],
+  "90": [
+    "Alaska",
+    "Florida",
+    "Texas",
+    "California"
+  ],
+  "91": [
+    "Revolutionary War",
+    "World War I",
+    "World War II",
+    "Korean War"
+  ],
+  "92": [
+    "Revolutionary War",
+    "War of 1812",
+    "World War I",
+    "Vietnam War"
+  ],
+  "93": [
+    "Boston Tea Party",
+    "D-Day",
+    "Battle of Bunker Hill",
+    "Signing of the Constitution"
+  ],
+  "94": [
+    "First president",
+    "Wrote the Constitution",
+    "Won World War I",
+    "Discovered America"
+  ],
+  "95": [
+    "Ended the Civil War",
+    "Gave women the right to vote",
+    "Freed all slaves everywhere",
+    "Created the Constitution"
+  ],
+  "96": [
+    "Revolutionary War",
+    "War of 1812",
+    "World War I",
+    "World War II"
+  ],
+  "97": [
+    "13th Amendment",
+    "15th Amendment",
+    "19th Amendment",
+    "22nd Amendment"
+  ],
+  "98": [
+    "1776",
+    "1787",
+    "1865",
+    "1920"
+  ],
+  "99": [
+    "Rosa Parks",
+    "Eleanor Roosevelt",
+    "Betsy Ross",
+    "Sally Ride"
+  ],
+  "100": [
+    "Revolutionary War",
+    "Civil War",
+    "War of 1812",
+    "French and Indian War"
+  ],
+  "101": [
+    "To stop communism",
+    "Germany attacked the U.S.",
+    "To gain territory",
+    "Because of Pearl Harbor"
+  ],
+  "102": [
+    "1776",
+    "1865",
+    "1870",
+    "1964"
+  ],
+  "103": [
+    "A war",
+    "A political movement",
+    "A constitutional amendment",
+    "A type of government"
+  ],
+  "104": [
+    "1920",
+    "1939",
+    "1945",
+    "1950"
+  ],
+  "105": [
+    "Theodore Roosevelt",
+    "Harry Truman",
+    "Dwight Eisenhower",
+    "Woodrow Wilson"
+  ],
+  "106": [
+    "To stop communism",
+    "Germany attacked the U.S.",
+    "To gain territory",
+    "To help England"
+  ],
+  "107": [
+    "Led the Civil War",
+    "Wrote the Constitution",
+    "Ended slavery",
+    "First president"
+  ],
+  "108": [
+    "Germany",
+    "China",
+    "Japan",
+    "England"
+  ],
+  "109": [
+    "Terrorism",
+    "Immigration",
+    "Economic depression",
+    "Global warming"
+  ],
+  "110": [
+    "To gain territory",
+    "Japan attacked",
+    "To help China",
+    "Oil resources"
+  ],
+  "111": [
+    "To gain territory",
+    "France asked for help",
+    "China attacked",
+    "Oil resources"
+  ],
+  "112": [
+    "Ended slavery",
+    "Gave women the vote",
+    "Ended the war",
+    "Created new states"
+  ],
+  "113": [
+    "President of the United States",
+    "Freed the slaves",
+    "Won World War II",
+    "Wrote the Constitution"
+  ],
+  "114": [
+    "To stop communism",
+    "Iraq attacked the U.S.",
+    "To gain oil",
+    "Saddam Hussein threatened Israel"
+  ],
+  "115": [
+    "Hurricane Katrina",
+    "The Great Recession started",
+    "Presidential election",
+    "Olympic Games"
+  ],
+  "116": [
+    "Civil War",
+    "World War II",
+    "Cold War",
+    "Korean War"
+  ],
+  "117": [
+    "Mexican",
+    "Canadian",
+    "European",
+    "Viking"
+  ],
+  "118": [
+    "Democracy",
+    "The Constitution",
+    "Baseball",
+    "English language"
+  ],
+  "119": [
+    "New York City",
+    "Philadelphia",
+    "Boston",
+    "Los Angeles"
+  ],
+  "120": [
+    "Washington, D.C.",
+    "Philadelphia",
+    "Boston Harbor",
+    "San Francisco"
+  ],
+  "121": [
+    "For the 13 colonies",
+    "For good luck",
+    "For the 13 original presidents",
+    "For the 13 amendments"
+  ],
+  "122": [
+    "For the 50 colonies",
+    "For good luck",
+    "For the 50 presidents",
+    "For the 50 years of independence"
+  ],
+  "123": [
+    "America the Beautiful",
+    "God Bless America",
+    "My Country 'Tis of Thee",
+    "Yankee Doodle"
+  ],
+  "124": [
+    "In God we trust",
+    "Liberty and justice for all",
+    "One nation under God",
+    "United we stand"
+  ],
+  "125": [
+    "The day the Constitution was signed",
+    "The day the Civil War ended",
+    "The day George Washington was born",
+    "The day slavery ended"
+  ],
+  "126": [
+    "Election Day",
+    "Tax Day",
+    "Flag Day",
+    "Constitution Day"
+  ],
+  "127": [
+    "Celebrates independence",
+    "Honors all military members",
+    "Celebrates veterans",
+    "Marks the end of the Civil War"
+  ],
+  "128": [
+    "Honors those who died in war",
+    "Celebrates independence",
+    "Honors the President",
+    "Marks the end of World War II"
+  ]
+}
