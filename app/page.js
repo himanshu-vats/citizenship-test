@@ -1,12 +1,46 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import Link from 'next/link';
 import Question from '@/components/Question';
 import QuitModal from '@/components/QuitModal';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
+
+const initialState = {
+  testStarted: false,
+  currentScreen: 'home', // 'home', 'version', 'zip', 'options'
+  testVersion: '2025',
+  zipCode: '',
+  userInfo: null,
+  loadingZip: false,
+  zipError: '',
+  testSize: 10,
+  selectedCategory: 'all',
+  currentIndex: 0,
+  selectedAnswer: null,
+  hasSubmitted: false,
+  isCorrect: null,
+  explanation: '',
+  answers: [],
+  score: 0,
+  testQuestions: [],
+  showQuitModal: false,
+};
+
+function testReducer(state, action) {
+  switch (action.type) {
+    case 'START_TEST_SETUP':
+      return { ...state, currentScreen: 'version' };
+    case 'SELECT_VERSION':
+      return { ...state, testVersion: action.payload, currentScreen: 'zip' };
+    // ... other actions for each state transition
+    default:
+      return state;
+  }
+}
 
 export default function Home() {
   const [testStarted, setTestStarted] = useState(false);
@@ -29,6 +63,8 @@ export default function Home() {
   const [score, setScore] = useState(0);
   const [testQuestions, setTestQuestions] = useState([]);
   const [showQuitModal, setShowQuitModal] = useState(false);
+  const [state, dispatch] = useReducer(testReducer, initialState);
+  const { testStarted, currentScreen, testVersion, zipCode, userInfo, loadingZip, zipError, testSize, selectedCategory, currentIndex, selectedAnswer, hasSubmitted, isCorrect, explanation, answers, score, testQuestions, showQuitModal } = state;
 
   // Get the appropriate question set based on test version
   const questionSet = testVersion === '2008' ? questions2008 : questions2025;
