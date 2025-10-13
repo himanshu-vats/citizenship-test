@@ -42,8 +42,8 @@ export default function ResultsScreen({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8 flex items-center justify-center">
-      <div className="max-w-3xl w-full">
+    <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8 pb-24">
+      <div className="max-w-3xl w-full mx-auto">
         {/* Main Results Card */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header with confetti background for pass */}
@@ -55,7 +55,7 @@ export default function ResultsScreen({
               {passed ? 'Congratulations!' : 'Keep Practicing!'}
             </h1>
             <p className="text-white text-opacity-90">
-              {passed ? 'You passed the practice test!' : 'You&apos;re getting there!'}
+              {passed ? 'You passed the practice test!' : 'You are getting there!'}
             </p>
           </div>
 

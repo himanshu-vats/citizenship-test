@@ -60,7 +60,7 @@ export default function Personalize() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8">
+    <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8 pb-20">
       <div className="max-w-4xl mx-auto">
         <Link
           href="/"

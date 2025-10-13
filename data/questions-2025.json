@@ -2,13 +2,21 @@
   {
     "id": 1,
     "question": "What is the form of government of the United States?",
-    "answers": ["Republic", "Constitution-based federal republic", "Representative democracy"],
+    "answers": [
+      "Republic",
+      "Constitution-based Federal republic",
+      "Representative democracy"
+    ],
     "category": "American Government"
   },
   {
     "id": 2,
     "question": "What is the supreme law of the land?",
-    "answers": ["(U.S.) Constitution", "The Constitution", "Constitution"],
+    "answers": [
+      "(U.S.) Constitution",
+      "The Constitution",
+      "Constitution"
+    ],
     "category": "American Government"
   },
   {
@@ -38,7 +46,10 @@
   {
     "id": 5,
     "question": "How are changes made to the U.S. Constitution?",
-    "answers": ["Amendments", "The amendment process"],
+    "answers": [
+      "Amendments",
+      "The amendment process"
+    ],
     "category": "American Government"
   },
   {
@@ -55,7 +66,11 @@
   {
     "id": 7,
     "question": "How many amendments does the U.S. Constitution have?",
-    "answers": ["Twenty-seven (27)", "27", "Twenty-seven"],
+    "answers": [
+      "Twenty-seven (27)",
+      "27",
+      "Twenty-seven"
+    ],
     "category": "American Government"
   },
   {
@@ -72,7 +87,9 @@
   {
     "id": 9,
     "question": "What founding document said the American colonies were free from Britain?",
-    "answers": ["Declaration of Independence"],
+    "answers": [
+      "Declaration of Independence"
+    ],
     "category": "American Government"
   },
   {
@@ -91,13 +108,18 @@
   {
     "id": 11,
     "question": "The words \"Life, Liberty, and the pursuit of Happiness\" are in what founding document?",
-    "answers": ["Declaration of Independence"],
+    "answers": [
+      "Declaration of Independence"
+    ],
     "category": "American Government"
   },
   {
     "id": 12,
     "question": "What is the economic system of the United States?",
-    "answers": ["Capitalism", "Free market economy"],
+    "answers": [
+      "Capitalism",
+      "Free market economy"
+    ],
     "category": "American Government"
   },
   {
@@ -141,14 +163,16 @@
     "question": "Name the three branches of government.",
     "answers": [
       "Legislative, executive, and judicial",
-      "Congress, president, and the courts"
+      "Congress, President, and the courts"
     ],
     "category": "System of Government"
   },
   {
     "id": 17,
     "question": "The President of the United States is in charge of which branch of government?",
-    "answers": ["Executive branch"],
+    "answers": [
+      "Executive branch"
+    ],
     "category": "System of Government"
   },
   {
@@ -166,7 +190,10 @@
   {
     "id": 19,
     "question": "What are the two parts of the U.S. Congress?",
-    "answers": ["Senate and House (of Representatives)", "Senate and House of Representatives"],
+    "answers": [
+      "Senate and House (of Representatives)",
+      "Senate and House of Representatives"
+    ],
     "category": "System of Government"
   },
   {
@@ -175,20 +202,28 @@
     "answers": [
       "Writes laws",
       "Declares war",
-      "Makes the federal budget"
+      "Makes the Federal budget"
     ],
     "category": "System of Government"
   },
   {
     "id": 21,
     "question": "How many U.S. senators are there?",
-    "answers": ["One hundred (100)", "100", "One hundred"],
+    "answers": [
+      "One hundred (100)",
+      "100",
+      "One hundred"
+    ],
     "category": "System of Government"
   },
   {
     "id": 22,
     "question": "How long is a term for a U.S. senator?",
-    "answers": ["Six (6) years", "6 years", "Six years"],
+    "answers": [
+      "Six (6) years",
+      "6 years",
+      "Six years"
+    ],
     "category": "System of Government"
   },
   {
@@ -196,32 +231,46 @@
     "question": "Who is one of your state's U.S. senators now?",
     "answers": [
       "Answers will vary",
-      "Visit senate.gov to find your senators"
+      "Visit Senate.gov to find your senators"
     ],
     "category": "System of Government"
   },
   {
     "id": 24,
     "question": "How many voting members are in the House of Representatives?",
-    "answers": ["Four hundred thirty-five (435)", "435", "Four hundred thirty-five"],
+    "answers": [
+      "Four hundred thirty-five (435)",
+      "435",
+      "Four hundred thirty-five"
+    ],
     "category": "System of Government"
   },
   {
     "id": 25,
     "question": "How long is a term for a member of the House of Representatives?",
-    "answers": ["Two (2) years", "2 years", "Two years"],
+    "answers": [
+      "Two (2) years",
+      "2 years",
+      "Two years"
+    ],
     "category": "System of Government"
   },
   {
     "id": 26,
     "question": "Why do U.S. representatives serve shorter terms than U.S. senators?",
-    "answers": ["To more closely follow public opinion"],
+    "answers": [
+      "To more closely follow public opinion"
+    ],
     "category": "System of Government"
   },
   {
     "id": 27,
     "question": "How many senators does each state have?",
-    "answers": ["Two (2)", "2", "Two"],
+    "answers": [
+      "Two (2)",
+      "2",
+      "Two"
+    ],
     "category": "System of Government"
   },
   {
@@ -247,19 +296,27 @@
   {
     "id": 30,
     "question": "What is the name of the Speaker of the House of Representatives now?",
-    "answers": ["Mike Johnson", "Johnson"],
+    "answers": [
+      "Mike Johnson",
+      "Johnson"
+    ],
     "category": "System of Government"
   },
   {
     "id": 31,
     "question": "Who does a U.S. senator represent?",
-    "answers": ["Citizens of their state", "People of their state"],
+    "answers": [
+      "Citizens of their state",
+      "People of their state"
+    ],
     "category": "System of Government"
   },
   {
     "id": 32,
     "question": "Who elects U.S. senators?",
-    "answers": ["Citizens from their state"],
+    "answers": [
+      "Citizens from their state"
+    ],
     "category": "System of Government"
   },
   {
@@ -276,7 +333,10 @@
   {
     "id": 34,
     "question": "Who elects members of the House of Representatives?",
-    "answers": ["Citizens from their (congressional) district", "Citizens from their district"],
+    "answers": [
+      "Citizens from their (congressional) district",
+      "Citizens from their district"
+    ],
     "category": "System of Government"
   },
   {
@@ -294,7 +354,11 @@
   {
     "id": 36,
     "question": "The President of the United States is elected for how many years?",
-    "answers": ["Four (4) years", "4 years", "Four years"],
+    "answers": [
+      "Four (4) years",
+      "4 years",
+      "Four years"
+    ],
     "category": "System of Government"
   },
   {
@@ -302,7 +366,7 @@
     "question": "The President of the United States can serve only two terms. Why?",
     "answers": [
       "(Because of) the 22nd Amendment",
-      "To keep the president from becoming too powerful",
+      "To keep the President from becoming too powerful",
       "Because of the 22nd Amendment"
     ],
     "category": "System of Government"
@@ -310,19 +374,31 @@
   {
     "id": 38,
     "question": "What is the name of the President of the United States now?",
-    "answers": ["Donald J. Trump", "Donald Trump", "Trump"],
+    "answers": [
+      "Donald J. Trump",
+      "Donald Trump",
+      "Trump"
+    ],
     "category": "System of Government"
   },
   {
     "id": 39,
     "question": "What is the name of the Vice President of the United States now?",
-    "answers": ["JD Vance", "J.D. Vance", "Vance"],
+    "answers": [
+      "JD Vance",
+      "J.D. Vance",
+      "Vance"
+    ],
     "category": "System of Government"
   },
   {
     "id": 40,
     "question": "If the president can no longer serve, who becomes president?",
-    "answers": ["The Vice President (of the United States)", "The Vice President", "Vice President"],
+    "answers": [
+      "The Vice President (of the United States)",
+      "The Vice President",
+      "Vice President"
+    ],
     "category": "System of Government"
   },
   {
@@ -334,32 +410,48 @@
       "Enforces laws",
       "Commander in Chief (of the military)",
       "Chief diplomat",
-      "Appoints federal judges"
+      "Appoints Federal judges"
     ],
     "category": "System of Government"
   },
   {
     "id": 42,
     "question": "Who is Commander in Chief of the U.S. military?",
-    "answers": ["The President (of the United States)", "The President", "President"],
+    "answers": [
+      "The President (of the United States)",
+      "The President",
+      "President"
+    ],
     "category": "System of Government"
   },
   {
     "id": 43,
     "question": "Who signs bills to become laws?",
-    "answers": ["The President (of the United States)", "The President", "President"],
+    "answers": [
+      "The President (of the United States)",
+      "The President",
+      "President"
+    ],
     "category": "System of Government"
   },
   {
     "id": 44,
     "question": "Who vetoes bills?",
-    "answers": ["The President (of the United States)", "The President", "President"],
+    "answers": [
+      "The President (of the United States)",
+      "The President",
+      "President"
+    ],
     "category": "System of Government"
   },
   {
     "id": 45,
     "question": "Who appoints federal judges?",
-    "answers": ["The President (of the United States)", "The President", "President"],
+    "answers": [
+      "The President (of the United States)",
+      "The President",
+      "President"
+    ],
     "category": "System of Government"
   },
   {
@@ -375,7 +467,10 @@
   {
     "id": 47,
     "question": "What does the President's Cabinet do?",
-    "answers": ["Advises the President (of the United States)", "Advises the President"],
+    "answers": [
+      "Advises the President (of the United States)",
+      "Advises the President"
+    ],
     "category": "System of Government"
   },
   {
@@ -411,15 +506,18 @@
     "id": 49,
     "question": "Why is the Electoral College important?",
     "answers": [
-      "It decides who is elected president.",
-      "It provides a compromise between the popular election of the president and congressional selection."
+      "It decides who is elected President.",
+      "It provides a compromise between the popular election of the President and Congressional selection."
     ],
     "category": "System of Government"
   },
   {
     "id": 50,
     "question": "What is one part of the judicial branch?",
-    "answers": ["Supreme Court", "Federal Courts"],
+    "answers": [
+      "Supreme Court",
+      "Federal Courts"
+    ],
     "category": "System of Government"
   },
   {
@@ -436,25 +534,42 @@
   {
     "id": 52,
     "question": "What is the highest court in the United States?",
-    "answers": ["Supreme Court", "The Supreme Court"],
+    "answers": [
+      "Supreme Court",
+      "The Supreme Court"
+    ],
     "category": "System of Government"
   },
   {
     "id": 53,
     "question": "How many seats are on the Supreme Court?",
-    "answers": ["Nine (9)", "9", "Nine"],
+    "answers": [
+      "Nine (9)",
+      "9",
+      "Nine"
+    ],
     "category": "System of Government"
   },
   {
     "id": 54,
     "question": "How many Supreme Court justices are usually needed to decide a case?",
-    "answers": ["Five (5)", "5", "Five"],
+    "answers": [
+      "Five (5)",
+      "5",
+      "Five"
+    ],
     "category": "System of Government"
   },
   {
     "id": 55,
     "question": "How long do Supreme Court justices serve?",
-    "answers": ["(For) life", "Lifetime appointment", "(Until) retirement", "Life", "For life"],
+    "answers": [
+      "(For) life",
+      "Lifetime appointment",
+      "(Until) retirement",
+      "Life",
+      "For life"
+    ],
     "category": "System of Government"
   },
   {
@@ -469,7 +584,11 @@
   {
     "id": 57,
     "question": "Who is the Chief Justice of the United States now?",
-    "answers": ["John Roberts", "John G. Roberts Jr.", "Roberts"],
+    "answers": [
+      "John Roberts",
+      "John G. Roberts Jr.",
+      "Roberts"
+    ],
     "category": "System of Government"
   },
   {
@@ -502,7 +621,7 @@
     "question": "What is the purpose of the 10th Amendment?",
     "answers": [
       "(It states that the) powers not given to the federal government belong to the states or to the people.",
-      "Powers not given to the federal government belong to the states or to the people."
+      "Powers not given to the Federal government belong to the states or to the people."
     ],
     "category": "System of Government"
   },
@@ -518,7 +637,9 @@
   {
     "id": 62,
     "question": "What is the capital of your state?",
-    "answers": ["Answers will vary"],
+    "answers": [
+      "Answers will vary"
+    ],
     "category": "System of Government"
   },
   {
@@ -535,7 +656,11 @@
   {
     "id": 64,
     "question": "Who can vote in federal elections, run for federal office, and serve on a jury in the United States?",
-    "answers": ["Citizens", "Citizens of the United States", "U.S. citizens"],
+    "answers": [
+      "Citizens",
+      "Citizens of the United States",
+      "U.S. citizens"
+    ],
     "category": "Rights and Responsibilities"
   },
   {
@@ -554,7 +679,10 @@
   {
     "id": 66,
     "question": "What do we show loyalty to when we say the Pledge of Allegiance?",
-    "answers": ["The United States", "The flag"],
+    "answers": [
+      "The United States",
+      "The flag"
+    ],
     "category": "Rights and Responsibilities"
   },
   {
@@ -606,7 +734,7 @@
       "Obey the law",
       "Serve in the military",
       "Run for office",
-      "Work for local, state, or federal government"
+      "Work for local, state, or Federal government"
     ],
     "category": "Rights and Responsibilities"
   },
@@ -615,7 +743,7 @@
     "question": "Why is it important to pay federal taxes?",
     "answers": [
       "Required by law",
-      "All people pay to fund the federal government",
+      "All people pay to fund the Federal government",
       "Required by the (U.S.) Constitution (16th Amendment)",
       "Civic duty"
     ],
@@ -646,13 +774,19 @@
   {
     "id": 74,
     "question": "Who lived in America before the Europeans arrived?",
-    "answers": ["American Indians", "Native Americans"],
+    "answers": [
+      "American Indians",
+      "Native Americans"
+    ],
     "category": "American History"
   },
   {
     "id": 75,
     "question": "What group of people was taken and sold as slaves?",
-    "answers": ["Africans", "People from Africa"],
+    "answers": [
+      "Africans",
+      "People from Africa"
+    ],
     "category": "American History"
   },
   {
@@ -685,13 +819,19 @@
   {
     "id": 78,
     "question": "Who wrote the Declaration of Independence?",
-    "answers": ["(Thomas) Jefferson", "Thomas Jefferson", "Jefferson"],
+    "answers": [
+      "(Thomas) Jefferson",
+      "Thomas Jefferson",
+      "Jefferson"
+    ],
     "category": "American History"
   },
   {
     "id": 79,
     "question": "When was the Declaration of Independence adopted?",
-    "answers": ["July 4, 1776"],
+    "answers": [
+      "July 4, 1776"
+    ],
     "category": "American History"
   },
   {
@@ -730,7 +870,10 @@
   {
     "id": 82,
     "question": "What founding document was written in 1787?",
-    "answers": ["(U.S.) Constitution", "Constitution"],
+    "answers": [
+      "(U.S.) Constitution",
+      "Constitution"
+    ],
     "category": "American History"
   },
   {
@@ -773,7 +916,7 @@
     "question": "George Washington is famous for many things. Name one.",
     "answers": [
       "\"Father of Our Country\"",
-      "First president of the United States",
+      "First President of the United States",
       "General of the Continental Army",
       "President of the Constitutional Convention"
     ],
@@ -784,7 +927,7 @@
     "question": "Thomas Jefferson is famous for many things. Name one.",
     "answers": [
       "Writer of the Declaration of Independence",
-      "Third president of the United States",
+      "Third President of the United States",
       "Doubled the size of the United States (Louisiana Purchase)",
       "First Secretary of State",
       "Founded the University of Virginia",
@@ -797,7 +940,7 @@
     "question": "James Madison is famous for many things. Name one.",
     "answers": [
       "\"Father of the Constitution\"",
-      "Fourth president of the United States",
+      "Fourth President of the United States",
       "President during the War of 1812",
       "One of the writers of the Federalist Papers"
     ],
@@ -818,7 +961,10 @@
   {
     "id": 90,
     "question": "What territory did the United States buy from France in 1803?",
-    "answers": ["Louisiana Territory", "Louisiana"],
+    "answers": [
+      "Louisiana Territory",
+      "Louisiana"
+    ],
     "category": "American History"
   },
   {
@@ -835,7 +981,10 @@
   {
     "id": 92,
     "question": "Name the U.S. war between the North and the South.",
-    "answers": ["The Civil War", "Civil War"],
+    "answers": [
+      "The Civil War",
+      "Civil War"
+    ],
     "category": "American History"
   },
   {
@@ -860,7 +1009,7 @@
       "Freed the slaves (Emancipation Proclamation)",
       "Saved (or preserved) the Union",
       "Led the United States during the Civil War",
-      "16th president of the United States",
+      "16th President of the United States",
       "Delivered the Gettysburg Address"
     ],
     "category": "American History"
@@ -879,13 +1028,18 @@
   {
     "id": 96,
     "question": "What U.S. war ended slavery?",
-    "answers": ["The Civil War", "Civil War"],
+    "answers": [
+      "The Civil War",
+      "Civil War"
+    ],
     "category": "American History"
   },
   {
     "id": 97,
     "question": "What amendment says all persons born or naturalized in the United States, and subject to the jurisdiction thereof, are U.S. citizens?",
-    "answers": ["14th Amendment"],
+    "answers": [
+      "14th Amendment"
+    ],
     "category": "American History"
   },
   {
@@ -937,25 +1091,39 @@
   {
     "id": 102,
     "question": "When did all women get the right to vote?",
-    "answers": ["1920", "After World War I", "(With the) 19th Amendment"],
+    "answers": [
+      "1920",
+      "After World War I",
+      "(With the) 19th Amendment"
+    ],
     "category": "American History"
   },
   {
     "id": 103,
     "question": "What was the Great Depression?",
-    "answers": ["Longest economic recession in modern history"],
+    "answers": [
+      "Longest economic recession in modern history"
+    ],
     "category": "American History"
   },
   {
     "id": 104,
     "question": "When did the Great Depression start?",
-    "answers": ["The Great Crash (1929)", "Stock market crash of 1929"],
+    "answers": [
+      "The Great Crash (1929)",
+      "Stock market crash of 1929"
+    ],
     "category": "American History"
   },
   {
     "id": 105,
     "question": "Who was president during the Great Depression and World War II?",
-    "answers": ["(Franklin) Roosevelt", "Franklin Roosevelt", "Roosevelt", "FDR"],
+    "answers": [
+      "(Franklin) Roosevelt",
+      "Franklin Roosevelt",
+      "Roosevelt",
+      "FDR"
+    ],
     "category": "American History"
   },
   {
@@ -975,7 +1143,7 @@
     "answers": [
       "General during World War II",
       "President at the end of (during) the Korean War",
-      "34th president of the United States",
+      "34th President of the United States",
       "Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"
     ],
     "category": "American History"
@@ -983,31 +1151,44 @@
   {
     "id": 108,
     "question": "Who was the United States' main rival during the Cold War?",
-    "answers": ["Soviet Union", "USSR", "Russia"],
+    "answers": [
+      "Soviet Union",
+      "U.S.",
+      "Russia"
+    ],
     "category": "American History"
   },
   {
     "id": 109,
     "question": "During the Cold War, what was one main concern of the United States?",
-    "answers": ["Communism", "Nuclear war"],
+    "answers": [
+      "Communism",
+      "Nuclear war"
+    ],
     "category": "American History"
   },
   {
     "id": 110,
     "question": "Why did the United States enter the Korean War?",
-    "answers": ["To stop the spread of communism"],
+    "answers": [
+      "To stop the spread of communism"
+    ],
     "category": "American History"
   },
   {
     "id": 111,
     "question": "Why did the United States enter the Vietnam War?",
-    "answers": ["To stop the spread of communism"],
+    "answers": [
+      "To stop the spread of communism"
+    ],
     "category": "American History"
   },
   {
     "id": 112,
     "question": "What did the civil rights movement do?",
-    "answers": ["Fought to end racial discrimination"],
+    "answers": [
+      "Fought to end racial discrimination"
+    ],
     "category": "American History"
   },
   {
@@ -1023,7 +1204,9 @@
   {
     "id": 114,
     "question": "Why did the United States enter the Persian Gulf War?",
-    "answers": ["To force the Iraqi military from Kuwait"],
+    "answers": [
+      "To force the Iraqi military from Kuwait"
+    ],
     "category": "American History"
   },
   {
@@ -1051,10 +1234,31 @@
     "id": 117,
     "question": "Name one American Indian tribe in the United States.",
     "answers": [
-      "Apache", "Blackfeet", "Cayuga", "Cherokee", "Cheyenne", "Chippewa",
-      "Choctaw", "Creek", "Crow", "Hopi", "Huron", "Inupiat", "Lakota",
-      "Mohawk", "Mohegan", "Navajo", "Oneida", "Onondaga", "Pueblo",
-      "Seminole", "Seneca", "Shawnee", "Sioux", "Teton", "Tuscarora"
+      "Apache",
+      "Blackfeet",
+      "Cayuga",
+      "Cherokee",
+      "Cheyenne",
+      "Chippewa",
+      "Choctaw",
+      "Creek",
+      "Crow",
+      "Hopi",
+      "Huron",
+      "Inupiat",
+      "Lakota",
+      "Mohawk",
+      "Mohegan",
+      "Navajo",
+      "Oneida",
+      "Onondaga",
+      "Pueblo",
+      "Seminole",
+      "Seneca",
+      "Shawnee",
+      "Sioux",
+      "Teton",
+      "Tuscarora"
     ],
     "category": "American History"
   },
@@ -1075,7 +1279,11 @@
   {
     "id": 119,
     "question": "What is the capital of the United States?",
-    "answers": ["Washington, D.C.", "Washington D.C.", "D.C."],
+    "answers": [
+      "Washington, D.C.",
+      "Washington D.C.",
+      "D.C."
+    ],
     "category": "Symbols and Holidays"
   },
   {
@@ -1085,8 +1293,8 @@
       "New York (Harbor)",
       "Liberty Island",
       "New Jersey",
-      "near New York City",
-      "on the Hudson (River)"
+      "Near New York City",
+      "On the Hudson (River)"
     ],
     "category": "Symbols and Holidays"
   },
@@ -1116,13 +1324,18 @@
   {
     "id": 123,
     "question": "What is the name of the national anthem?",
-    "answers": ["The Star-Spangled Banner"],
+    "answers": [
+      "The Star-Spangled Banner"
+    ],
     "category": "Symbols and Holidays"
   },
   {
     "id": 124,
     "question": "The Nation's first motto was \"E Pluribus Unum.\" What does that mean?",
-    "answers": ["Out of many, one", "We all become one"],
+    "answers": [
+      "Out of many, one",
+      "We all become one"
+    ],
     "category": "Symbols and Holidays"
   },
   {
@@ -1155,7 +1368,9 @@
   {
     "id": 127,
     "question": "What is Memorial Day?",
-    "answers": ["A holiday to honor soldiers who died in military service"],
+    "answers": [
+      "A holiday to honor soldiers who died in military service"
+    ],
     "category": "Symbols and Holidays"
   },
   {

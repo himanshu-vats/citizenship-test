@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ResultsScreen from '@/components/ResultsScreen';
 
 export default function Stats() {
   const [results, setResults] = useState([]);
+  const [selectedResult, setSelectedResult] = useState(null);
   const [stats, setStats] = useState({
     totalTests: 0,
     averageScore: 0,
@@ -91,8 +93,29 @@ export default function Stats() {
     return date.toLocaleDateString('en-US', options);
   };
 
+  // Show detailed results screen if a result is selected
+  if (selectedResult) {
+    return (
+      <ResultsScreen
+        score={selectedResult.score}
+        total={selectedResult.total}
+        percentage={selectedResult.percentage}
+        passed={selectedResult.passed}
+        answers={selectedResult.answers || []}
+        testVersion={selectedResult.testVersion || '2025'}
+        onRetake={() => {
+          setSelectedResult(null);
+          window.location.href = '/';
+        }}
+        onGoHome={() => {
+          setSelectedResult(null);
+        }}
+      />
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50">
+    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 pb-20">
       {/* Header */}
       <div className="bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 text-white py-6 px-4 sm:px-6 shadow-lg">
         <div className="max-w-4xl mx-auto">
@@ -181,9 +204,10 @@ export default function Stats() {
 
               <div className="divide-y">
                 {results.map((result, index) => (
-                  <div 
+                  <button
                     key={index}
-                    className="p-4 sm:p-6 hover:bg-gray-50 transition-colors"
+                    onClick={() => setSelectedResult(result)}
+                    className="w-full p-4 sm:p-6 hover:bg-blue-50 transition-colors text-left cursor-pointer group"
                   >
                     <div className="flex items-center justify-between">
                       {/* Left side - Score and status */}
@@ -219,9 +243,12 @@ export default function Stats() {
                             {result.category}
                           </div>
                         )}
+                        <div className="text-xs text-blue-600 font-semibold mt-1 group-hover:underline">
+                          Click to view details →
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

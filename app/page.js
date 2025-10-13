@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Question from '@/components/Question';
 import QuitModal from '@/components/QuitModal';
 import ResultsScreen from '@/components/ResultsScreen';
+import InlineZipPrompt from '@/components/InlineZipPrompt';
+import PaywallModal from '@/components/PaywallModal';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
@@ -32,6 +34,11 @@ export default function Home() {
   const [score, setScore] = useState(0);
   const [testQuestions, setTestQuestions] = useState([]);
   const [showQuitModal, setShowQuitModal] = useState(false);
+  const [showInlineZipPrompt, setShowInlineZipPrompt] = useState(false);
+  const [zipPromptDismissed, setZipPromptDismissed] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [testCount, setTestCount] = useState(0);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   // Get the appropriate question set based on test version
   const questionSet = testVersion === '2008' ? questions2008 : questions2025;
@@ -39,7 +46,7 @@ export default function Home() {
   // Get categories from the selected question set
   const categories = ['all', ...new Set(questionSet.map(q => q.category))];
 
-  // Load saved user info on mount
+  // Load saved user info and premium status on mount
   useEffect(() => {
     const saved = localStorage.getItem('userRepresentatives');
     if (saved) {
@@ -51,16 +58,40 @@ export default function Home() {
         console.error('Error loading saved info:', e);
       }
     }
+
+    // Check premium status
+    const premium = localStorage.getItem('isPremium');
+    setIsPremium(premium === 'true');
+
+    // Count completed tests
+    const results = JSON.parse(localStorage.getItem('testResults') || '[]');
+    setTestCount(results.length);
   }, []);
 
+  // Check if current question is personalized and show inline prompt if needed
+  useEffect(() => {
+    if (!testStarted || !testQuestions.length || hasSubmitted) return;
+
+    const currentQuestion = testQuestions[currentIndex];
+    const personalQuestionIds = [23, 29, 61, 62]; // IDs that need personalization
+
+    // Show prompt if: no user info, question is personalized, hasn't been dismissed this session, and question not answered yet
+    if (!userInfo && personalQuestionIds.includes(currentQuestion.id) && !zipPromptDismissed && !selectedAnswer) {
+      setShowInlineZipPrompt(true);
+    }
+  }, [testStarted, currentIndex, testQuestions, userInfo, zipPromptDismissed, hasSubmitted, selectedAnswer]);
+
   const handleStartTest = () => {
+    // Reload test count to ensure we have the latest count
+    const results = JSON.parse(localStorage.getItem('testResults') || '[]');
+    setTestCount(results.length);
     setShowVersionSelect(true);
   };
 
   const handleVersionSelect = (version) => {
     setTestVersion(version);
     setShowVersionSelect(false);
-    setShowZipPrompt(true);
+    setShowOptions(true);
   };
 
   const handleFetchZipInfo = async () => {
@@ -105,24 +136,23 @@ export default function Home() {
   };
 
   const handleBeginTest = () => {
-    // Use the appropriate question set based on test version
-    const questionSet = testVersion === '2008' ? questions2008 : questions2025;
-    
-    // Questions that require personalization (IDs that ask about user's specific reps)
-    const personalQuestionIds = [20, 23, 29, 43, 44, 61]; // Adjust these based on actual question IDs
-    
-    let filteredQuestions = selectedCategory === 'all' 
-      ? questionSet 
-      : questionSet.filter(q => q.category === selectedCategory);
-
-    // If user hasn't provided ZIP code, exclude personal questions
-    if (!userInfo) {
-      filteredQuestions = filteredQuestions.filter(q => !personalQuestionIds.includes(q.id));
+    // Check if user has exceeded free tier limit
+    if (!isPremium && testCount >= 3) {
+      setShowPaywall(true);
+      return;
     }
 
+    // Use the appropriate question set based on test version
+    const questionSet = testVersion === '2008' ? questions2008 : questions2025;
+
+    let filteredQuestions = selectedCategory === 'all'
+      ? questionSet
+      : questionSet.filter(q => q.category === selectedCategory);
+
+    // Now we include all questions - the inline prompt will handle personalized ones
     const shuffled = [...filteredQuestions].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, Math.min(testSize, shuffled.length));
-    
+
     setTestQuestions(selected.map(q => prepareQuestionForTest(q, testVersion, userInfo)));
     setTestStarted(true);
     setShowOptions(false);
@@ -133,6 +163,7 @@ export default function Home() {
     setExplanation('');
     setAnswers([]);
     setScore(0);
+    setZipPromptDismissed(false);
   };
 
   const handleAnswer = (answer) => {
@@ -170,7 +201,8 @@ export default function Home() {
         setIsCorrect(null);
         setExplanation('');
       } else {
-        const finalScore = score + (isCorrect ? 1 : 0);
+        // Use the current score - it was already incremented when answer was submitted
+        const finalScore = score;
         const passingScore = testVersion === '2025' ? 12 : 6;
         const passed = finalScore >= passingScore;
 
@@ -243,6 +275,27 @@ export default function Home() {
     const existing = JSON.parse(localStorage.getItem('testResults') || '[]');
     existing.push(result);
     localStorage.setItem('testResults', JSON.stringify(existing));
+    setTestCount(existing.length); // Update test count
+  };
+
+  const handleInlineZipSave = (data) => {
+    setUserInfo(data);
+    setShowInlineZipPrompt(false);
+    // Regenerate current question with personalized data
+    const currentQuestion = testQuestions[currentIndex];
+    const updatedQuestion = prepareQuestionForTest(
+      questionSet.find(q => q.id === currentQuestion.id),
+      testVersion,
+      data
+    );
+    const updatedQuestions = [...testQuestions];
+    updatedQuestions[currentIndex] = updatedQuestion;
+    setTestQuestions(updatedQuestions);
+  };
+
+  const handleInlineZipSkip = () => {
+    setShowInlineZipPrompt(false);
+    setZipPromptDismissed(true); // Don't show again this session
   };
 
   // Results screen
@@ -281,80 +334,134 @@ export default function Home() {
 
           <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 mb-6">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 text-gray-900">
-              US Citizenship Test 2025
+              US Citizenship Test Prep
             </h1>
-            <p className="text-lg sm:text-xl mb-6 text-gray-700">
-              Master all 128 official USCIS questions
+            <p className="text-base sm:text-lg text-gray-700 mb-2 font-medium">
+              Pass Your USCIS Civics Test with Confidence
             </p>
-            
+
+            {/* Key Value Props */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6 border border-blue-200">
+              <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600 font-bold">✓</span>
+                  <span className="text-gray-900 font-semibold">Both 2008 & 2025 Tests</span>
+                </div>
+                <div className="hidden sm:block text-gray-400">•</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600 font-bold">✓</span>
+                  <span className="text-gray-900 font-semibold">Official USCIS Questions</span>
+                </div>
+                <div className="hidden sm:block text-gray-400">•</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600 font-bold">✓</span>
+                  <span className="text-gray-900 font-semibold">Start Free</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Test Version Badge */}
+            <div className="mb-6 p-3 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg">
+              <p className="text-xs font-bold text-amber-900 mb-1">📅 Which test will you take?</p>
+              <p className="text-xs text-amber-800">
+                <strong>2008 Test (100 Q)</strong> - Filed before Oct 20, 2025 •
+                <strong className="ml-1">2025 Test (128 Q)</strong> - Filed on/after Oct 20, 2025
+              </p>
+            </div>
+
             <div className="flex gap-1 mb-6 justify-center">
               <div className="w-12 h-1 bg-red-600 rounded"></div>
               <div className="w-12 h-1 bg-white border border-gray-300 rounded"></div>
               <div className="w-12 h-1 bg-blue-600 rounded"></div>
             </div>
 
-            <button 
-              onClick={handleStartTest}
-              className="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-xl text-lg font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-            >
-              Start Practice Test
-            </button>
-          </div>
-
-          <div className="space-y-3">
+            {/* Primary CTA - Study Mode */}
             <Link
               href="/study"
-              className="block bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white p-5 rounded-xl transition-all shadow-lg hover:shadow-xl"
+              className="block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-6 rounded-2xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 mb-4"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <span className="text-3xl mr-3">📚</span>
-                  <div>
-                    <span className="font-bold text-white text-lg block">Study Mode</span>
-                    <span className="text-blue-100 text-sm">Learn all questions first</span>
+                  <div className="bg-white bg-opacity-20 p-3 rounded-xl mr-4">
+                    <span className="text-4xl">📚</span>
+                  </div>
+                  <div className="text-left">
+                    <span className="font-bold text-white text-xl block">Study Mode</span>
+                    <span className="text-blue-100 text-sm">Learn with flashcards • Mark progress</span>
                   </div>
                 </div>
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
             </Link>
 
+            {/* Secondary CTA - Practice Test */}
+            <button
+              onClick={handleStartTest}
+              className="w-full p-5 bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-blue-400 rounded-2xl transition-all shadow-md hover:shadow-lg text-left group mb-4"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center flex-1">
+                  <div className="bg-blue-50 group-hover:bg-blue-100 p-3 rounded-xl mr-4 transition-colors">
+                    <span className="text-3xl">✍️</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-gray-900 text-lg block">Practice Test</span>
+                      {!isPremium && (
+                        <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded">
+                          {testCount}/3 used
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-gray-600 text-sm">Test yourself • Track your score</span>
+                  </div>
+                </div>
+                <svg className="w-6 h-6 text-gray-400 group-hover:text-blue-600 flex-shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </button>
+
+            {/* Progress Card */}
             <Link
               href="/stats"
-              className="block bg-white hover:bg-gray-50 text-gray-900 p-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+              className="block bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-green-200"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <span className="text-2xl mr-3">📊</span>
-                  <span className="font-semibold text-gray-900">View Past Results</span>
+                  <div className="bg-white p-2.5 rounded-lg mr-3 shadow-sm">
+                    <span className="text-2xl">📊</span>
+                  </div>
+                  <div className="text-left">
+                    <span className="font-bold text-gray-900 text-sm block">Your Progress</span>
+                    <span className="text-xs text-gray-600">View history & stats</span>
+                  </div>
                 </div>
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </Link>
-
-            <Link
-              href="/personalize"
-              className="block bg-white hover:bg-gray-50 text-gray-900 p-4 rounded-xl transition-all shadow-md hover:shadow-lg"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <span className="text-2xl mr-3">📍</span>
-                  <span className="font-semibold text-gray-900">Manage My Representatives</span>
-                </div>
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
             </Link>
           </div>
 
-          <div className="mt-6 bg-white bg-opacity-90 rounded-lg p-3 shadow-md">
-            <p className="text-sm text-gray-800 font-medium">
-              ⭐ 2025 Official Questions • Detailed Explanations • Track Progress
-            </p>
+          <div className="bg-white bg-opacity-90 rounded-xl p-4 shadow-md">
+            <p className="text-xs font-bold text-gray-900 mb-2">Why Choose This App?</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-gray-700">
+              <div className="flex items-start gap-2">
+                <span className="text-green-600">✓</span>
+                <span><strong>Both Versions:</strong> 2008 (100Q) & 2025 (128Q) official tests</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-green-600">✓</span>
+                <span><strong>Personalized:</strong> Auto-fills YOUR state&apos;s senators & officials</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-green-600">✓</span>
+                <span><strong>Free to Start:</strong> 3 free tests, then unlock unlimited</span>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -575,19 +682,35 @@ export default function Home() {
 
   // Test options screen
   if (showOptions && !testStarted) {
-    const personalQuestionIds = [20, 23, 29, 43, 44, 61];
     const hasPersonalInfo = !!userInfo;
-    const availableQuestions = hasPersonalInfo 
-      ? questionSet.length 
-      : questionSet.filter(q => !personalQuestionIds.includes(q.id)).length;
+
+    // Calculate questions per category
+    const categoryQuestionCounts = {};
+    questionSet.forEach(q => {
+      categoryQuestionCounts[q.category] = (categoryQuestionCounts[q.category] || 0) + 1;
+    });
+
+    const filteredQuestions = selectedCategory === 'all'
+      ? questionSet
+      : questionSet.filter(q => q.category === selectedCategory);
+    const availableQuestions = filteredQuestions.length;
+
+    // Adjust test size if it exceeds available questions
+    const effectiveTestSize = Math.min(testSize, availableQuestions);
 
     return (
       <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8">
+        <PaywallModal
+          isOpen={showPaywall}
+          onClose={() => setShowPaywall(false)}
+          testsTaken={testCount}
+        />
+
         <div className="max-w-2xl mx-auto">
           <button
             onClick={() => {
               setShowOptions(false);
-              setShowZipPrompt(true);
+              setShowVersionSelect(true);
             }}
             className="flex items-center text-blue-700 hover:text-blue-900 font-bold mb-6 bg-white px-4 py-2 rounded-lg shadow-md"
           >
@@ -615,78 +738,102 @@ export default function Home() {
                 </p>
               </div>
             ) : (
-              <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
-                <p className="text-sm font-bold text-yellow-900 mb-1">⚠️ Generic test mode</p>
-                <p className="text-sm text-yellow-800">
-                  Questions about your specific representatives will be excluded. 
-                  <button
-                    onClick={() => {
-                      setShowOptions(false);
-                      setShowZipPrompt(true);
-                    }}
-                    className="ml-1 underline font-semibold"
-                  >
-                    Add ZIP code
-                  </button>
+              <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded-r-lg">
+                <p className="text-sm font-bold text-blue-900 mb-1">💡 Tip: Personalize state questions</p>
+                <p className="text-sm text-blue-800">
+                  We&apos;ll ask for your ZIP code if a question about YOUR state appears.
+                  <Link href="/settings" className="ml-1 underline font-semibold text-blue-900">
+                    Or add it now in Settings
+                  </Link>
                 </p>
               </div>
             )}
 
             <div className="mb-6">
               <label className="block text-base font-bold text-gray-900 mb-3">
-                Number of Questions
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[10, 20, 50, 100].map(num => (
-                  <button
-                    key={num}
-                    onClick={() => setTestSize(Math.min(num, availableQuestions))}
-                    disabled={num > availableQuestions}
-                    className={`p-4 rounded-lg border-2 font-bold text-lg transition-all ${
-                      testSize === num
-                        ? 'border-blue-600 bg-blue-600 text-white shadow-lg'
-                        : num > availableQuestions
-                        ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'border-gray-300 text-gray-900 hover:border-blue-400 hover:bg-blue-50'
-                    }`}
-                  >
-                    {num}
-                  </button>
-                ))}
-              </div>
-              {!hasPersonalInfo && (
-                <p className="text-xs text-gray-500 mt-2">
-                  {availableQuestions} questions available without ZIP code
-                </p>
-              )}
-            </div>
-
-            <div className="mb-8">
-              <label className="block text-base font-bold text-gray-900 mb-3">
                 Category
               </label>
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => {
+                  const newCategory = e.target.value;
+                  setSelectedCategory(newCategory);
+                  // Calculate available questions for new category
+                  const newFilteredQuestions = newCategory === 'all'
+                    ? questionSet
+                    : questionSet.filter(q => q.category === newCategory);
+                  const newAvailableQuestions = newFilteredQuestions.length;
+                  // Set testSize to min of current size and available questions
+                  setTestSize(Math.min(testSize, newAvailableQuestions));
+                }}
                 className="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none text-gray-900 font-medium bg-white"
               >
-                <option value="all">All Categories (Recommended)</option>
+                <option value="all">All Categories ({questionSet.length} questions)</option>
                 {categories.filter(c => c !== 'all').map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>
+                    {cat} ({categoryQuestionCounts[cat]} questions)
+                  </option>
                 ))}
               </select>
+              <p className="text-xs text-gray-600 mt-2">
+                💡 &quot;All Categories&quot; recommended for realistic test simulation
+              </p>
             </div>
+
+            <div className="mb-6">
+              <label className="block text-base font-bold text-gray-900 mb-3">
+                Number of Questions
+                {availableQuestions < testSize && (
+                  <span className="ml-2 text-sm font-normal text-orange-600">
+                    (Only {availableQuestions} available in this category)
+                  </span>
+                )}
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[10, 20, 50, 100].map(num => {
+                  const isDisabled = num > availableQuestions;
+                  const isSelected = testSize === num;
+
+                  return (
+                    <button
+                      key={num}
+                      onClick={() => setTestSize(num)}
+                      disabled={isDisabled}
+                      className={`p-4 rounded-lg border-2 font-bold text-lg transition-all ${
+                        isSelected
+                          ? 'border-blue-600 bg-blue-600 text-white shadow-lg'
+                          : isDisabled
+                          ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'border-gray-300 text-gray-900 hover:border-blue-400 hover:bg-blue-50'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {availableQuestions < testSize && (
+              <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
+                <p className="text-sm font-bold text-yellow-900 mb-1">⚠️ Limited Questions</p>
+                <p className="text-sm text-yellow-800">
+                  This category only has {availableQuestions} question{availableQuestions !== 1 ? 's' : ''}.
+                  Your test will include all {availableQuestions} question{availableQuestions !== 1 ? 's' : ''} instead of {testSize}.
+                </p>
+              </div>
+            )}
 
             <button
               onClick={handleBeginTest}
               className="w-full py-4 bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 text-white rounded-lg text-lg font-bold hover:shadow-xl transition-all shadow-md"
             >
-              Begin Test ({Math.min(testSize, availableQuestions)} questions)
+              Begin Test ({effectiveTestSize} question{effectiveTestSize !== 1 ? 's' : ''})
             </button>
 
             <div className="mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-600">
               <p className="text-sm text-gray-900 font-semibold">
-                📝 You need {Math.ceil(testSize * 0.6)}/{testSize} correct to pass (60%)
+                📝 You need {Math.ceil(effectiveTestSize * 0.6)}/{effectiveTestSize} correct to pass (60%)
               </p>
             </div>
           </div>
@@ -697,7 +844,7 @@ export default function Home() {
 
   // Test in progress
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 py-4 sm:py-8">
+    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 py-4 sm:py-8 pb-20">
       <QuitModal
         isOpen={showQuitModal}
         onClose={() => setShowQuitModal(false)}
@@ -706,6 +853,14 @@ export default function Home() {
         totalQuestions={testQuestions.length}
         score={score}
       />
+
+      {showInlineZipPrompt && (
+        <InlineZipPrompt
+          onSave={handleInlineZipSave}
+          onSkip={handleInlineZipSkip}
+          currentQuestion={testQuestions[currentIndex]}
+        />
+      )}
 
       {currentIndex > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4">
