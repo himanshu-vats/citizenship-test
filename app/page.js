@@ -6,7 +6,6 @@ import Question from '@/components/Question';
 import QuitModal from '@/components/QuitModal';
 import ResultsScreen from '@/components/ResultsScreen';
 import InlineZipPrompt from '@/components/InlineZipPrompt';
-import PaywallModal from '@/components/PaywallModal';
 import AppHeader from '@/components/AppHeader';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
@@ -37,9 +36,7 @@ export default function Home() {
   const [showQuitModal, setShowQuitModal] = useState(false);
   const [showInlineZipPrompt, setShowInlineZipPrompt] = useState(false);
   const [zipPromptDismissed, setZipPromptDismissed] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
   const [testCount, setTestCount] = useState(0);
-  const [showPaywall, setShowPaywall] = useState(false);
 
   // Get the appropriate question set based on test version
   const questionSet = testVersion === '2008' ? questions2008 : questions2025;
@@ -60,11 +57,7 @@ export default function Home() {
       }
     }
 
-    // Check premium status
-    const premium = localStorage.getItem('isPremium');
-    setIsPremium(premium === 'true');
-
-    // Count completed tests
+    // Count completed tests for stats display
     const results = JSON.parse(localStorage.getItem('testResults') || '[]');
     setTestCount(results.length);
 
@@ -91,9 +84,6 @@ export default function Home() {
   }, [testStarted, currentIndex, testQuestions, userInfo, zipPromptDismissed, hasSubmitted, selectedAnswer]);
 
   const handleStartTest = () => {
-    // Reload test count to ensure we have the latest count
-    const results = JSON.parse(localStorage.getItem('testResults') || '[]');
-    setTestCount(results.length);
     setShowVersionSelect(true);
   };
 
@@ -145,11 +135,6 @@ export default function Home() {
   };
 
   const handleBeginTest = () => {
-    // Check if user has exceeded free tier limit
-    if (!isPremium && testCount >= 3) {
-      setShowPaywall(true);
-      return;
-    }
 
     // Use the appropriate question set based on test version
     const questionSet = testVersion === '2008' ? questions2008 : questions2025;
@@ -384,13 +369,6 @@ export default function Home() {
                 <div className="text-4xl mb-2">✍️</div>
                 <div className="font-bold text-gray-900 dark:text-white text-base mb-1">Practice Test</div>
                 <div className="text-xs text-gray-600 dark:text-slate-400">Take a quiz</div>
-                {!isPremium && (
-                  <div className="absolute top-2 right-2">
-                    <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-bold rounded">
-                      {testCount}/3
-                    </span>
-                  </div>
-                )}
               </button>
 
               {/* Stats */}
@@ -697,12 +675,6 @@ export default function Home() {
           setShowVersionSelect(true);
         }} />
         <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
-        <PaywallModal
-          isOpen={showPaywall}
-          onClose={() => setShowPaywall(false)}
-          testsTaken={testCount}
-        />
-
         <div className="max-w-2xl mx-auto">
           {/* Version Badge */}
           <div className="mb-4">

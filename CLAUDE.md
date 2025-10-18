@@ -10,8 +10,9 @@ US Citizenship Test prep app built with Next.js 15. Helps users study for the US
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: JavaScript (no TypeScript)
-- **Styling**: Tailwind CSS v4
+- **Styling**: Tailwind CSS v4 with custom dark mode support
 - **Data Storage**: localStorage for user progress, JSON files for questions
+- **State Management**: React Context (ThemeContext for dark mode)
 - **Hosting**: Vercel (designed for free tier)
 
 ## Development Commands
@@ -50,14 +51,19 @@ app/
 └── api/representatives/route.js     # ZIP code → representative lookup
 
 components/
+├── AppHeader.jsx                    # Global header with back navigation & dark mode toggle
+├── BottomNav.jsx                    # Bottom navigation bar (Home, Study, Stats, Settings)
 ├── Question.jsx                     # Test question display with answers
 ├── QuitModal.jsx                    # Confirmation modal for quitting test
-└── ResultsScreen.jsx                # Test results screen (NEW - replaces alert)
+├── ResultsScreen.jsx                # Test results screen (replaced alert popup)
+├── InlineZipPrompt.jsx              # Inline ZIP code prompt during tests
+└── PaywallModal.jsx                 # Premium feature paywall modal
 
 lib/
 ├── answerGenerator.js               # Generates wrong answers, personalizes questions
 ├── testLogic.js                     # Quiz logic helpers
-└── storage.js                       # localStorage helpers
+├── storage.js                       # localStorage helpers
+└── ThemeContext.js                  # React Context for dark mode theme management
 
 data/
 ├── questions-2025.json              # 2025 test (128 questions)
@@ -119,6 +125,10 @@ Questions can have multiple acceptable answers. During tests, one is randomly se
 - `testResults`: Array of completed test results with score, date, answers
 - `userRepresentatives`: Cached ZIP lookup data with senators, rep, governor
 - `dailyTests`: Count for free tier limit (currently not enforced in MVP)
+- `knownQuestions`: Array of question IDs marked as "Know" in Study Mode
+- `stillLearningQuestions`: Array of question IDs marked as "Still Learning"
+- `testVersion`: Currently selected test version ('2008' or '2025')
+- `theme`: User's theme preference ('light', 'dark', or 'system')
 
 **Passing Score Logic**
 - Practice tests use same 60% threshold as real test
@@ -159,21 +169,34 @@ This script (`app/scripts/sync-uscis-data.js`) is designed to check USCIS source
 - Results saved via `saveTestResult()` to localStorage
 - Pass/fail logic uses `passingScore` variable (currently 60% threshold)
 
-## Monetization Design (Not Yet Implemented)
+## Monetization Strategy
 
-Free tier planned features:
-- 1 practice test per day (10 questions)
-- Local progress only
-- Browse all questions in study mode
+**Current Model: Ad-Based Revenue (100% Free App)**
 
-Premium ($14.99 one-time) planned features:
-- Unlimited tests
-- Full 20-question simulations
-- Progress sync across devices
-- Spaced repetition algorithm
-- Audio pronunciation
+All features are completely free with no limitations:
+- ✅ Unlimited study mode (flashcards)
+- ✅ Unlimited practice tests (all sizes)
+- ✅ All questions available
+- ✅ Full progress tracking
+- ✅ No daily limits
+- ✅ No paywall
 
-Currently all features are free (no paywall implemented).
+**Revenue Sources:**
+- Google AdSense (web platform)
+- Google AdMob (iOS/Android apps)
+
+**Ad Placement Strategy:**
+- Bottom sticky banner ads (non-intrusive)
+- Interstitial ads between test completions (configurable frequency)
+- No ads during active test taking (preserves study experience)
+
+**Cost Structure:**
+- Vercel hosting: Free tier (sufficient for expected traffic)
+- Domain: ~$12-15/year
+- Apple Developer: $99/year (for iOS App Store)
+- Google Play Developer: $25 one-time (for Android - future)
+
+**Target:** Break-even at ~1,000-2,000 monthly active users
 
 ## Testing Notes
 
@@ -198,18 +221,27 @@ Currently all features are free (no paywall implemented).
 - ✅ Quit modal with progress confirmation
 - ✅ Back navigation during tests
 - ✅ Mobile-responsive UI with gradient design
-- ✅ **Study Mode with Quizlet-style flashcards** (NEW - see below)
-- ✅ **Professional Results Screen** (NEW - replaced alert() popup)
+- ✅ **Study Mode with Quizlet-style flashcards**
+- ✅ **Professional Results Screen** (replaced alert popup)
+- ✅ **Dark Mode Support** (system/light/dark with toggle)
+- ✅ **Global Navigation Bar** (BottomNav component)
+- ✅ **Settings Page** (theme, version, ZIP, data management)
+- ✅ **AppHeader Component** (consistent header with back nav)
+- ✅ **Theme Context System** (centralized theme management)
+- ✅ **Inline ZIP Prompt** (contextual ZIP code collection during tests)
+- ✅ **Paywall Modal** (UI for premium feature gates)
 
-**Not Yet Implemented:**
-- ❌ Global navigation bar component
-- ❌ PWA manifest and iOS meta tags
-- ❌ Settings page (ZIP code flow refactor)
-- ❌ Daily test limits for free tier
-- ❌ Premium paywall and Stripe integration
-- ❌ Audio pronunciation
+**In Progress (See LAUNCH_GUIDE.md):**
+- 🔄 PWA manifest and iOS meta tags
+- 🔄 Google AdSense integration (web)
+- 🔄 Google AdMob integration (iOS/Android)
+- 🔄 Capacitor setup for native iOS app
+
+**Future Enhancements:**
+- ❌ Audio pronunciation feature
 - ❌ Spaced repetition algorithm
 - ❌ Analytics tracking
+- ❌ Android app (Google Play Store)
 
 **Development Phase:** Core features complete, working on launch readiness improvements
 
@@ -223,7 +255,134 @@ Currently all features are free (no paywall implemented).
 
 ---
 
-## Recent Additions (Current Session)
+## Recent Major Updates (Commit 98c4765 - "Updated multipel features")
+
+### 1. Dark Mode Theme System (`lib/ThemeContext.js`)
+
+**Architecture:**
+- React Context-based theme management
+- Three modes: `light`, `dark`, `system` (follows OS preference)
+- Persists preference to localStorage as `theme`
+- Automatically applies `.dark` class to `<html>` element
+
+**ThemeContext API:**
+```javascript
+const { theme, setTheme } = useTheme();
+// theme: 'light' | 'dark' | 'system'
+// setTheme: function to update theme
+```
+
+**Integration:**
+- Wrapped in `app/layout.js` at root level
+- All components have access via `useTheme()` hook
+- Tailwind CSS v4 dark mode classes throughout (e.g., `dark:bg-slate-900`)
+
+**CSS Implementation (`app/globals.css`):**
+- Custom variant: `@custom-variant dark (.dark &);`
+- CSS variables for theming defined in `:root`
+- Dark mode colors use slate palette (slate-900, slate-800, etc.)
+
+---
+
+### 2. AppHeader Component (`components/AppHeader.jsx`)
+
+**Purpose:** Consistent header across all pages with navigation and theme controls
+
+**Features:**
+- Back button with customizable action (optional)
+- Page title display
+- Dark mode toggle button (moon/sun icons)
+- Responsive design with blur backdrop
+- Sticky positioning at top
+
+**Props:**
+```javascript
+{
+  title: "Page Title",          // Optional page title
+  showBack: true,                // Show/hide back button
+  onBackClick: () => {}          // Custom back action (defaults to router.back())
+}
+```
+
+**Usage Pattern:**
+All pages now start with `<AppHeader />` followed by `<main>` content.
+
+---
+
+### 3. Settings Page Implementation (`app/settings/page.js`)
+
+**Features:**
+- **Theme Selector**: Light/Dark/System mode toggle with visual indicators
+- **Test Version**: Switch between 2008 and 2025 test versions
+- **ZIP Code Management**: View/update/clear ZIP code for personalization
+- **Data Management**: Clear all progress, test history, study progress
+- **About Section**: Links to USCIS resources and app info
+
+**Design:**
+- Card-based layout with sections
+- Dark mode support throughout
+- Confirmation dialogs for destructive actions (clear data)
+- Links to external resources (USCIS.gov, feedback, privacy)
+
+**State Management:**
+- Uses `useTheme()` for theme state
+- Direct localStorage manipulation for other settings
+- Real-time updates across app when settings change
+
+---
+
+### 4. Complete UI Redesign for Dark Mode
+
+**All pages redesigned with:**
+- Tailwind v4 dark mode classes (`dark:bg-*`, `dark:text-*`)
+- Consistent color palette:
+  - Light mode: white, gray-50/100, blue-600, purple-600
+  - Dark mode: slate-900/800/700, blue-500, purple-500
+- Gradient updates for dark mode compatibility
+- Border and shadow adjustments for dark mode
+
+**Pages affected:**
+- `app/page.js` - Home and test flow
+- `app/study/page.js` - Flashcard study mode
+- `app/stats/page.js` - Test history
+- `app/settings/page.js` - Settings (new implementation)
+- `app/personalize/page.js` - Representative management
+
+**Component updates:**
+- `components/Question.jsx` - Dark mode answer buttons
+- `components/QuitModal.jsx` - Dark mode modal
+- `components/ResultsScreen.jsx` - Dark mode results
+- `components/BottomNav.jsx` - Enhanced with settings tab
+
+---
+
+### 5. BottomNav Enhancement
+
+**New Features:**
+- 4-tab navigation: Home, Study, Stats, Settings
+- Active state indicators
+- Dark mode support
+- iOS safe area padding
+- Hide during active tests
+
+**Integration:**
+- Moved from individual pages to global `app/layout.js`
+- Conditionally hidden during test flow (managed in page logic)
+
+---
+
+### 6. Code Quality Improvements
+
+**Changes:**
+- Removed debug console.log statements from API route
+- Cleaned up unused imports
+- Consistent spacing and formatting
+- Added test infrastructure files (`run-tests-with-report.sh`)
+- Debug HTML files for theme testing
+
+---
+
+## Recent Additions (Previous Sessions)
 
 ### 1. Study Mode - Quizlet-Style Flashcards (`app/study/page.js`)
 
@@ -309,40 +468,36 @@ testVersion: '2025' // Currently selected version
 
 ---
 
-## Next Priority Tasks (from IMPLEMENTATION_PLAN.md)
+## Next Priority Tasks
 
-Based on the product review and implementation plan:
+Based on current app status:
 
-1. **Global Navigation Bar** (Priority 3)
-   - Bottom nav for mobile
-   - Tabs: Home, Study, Stats, Settings
-   - Hide during active test
-   - iOS safe area insets
-
-2. **Refactor ZIP Code Flow** (Priority 4)
-   - Move ZIP to Settings page
-   - Make optional/dismissible
-   - Auto-prompt only when personalized question appears
-   - Remove from mandatory test flow
-
-3. **PWA Support** (Priority 5)
-   - Add `manifest.json`
-   - iOS meta tags
+1. **PWA Support** (High Priority)
+   - Add `manifest.json` with app metadata
+   - iOS meta tags for home screen
    - App icons (72px to 512px)
    - Splash screens
    - Standalone display mode
+   - Offline service worker (optional)
 
-4. **Settings Page** (Priority 4)
-   - Test version switcher
-   - ZIP code management
-   - Clear all data
-   - About/Help
+2. **Premium/Monetization Implementation** (Medium Priority)
+   - Enforce daily test limits for free tier (3 tests)
+   - Stripe payment integration for one-time $14.99 purchase
+   - Premium feature gates (unlimited tests, sync, etc.)
+   - License key validation
 
-5. **Home Page Redesign** (Priority 4)
-   - Make Study Mode most prominent CTA
-   - Move test to secondary button
-   - Add progress widget
-   - Clearer value proposition
+3. **Enhanced Features** (Low Priority)
+   - Audio pronunciation for questions
+   - Spaced repetition algorithm for Study Mode
+   - Analytics tracking (privacy-friendly)
+   - Export test results as PDF
+   - Share progress to social media
+
+4. **Polish & Optimization** (Ongoing)
+   - Performance optimization (lazy loading, code splitting)
+   - Accessibility audit (ARIA labels, keyboard nav)
+   - SEO improvements
+   - Error boundaries and better error handling
 
 ---
 
