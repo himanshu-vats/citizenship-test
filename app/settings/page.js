@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import AppHeader from '@/components/AppHeader';
 
 export default function Settings() {
   const [zipCode, setZipCode] = useState('');
@@ -86,30 +87,23 @@ export default function Settings() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 pb-20">
-      <div className="max-w-2xl mx-auto">
-        <Link
-          href="/"
-          className="inline-flex items-center text-blue-700 hover:text-blue-900 font-bold mb-6 bg-white px-4 py-2 rounded-lg shadow-md"
-        >
-          <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Home
-        </Link>
-        <div className="bg-white rounded-2xl shadow-2xl p-6 border-t-4 border-blue-600">
-          <div className="flex items-center mb-6">
-            <span className="text-4xl mr-3">⚙️</span>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-              <p className="text-gray-600 mt-1">Manage your preferences</p>
+    <>
+      <AppHeader title="Settings" showBack={true} backHref="/" />
+      <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900 p-4 pb-20">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 border-t-4 border-blue-600 dark:border-blue-500">
+            <div className="flex items-center mb-6">
+              <span className="text-4xl mr-3">⚙️</span>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
+                <p className="text-gray-600 dark:text-slate-300 mt-1">Manage your preferences</p>
+              </div>
             </div>
-          </div>
 
           {/* Test Version Selection */}
-          <section className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Test Version</h2>
-            <p className="text-sm text-gray-600 mb-4">
+          <section className="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Test Version</h2>
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
               Choose which test version to use based on your N-400 filing date.
             </p>
             <div className="space-y-3">
@@ -117,16 +111,16 @@ export default function Settings() {
                 onClick={() => handleVersionChange('2025')}
                 className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
                   testVersion === '2025'
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-gray-300 hover:border-gray-400'
+                    ? 'border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                    : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 dark:hover:border-slate-500'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-bold text-gray-900">
+                    <div className="font-bold text-gray-900 dark:text-white">
                       2025 Test (128 Questions)
                     </div>
-                    <div className="text-sm text-gray-600 mt-1">
+                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1">
                       For N-400 filed on/after October 20, 2025
                     </div>
                   </div>
@@ -140,16 +134,16 @@ export default function Settings() {
                 onClick={() => handleVersionChange('2008')}
                 className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
                   testVersion === '2008'
-                    ? 'border-blue-600 bg-blue-50'
-                    : 'border-gray-300 hover:border-gray-400'
+                    ? 'border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30'
+                    : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 dark:hover:border-slate-500'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-bold text-gray-900">
+                    <div className="font-bold text-gray-900 dark:text-white">
                       2008 Test (100 Questions)
                     </div>
-                    <div className="text-sm text-gray-600 mt-1">
+                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1">
                       For N-400 filed before October 20, 2025
                     </div>
                   </div>
@@ -162,19 +156,19 @@ export default function Settings() {
           </section>
 
           {/* ZIP Code / Representatives */}
-          <section className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-3">My State Info</h2>
-            <p className="text-sm text-gray-600 mb-4">
+          <section className="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">My State Info</h2>
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
               Enter your ZIP code to personalize questions about YOUR state officials.
             </p>
 
-            <div className="bg-blue-50 border-l-4 border-blue-600 p-3 mb-4 rounded-r-lg">
-              <p className="text-xs font-bold text-blue-900 mb-1">What we can determine from your ZIP:</p>
-              <div className="text-xs text-blue-800 space-y-1">
+            <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600 dark:border-blue-500 p-3 mb-4 rounded-r-lg">
+              <p className="text-xs font-bold text-blue-900 dark:text-blue-200 mb-1">What we can determine from your ZIP:</p>
+              <div className="text-xs text-blue-800 dark:text-blue-300 space-y-1">
                 <p>✓ Your 2 U.S. Senators</p>
                 <p>✓ Your Governor</p>
                 <p>✓ Your State Capital</p>
-                <p className="text-xs text-blue-700 mt-2">
+                <p className="text-xs text-blue-700 dark:text-blue-400 mt-2">
                   ✗ Your House Representative - ZIP codes don&apos;t align with congressional districts.
                   We&apos;ll show you where to look it up when needed.
                 </p>
@@ -182,7 +176,7 @@ export default function Settings() {
             </div>
 
             <form onSubmit={handleZipSubmit} className="mb-4">
-              <label className="block text-sm font-bold text-gray-700 mb-2">
+              <label className="block text-sm font-bold text-gray-700 dark:text-slate-300 mb-2">
                 ZIP Code
               </label>
               <div className="flex gap-3">
@@ -192,34 +186,34 @@ export default function Settings() {
                   onChange={(e) => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
                   placeholder="12345"
                   maxLength="5"
-                  className="flex-1 p-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none text-gray-900"
+                  className="flex-1 p-3 border-2 border-gray-300 dark:border-slate-600 rounded-lg focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none text-gray-900 dark:text-white bg-white dark:bg-slate-700"
                   disabled={loading}
                 />
                 <button
                   type="submit"
                   disabled={loading || zipCode.length !== 5}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-bold hover:bg-blue-700 dark:hover:bg-blue-600 transition-all disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Loading...' : 'Save'}
                 </button>
               </div>
               {error && (
-                <p className="text-red-600 mt-2 text-sm">{error}</p>
+                <p className="text-red-600 dark:text-red-400 mt-2 text-sm">{error}</p>
               )}
             </form>
 
             {savedInfo && (
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4 border border-gray-200 dark:border-slate-600">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-gray-900">Saved Information</span>
+                  <span className="font-bold text-gray-900 dark:text-white">Saved Information</span>
                   <button
                     onClick={handleClearZip}
-                    className="text-sm text-red-600 hover:text-red-800"
+                    className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                   >
                     Clear
                   </button>
                 </div>
-                <div className="space-y-1 text-sm text-gray-700">
+                <div className="space-y-1 text-sm text-gray-700 dark:text-slate-300">
                   {savedInfo.stateName && (
                     <p><strong>State:</strong> {savedInfo.stateName}</p>
                   )}
@@ -239,16 +233,16 @@ export default function Settings() {
 
           {/* Data Management */}
           <section className="mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Data Management</h2>
-            <p className="text-sm text-gray-600 mb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Data Management</h2>
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
               Clear all saved data including test history, progress, and preferences.
             </p>
             <button
               onClick={handleClearAllData}
               className={`w-full py-3 rounded-lg font-bold transition-all ${
                 showClearConfirm
-                  ? 'bg-red-600 text-white hover:bg-red-700'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-red-600 dark:bg-red-700 text-white hover:bg-red-700 dark:hover:bg-red-600'
+                  : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-600'
               }`}
             >
               {showClearConfirm ? 'Click Again to Confirm' : 'Clear All Data'}
@@ -256,7 +250,7 @@ export default function Settings() {
             {showClearConfirm && (
               <button
                 onClick={() => setShowClearConfirm(false)}
-                className="w-full mt-2 py-2 text-sm text-gray-600 hover:text-gray-800"
+                className="w-full mt-2 py-2 text-sm text-gray-600 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200"
               >
                 Cancel
               </button>
@@ -265,15 +259,15 @@ export default function Settings() {
 
           {/* About */}
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">About</h2>
-            <div className="space-y-2 text-sm text-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">About</h2>
+            <div className="space-y-2 text-sm text-gray-700 dark:text-slate-300">
               <p>
                 <strong>US Citizenship Test 2025</strong>
               </p>
               <p>
                 Practice for your USCIS civics test with official questions from both the 2008 and 2025 versions.
               </p>
-              <p className="text-xs text-gray-500 mt-4">
+              <p className="text-xs text-gray-500 dark:text-slate-400 mt-4">
                 Version 1.0.0
               </p>
             </div>
@@ -281,5 +275,6 @@ export default function Settings() {
         </div>
       </div>
     </main>
+    </>
   );
 }

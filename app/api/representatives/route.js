@@ -4,7 +4,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const zipCode = searchParams.get('zipCode');
 
-  console.log('🔍 API Route called with ZIP:', zipCode);
+  
 
   if (!zipCode) {
     return NextResponse.json({ error: 'ZIP code is required' }, { status: 400 });
@@ -27,7 +27,7 @@ export async function GET(request) {
     const latitude = zipData.places[0].latitude;
     const longitude = zipData.places[0].longitude;
 
-    console.log('📍 Location:', { state, stateName, city, latitude, longitude });
+   
 
     // Step 2: Get state capital and governor
     const stateCapitals = getStateCapitals();
@@ -38,7 +38,7 @@ export async function GET(request) {
 
     // Step 3: Get senators (always 2 per state)
     const senators = getStateSenators(state);
-    console.log('👥 Senators for', state, ':', senators);
+
 
     // Step 4: Try to get representative using geocoding
     let representative = null;
@@ -47,13 +47,11 @@ export async function GET(request) {
     const GOOGLE_CIVIC_API_KEY = process.env.GOOGLE_CIVIC_API_KEY;
     if (GOOGLE_CIVIC_API_KEY) {
       try {
-        console.log('📡 Trying Google Civic API for representative...');
         const civicUrl = `https://www.googleapis.com/civicinfo/v2/representatives?address=${zipCode}&key=${GOOGLE_CIVIC_API_KEY}&levels=country&roles=legislatorLowerBody`;
         const civicResponse = await fetch(civicUrl);
         
         if (civicResponse.ok) {
           const civicData = await civicResponse.json();
-          console.log('✅ Google Civic API response received');
           
           // Extract representative
           const offices = civicData.offices || [];
@@ -64,14 +62,12 @@ export async function GET(request) {
               const index = office.officialIndices?.[0];
               if (index !== undefined && officials[index]) {
                 representative = officials[index].name;
-                console.log('✅ Found representative:', representative);
                 break;
               }
             }
           }
         }
       } catch (error) {
-        console.log('⚠️ Google Civic API failed:', error.message);
       }
     }
 

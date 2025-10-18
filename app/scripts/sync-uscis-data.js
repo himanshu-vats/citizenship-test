@@ -130,22 +130,15 @@ If a major official changes (President, Vice President):
 }
 
 // Run validation
-console.log('🔍 USCIS Data Validation Report\n');
-console.log('=' .repeat(50));
 
 const report = generateDataValidationReport();
-console.log(JSON.stringify(report, null, 2));
 
 // Save instructions
 fs.writeFileSync('USCIS-UPDATE-GUIDE.md', createUpdateInstructions());
-console.log('\n✅ Update instructions saved to USCIS-UPDATE-GUIDE.md');
 
 // Check if any data needs review
 const needsReview = report.checks.filter(c => c.needsReview);
 if (needsReview.length > 0) {
-  console.log('\n⚠️  WARNING: The following need verification:');
   needsReview.forEach(item => {
-    console.log(`   - ${item.position}: Last verified ${item.daysSinceVerification} days ago`);
-    console.log(`     Check: ${item.verificationUrl}`);
   });
 }

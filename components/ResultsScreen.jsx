@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import AppHeader from './AppHeader';
 
 export default function ResultsScreen({
   score,
@@ -14,40 +15,16 @@ export default function ResultsScreen({
   onGoHome
 }) {
   const [showReview, setShowReview] = useState(false);
-  const [shareSuccess, setShareSuccess] = useState(false);
-
-  const handleShare = async () => {
-    const shareText = `I scored ${score}/${total} (${percentage}%) on the US Citizenship Test ${testVersion}! ${passed ? '✓ PASSED' : 'Still practicing'}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'US Citizenship Test Results',
-          text: shareText
-        });
-      } catch (err) {
-        // User cancelled or error occurred
-        console.log('Share cancelled');
-      }
-    } else {
-      // Fallback: Copy to clipboard
-      try {
-        await navigator.clipboard.writeText(shareText);
-        setShareSuccess(true);
-        setTimeout(() => setShareSuccess(false), 3000);
-      } catch (err) {
-        console.error('Failed to copy:', err);
-      }
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8 pb-24">
+    <>
+      <AppHeader title="Test Results" showBack={true} backHref="/" />
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900 p-4 sm:p-8">
       <div className="max-w-3xl w-full mx-auto">
         {/* Main Results Card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border dark:border-slate-700">
           {/* Header with confetti background for pass */}
-          <div className={`p-8 text-center ${passed ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-gradient-to-r from-gray-500 to-gray-600'}`}>
+          <div className={`p-8 text-center ${passed ? 'bg-gradient-to-r from-green-500 to-emerald-600 dark:from-green-600 dark:to-emerald-700' : 'bg-gradient-to-r from-gray-500 to-gray-600 dark:from-gray-600 dark:to-gray-700'}`}>
             <div className="text-6xl mb-4">
               {passed ? '🎉' : '📚'}
             </div>
@@ -62,21 +39,21 @@ export default function ResultsScreen({
           {/* Score Display */}
           <div className="p-8">
             <div className="text-center mb-8">
-              <div className="text-6xl font-bold text-gray-900 mb-2">
+              <div className="text-6xl font-bold text-gray-900 dark:text-white mb-2">
                 {score}/{total}
               </div>
-              <div className={`text-3xl font-bold mb-4 ${passed ? 'text-green-600' : 'text-orange-600'}`}>
+              <div className={`text-3xl font-bold mb-4 ${passed ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}`}>
                 {percentage}%
               </div>
               <div className={`inline-block px-6 py-3 rounded-full text-lg font-bold ${
                 passed
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-orange-100 text-orange-800'
+                  ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
+                  : 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300'
               }`}>
                 {passed ? '✓ PASSED' : '○ NEED MORE PRACTICE'}
               </div>
 
-              <div className="mt-4 text-sm text-gray-600">
+              <div className="mt-4 text-sm text-gray-600 dark:text-slate-400">
                 Test Version: <span className="font-semibold">{testVersion === '2025' ? '2025 (need 12/20)' : '2008 (need 6/10)'}</span>
               </div>
             </div>
@@ -102,50 +79,20 @@ export default function ResultsScreen({
                 </svg>
                 Take Another Test
               </button>
-
-              <Link
-                href="/study"
-                className="block w-full py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-center"
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <span className="text-xl">📚</span>
-                  Study Mode
-                </div>
-              </Link>
-
-              <button
-                onClick={handleShare}
-                className="w-full py-4 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-                {shareSuccess ? 'Copied to Clipboard!' : 'Share Results'}
-              </button>
-
-              <button
-                onClick={onGoHome}
-                className="w-full py-4 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-bold transition-all border-2 border-gray-300 flex items-center justify-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Back to Home
-              </button>
             </div>
 
             {/* Performance Tip */}
             {!passed && (
-              <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-4">
-                <p className="text-sm text-yellow-900">
+              <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-500 dark:border-yellow-600 rounded-r-lg p-4">
+                <p className="text-sm text-yellow-900 dark:text-yellow-200">
                   <strong>💡 Tip:</strong> Try using Study Mode to review all questions with answers before taking another test.
                 </p>
               </div>
             )}
 
             {passed && (
-              <div className="bg-green-50 border-l-4 border-green-500 rounded-r-lg p-4">
-                <p className="text-sm text-green-900">
+              <div className="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 dark:border-green-600 rounded-r-lg p-4">
+                <p className="text-sm text-green-900 dark:text-green-200">
                   <strong>🎯 Great job!</strong> Keep practicing to maintain your knowledge for the real interview.
                 </p>
               </div>
@@ -155,9 +102,9 @@ export default function ResultsScreen({
 
         {/* Review Section (Expandable) */}
         {showReview && answers && answers.length > 0 && (
-          <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mt-6 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 border dark:border-slate-700">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+              <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Detailed Review
@@ -169,38 +116,38 @@ export default function ResultsScreen({
                   key={index}
                   className={`p-4 rounded-xl border-2 ${
                     answer.isCorrect
-                      ? 'border-green-300 bg-green-50'
-                      : 'border-red-300 bg-red-50'
+                      ? 'border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20'
+                      : 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
-                      answer.isCorrect ? 'bg-green-500' : 'bg-red-500'
+                      answer.isCorrect ? 'bg-green-500 dark:bg-green-600' : 'bg-red-500 dark:bg-red-600'
                     }`}>
                       {answer.isCorrect ? '✓' : '✗'}
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-900 mb-2">
+                      <p className="font-semibold text-gray-900 dark:text-white mb-2">
                         Q{index + 1}: {answer.question}
                       </p>
 
                       {!answer.isCorrect && (
                         <div className="mb-2">
-                          <p className="text-sm text-red-800">
+                          <p className="text-sm text-red-800 dark:text-red-300">
                             <span className="font-semibold">Your answer:</span> {answer.selected}
                           </p>
                         </div>
                       )}
 
                       <div className="mb-2">
-                        <p className="text-sm text-green-800">
+                        <p className="text-sm text-green-800 dark:text-green-300">
                           <span className="font-semibold">Correct answer:</span> {answer.correct}
                         </p>
                       </div>
 
                       {answer.explanation && (
-                        <div className="mt-2 pt-2 border-t border-gray-300">
-                          <p className="text-xs text-gray-700 whitespace-pre-line">
+                        <div className="mt-2 pt-2 border-t border-gray-300 dark:border-slate-600">
+                          <p className="text-xs text-gray-700 dark:text-slate-300 whitespace-pre-line">
                             {answer.explanation}
                           </p>
                         </div>
@@ -213,7 +160,7 @@ export default function ResultsScreen({
 
             {/* Study Weak Areas Button */}
             {answers.filter(a => !a.isCorrect).length > 0 && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
                 <Link
                   href="/study"
                   className="block w-full py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-center"
@@ -226,5 +173,6 @@ export default function ResultsScreen({
         )}
       </div>
     </div>
+    </>
   );
 }

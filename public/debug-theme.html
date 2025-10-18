@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Theme Debug</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+    button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    pre { background: #f0f0f0; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Theme Debug Tool</h1>
+
+  <h2>Current State:</h2>
+  <pre id="state"></pre>
+
+  <h2>Actions:</h2>
+  <button onclick="clearTheme()">Clear localStorage theme</button>
+  <button onclick="setLight()">Set to Light</button>
+  <button onclick="setDark()">Set to Dark</button>
+  <button onclick="refresh()">Refresh Info</button>
+
+  <script>
+    function updateState() {
+      const state = {
+        'localStorage theme': localStorage.getItem('theme'),
+        'html classes': document.documentElement.className,
+        'All localStorage keys': Object.keys(localStorage).join(', ')
+      };
+      document.getElementById('state').textContent = JSON.stringify(state, null, 2);
+    }
+
+    function clearTheme() {
+      localStorage.removeItem('theme');
+      alert('Theme cleared from localStorage');
+      updateState();
+    }
+
+    function setLight() {
+      localStorage.setItem('theme', 'light');
+      alert('Set to light');
+      updateState();
+    }
+
+    function setDark() {
+      localStorage.setItem('theme', 'dark');
+      alert('Set to dark');
+      updateState();
+    }
+
+    function refresh() {
+      updateState();
+    }
+
+    // Initialize
+    updateState();
+  </script>
+</body>
+</html>

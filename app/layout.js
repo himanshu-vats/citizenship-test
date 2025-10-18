@@ -1,5 +1,5 @@
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
+import { ThemeProvider } from "@/lib/ThemeContext";
 
 export const metadata = {
   title: "US Citizenship Test Prep - 2008 & 2025 USCIS Questions | Free Practice",
@@ -20,9 +20,10 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Citizenship" />
       </head>
-      <body className="antialiased pb-16" suppressHydrationWarning>
-        {children}
-        <BottomNav />
+      <body className="antialiased bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors" suppressHydrationWarning>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

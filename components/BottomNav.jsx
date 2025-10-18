@@ -9,15 +9,22 @@ export default function BottomNav() {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    // Hide nav during test (when testStarted state is active)
-    // We detect this by checking if body has overflow hidden or specific class
+    // Hide nav when study-mode-active class is present on body
     const checkVisibility = () => {
-      // For now, always show on main pages
-      // The main page.js will handle hiding during active test
-      setIsVisible(true);
+      const isStudyModeActive = document.body.classList.contains('study-mode-active');
+      setIsVisible(!isStudyModeActive);
     };
 
     checkVisibility();
+
+    // Watch for class changes on body
+    const observer = new MutationObserver(checkVisibility);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
   }, [pathname]);
 
   const navItems = [
@@ -64,7 +71,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50"
+      className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700 z-50"
       style={{
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
@@ -80,8 +87,8 @@ export default function BottomNav() {
                 href={item.href}
                 className={`flex flex-col items-center justify-center py-2 px-3 min-w-[64px] min-h-[56px] transition-colors ${
                   isActive
-                    ? 'text-blue-600'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 <div className={`transition-transform ${isActive ? 'scale-110' : ''}`}>

@@ -7,6 +7,7 @@ import QuitModal from '@/components/QuitModal';
 import ResultsScreen from '@/components/ResultsScreen';
 import InlineZipPrompt from '@/components/InlineZipPrompt';
 import PaywallModal from '@/components/PaywallModal';
+import AppHeader from '@/components/AppHeader';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
@@ -66,6 +67,14 @@ export default function Home() {
     // Count completed tests
     const results = JSON.parse(localStorage.getItem('testResults') || '[]');
     setTestCount(results.length);
+
+    // Check for startTest query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('startTest') === 'true') {
+      setShowVersionSelect(true);
+      // Clean up URL
+      window.history.replaceState({}, '', '/');
+    }
   }, []);
 
   // Check if current question is personalized and show inline prompt if needed
@@ -324,241 +333,224 @@ export default function Home() {
   // Home screen
   if (!testStarted && !showResults && !showOptions && !showVersionSelect && !showZipPrompt) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8">
-        <div className="text-center max-w-2xl w-full">
-          <div className="mb-6">
-            <div className="w-24 h-24 mx-auto bg-white rounded-full flex items-center justify-center shadow-2xl border-4 border-blue-600">
-              <span className="text-5xl">🗽</span>
-            </div>
-          </div>
+      <>
+        <AppHeader showBack={false} />
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
+          <div className="max-w-2xl mx-auto">
 
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 mb-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 text-gray-900">
-              US Citizenship Test Prep
-            </h1>
-            <p className="text-base sm:text-lg text-gray-700 mb-2 font-medium">
-              Pass Your USCIS Civics Test with Confidence
-            </p>
-
-            {/* Key Value Props */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6 border border-blue-200">
-              <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span className="text-gray-900 font-semibold">Both 2008 & 2025 Tests</span>
-                </div>
-                <div className="hidden sm:block text-gray-400">•</div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span className="text-gray-900 font-semibold">Official USCIS Questions</span>
-                </div>
-                <div className="hidden sm:block text-gray-400">•</div>
-                <div className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">✓</span>
-                  <span className="text-gray-900 font-semibold">Start Free</span>
-                </div>
+            {/* Hero Section */}
+            <div className="text-center mb-4 pt-4">
+              <div className="mx-auto mb-6">
+                <span className="text-9xl sm:text-[10rem] md:text-[12rem]">🗽</span>
               </div>
-            </div>
-
-            {/* Test Version Badge */}
-            <div className="mb-6 p-3 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg">
-              <p className="text-xs font-bold text-amber-900 mb-1">📅 Which test will you take?</p>
-              <p className="text-xs text-amber-800">
-                <strong>2008 Test (100 Q)</strong> - Filed before Oct 20, 2025 •
-                <strong className="ml-1">2025 Test (128 Q)</strong> - Filed on/after Oct 20, 2025
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-3 leading-tight">
+                US Citizenship Test
+              </h1>
+              <p className="text-gray-600 dark:text-slate-400 text-base sm:text-lg font-medium max-w-md mx-auto">
+                Official USCIS questions • 2008 & 2025 versions
               </p>
             </div>
 
-            <div className="flex gap-1 mb-6 justify-center">
-              <div className="w-12 h-1 bg-red-600 rounded"></div>
-              <div className="w-12 h-1 bg-white border border-gray-300 rounded"></div>
-              <div className="w-12 h-1 bg-blue-600 rounded"></div>
-            </div>
-
-            {/* Primary CTA - Study Mode */}
+            {/* Primary Action - Study Mode (Hero CTA) */}
             <Link
               href="/study"
-              className="block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-6 rounded-2xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 mb-4"
+              className="block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 mb-4 overflow-hidden"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="bg-white bg-opacity-20 p-3 rounded-xl mr-4">
-                    <span className="text-4xl">📚</span>
-                  </div>
-                  <div className="text-left">
-                    <span className="font-bold text-white text-xl block">Study Mode</span>
-                    <span className="text-blue-100 text-sm">Learn with flashcards • Mark progress</span>
-                  </div>
-                </div>
-                <svg className="w-8 h-8 text-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </Link>
-
-            {/* Secondary CTA - Practice Test */}
-            <button
-              onClick={handleStartTest}
-              className="w-full p-5 bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-blue-400 rounded-2xl transition-all shadow-md hover:shadow-lg text-left group mb-4"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center flex-1">
-                  <div className="bg-blue-50 group-hover:bg-blue-100 p-3 rounded-xl mr-4 transition-colors">
-                    <span className="text-3xl">✍️</span>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-900 text-lg block">Practice Test</span>
-                      {!isPremium && (
-                        <span className="px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded">
-                          {testCount}/3 used
-                        </span>
-                      )}
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                      <span className="text-3xl">📚</span>
                     </div>
-                    <span className="text-gray-600 text-sm">Test yourself • Track your score</span>
+                    <div className="text-left">
+                      <div className="font-bold text-white text-xl">Study Mode</div>
+                      <div className="text-blue-100 text-sm">Learn before you test</div>
+                    </div>
                   </div>
+                  <svg className="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
-                <svg className="w-6 h-6 text-gray-400 group-hover:text-blue-600 flex-shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
               </div>
-            </button>
+            </Link>
 
-            {/* Progress Card */}
+            {/* Secondary Actions Grid */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Practice Test */}
+              <button
+                onClick={handleStartTest}
+                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 rounded-2xl transition-all shadow-md hover:shadow-lg p-5 text-center group relative"
+              >
+                <div className="text-4xl mb-2">✍️</div>
+                <div className="font-bold text-gray-900 dark:text-white text-base mb-1">Practice Test</div>
+                <div className="text-xs text-gray-600 dark:text-slate-400">Take a quiz</div>
+                {!isPremium && (
+                  <div className="absolute top-2 right-2">
+                    <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-bold rounded">
+                      {testCount}/3
+                    </span>
+                  </div>
+                )}
+              </button>
+
+              {/* Stats */}
+              <Link
+                href="/stats"
+                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-green-400 dark:hover:border-green-500 rounded-2xl transition-all shadow-md hover:shadow-lg p-5 text-center group"
+              >
+                <div className="text-4xl mb-2">📊</div>
+                <div className="font-bold text-gray-900 dark:text-white text-base mb-1">Your Stats</div>
+                <div className="text-xs text-gray-600 dark:text-slate-400">View progress</div>
+              </Link>
+            </div>
+
+            {/* Quick Stats (if user has history) */}
+            {testCount > 0 && (
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 mb-6 border border-green-200 dark:border-green-800">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-green-600 dark:text-green-400 text-xl">🎯</span>
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {testCount} test{testCount !== 1 ? 's' : ''} completed
+                    </span>
+                  </div>
+                  <Link
+                    href="/stats"
+                    className="text-xs font-bold text-green-700 dark:text-green-400 hover:underline"
+                  >
+                    View all →
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Settings Quick Access */}
             <Link
-              href="/stats"
-              className="block bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-green-200"
+              href="/settings"
+              className="block bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl p-4 transition-all border border-gray-200 dark:border-slate-700"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="bg-white p-2.5 rounded-lg mr-3 shadow-sm">
-                    <span className="text-2xl">📊</span>
-                  </div>
-                  <div className="text-left">
-                    <span className="font-bold text-gray-900 text-sm block">Your Progress</span>
-                    <span className="text-xs text-gray-600">View history & stats</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">⚙️</span>
+                  <div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white">Settings</div>
+                    <div className="text-xs text-gray-600 dark:text-slate-400">Version, ZIP code & more</div>
                   </div>
                 </div>
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
             </Link>
-          </div>
 
-          <div className="bg-white bg-opacity-90 rounded-xl p-4 shadow-md">
-            <p className="text-xs font-bold text-gray-900 mb-2">Why Choose This App?</p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-gray-700">
-              <div className="flex items-start gap-2">
-                <span className="text-green-600">✓</span>
-                <span><strong>Both Versions:</strong> 2008 (100Q) & 2025 (128Q) official tests</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-green-600">✓</span>
-                <span><strong>Personalized:</strong> Auto-fills YOUR state&apos;s senators & officials</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-green-600">✓</span>
-                <span><strong>Free to Start:</strong> 3 free tests, then unlock unlimited</span>
-              </div>
-            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </>
     );
   }
 
   // Test version selection screen
   if (showVersionSelect && !showZipPrompt && !showOptions) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8">
-        <div className="max-w-3xl mx-auto">
-          <button
-            onClick={() => setShowVersionSelect(false)}
-            className="flex items-center text-blue-700 hover:text-blue-900 font-bold mb-6 bg-white px-4 py-2 rounded-lg shadow-md"
-          >
-            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
+      <>
+        <AppHeader
+          title="Choose Version"
+          showBack={true}
+          onBackClick={() => setShowVersionSelect(false)}
+        />
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
+          <div className="max-w-2xl mx-auto">
 
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border-t-4 border-blue-600">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-900">
-              Which Test Version?
-            </h2>
-            <p className="text-gray-600 mb-6">Select based on your N-400 filing date</p>
-
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg p-4 mb-6">
-              <p className="text-sm font-bold text-yellow-900 mb-2">📅 Important: Choose Correctly!</p>
-              <p className="text-sm text-yellow-800">
-                The test version depends on when you filed Form N-400 (Application for Naturalization).
-                The transition date is <strong>October 20, 2025</strong>.
-              </p>
+            {/* Info Alert */}
+            <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <span className="text-yellow-600 dark:text-yellow-400 text-xl flex-shrink-0">📅</span>
+                <div>
+                  <p className="text-sm font-bold text-yellow-900 dark:text-yellow-200 mb-1">Choose based on your filing date</p>
+                  <p className="text-xs text-yellow-800 dark:text-yellow-300">
+                    Filed <strong>before Oct 20, 2025</strong> → 2008 version<br/>
+                    Filed <strong>on/after Oct 20, 2025</strong> → 2025 version
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <button
-                onClick={() => handleVersionSelect('2008')}
-                className="w-full p-6 border-2 border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      2008 Test (100 Questions)
-                    </h3>
-                    <p className="text-gray-700 mb-3">
-                      Filed N-400 <strong>before October 20, 2025</strong>
-                    </p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• 100 possible questions</li>
-                      <li>• Asked 10 questions in interview</li>
-                      <li>• Must answer 6 correctly to pass</li>
-                    </ul>
-                  </div>
-                  <svg className="w-6 h-6 text-gray-400 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </button>
-
+            {/* Version Cards */}
+            <div className="space-y-4 mb-6">
+              {/* 2025 Version (Featured) */}
               <button
                 onClick={() => handleVersionSelect('2025')}
-                className="w-full p-6 border-2 border-blue-500 bg-blue-50 rounded-xl hover:border-blue-600 hover:bg-blue-100 transition-all text-left"
+                className="w-full bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl p-6 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-left"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-xl font-bold text-gray-900">
-                        2025 Test (128 Questions)
-                      </h3>
-                      <span className="px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded">NEW</span>
-                    </div>
-                    <p className="text-gray-700 mb-3">
-                      Filed N-400 <strong>on or after October 20, 2025</strong>
-                    </p>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• 128 possible questions</li>
-                      <li>• Asked 20 questions in interview</li>
-                      <li>• Must answer 12 correctly to pass (60%)</li>
-                    </ul>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-2xl font-bold">2025 Test</h3>
+                    <span className="px-2 py-1 bg-white/20 backdrop-blur-sm text-xs font-bold rounded">NEW</span>
                   </div>
-                  <svg className="w-6 h-6 text-blue-600 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
+                </div>
+                <div className="space-y-2 text-sm text-white/90">
+                  <p className="font-semibold">Filed on/after October 20, 2025</p>
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    <div className="bg-white/10 rounded-lg p-2 text-center">
+                      <div className="font-bold text-lg">128</div>
+                      <div className="text-xs opacity-80">Questions</div>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-2 text-center">
+                      <div className="font-bold text-lg">20</div>
+                      <div className="text-xs opacity-80">Asked</div>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-2 text-center">
+                      <div className="font-bold text-lg">12</div>
+                      <div className="text-xs opacity-80">To pass</div>
+                    </div>
+                  </div>
+                </div>
+              </button>
+
+              {/* 2008 Version */}
+              <button
+                onClick={() => handleVersionSelect('2008')}
+                className="w-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-6 transition-all shadow-md hover:shadow-lg text-left"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">2008 Test</h3>
+                  <svg className="w-6 h-6 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <div className="space-y-2 text-sm text-gray-600 dark:text-slate-400">
+                  <p className="font-semibold text-gray-700 dark:text-slate-300">Filed before October 20, 2025</p>
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-2 text-center">
+                      <div className="font-bold text-lg text-gray-900 dark:text-white">100</div>
+                      <div className="text-xs">Questions</div>
+                    </div>
+                    <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-2 text-center">
+                      <div className="font-bold text-lg text-gray-900 dark:text-white">10</div>
+                      <div className="text-xs">Asked</div>
+                    </div>
+                    <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-2 text-center">
+                      <div className="font-bold text-lg text-gray-900 dark:text-white">6</div>
+                      <div className="text-xs">To pass</div>
+                    </div>
+                  </div>
                 </div>
               </button>
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded-r-lg">
-              <p className="text-sm text-blue-900">
-                <strong>Not sure when you filed?</strong> Check your N-400 receipt notice or contact USCIS.
-                If you haven&apos;t filed yet, you&apos;ll likely take the 2025 test.
+            {/* Help Text */}
+            <div className="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
+              <p className="text-xs text-gray-600 dark:text-slate-400 text-center">
+                <strong className="text-gray-900 dark:text-white">Not sure?</strong> Check your N-400 receipt notice or contact USCIS
               </p>
             </div>
+
           </div>
-        </div>
-      </main>
+        </main>
+      </>
     );
   }
 
@@ -699,7 +691,12 @@ export default function Home() {
     const effectiveTestSize = Math.min(testSize, availableQuestions);
 
     return (
-      <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 p-4 sm:p-8">
+      <>
+        <AppHeader title="Customize Your Test" showBack={true} onBackClick={() => {
+          setShowOptions(false);
+          setShowVersionSelect(true);
+        }} />
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
         <PaywallModal
           isOpen={showPaywall}
           onClose={() => setShowPaywall(false)}
@@ -707,144 +704,140 @@ export default function Home() {
         />
 
         <div className="max-w-2xl mx-auto">
-          <button
-            onClick={() => {
-              setShowOptions(false);
-              setShowVersionSelect(true);
-            }}
-            className="flex items-center text-blue-700 hover:text-blue-900 font-bold mb-6 bg-white px-4 py-2 rounded-lg shadow-md"
-          >
-            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back
-          </button>
+          {/* Version Badge */}
+          <div className="mb-4">
+            <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white text-sm font-bold rounded-xl shadow-md">
+              {testVersion === '2025' ? '2025 Test Version' : '2008 Test Version'}
+            </span>
+          </div>
 
-          <div className="bg-white rounded-xl shadow-2xl p-6 sm:p-8 border-t-4 border-blue-600">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Customize Your Test
-              </h2>
-              <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-bold rounded-lg">
-                {testVersion === '2025' ? '2025 Version' : '2008 Version'}
-              </span>
+          {/* Personalization Status */}
+          {hasPersonalInfo ? (
+            <div className="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-green-600 dark:text-green-400 text-xl flex-shrink-0">✓</span>
+                <div>
+                  <p className="text-sm font-bold text-green-900 dark:text-green-200 mb-1">Personalized test enabled</p>
+                  <p className="text-xs text-green-800 dark:text-green-300">
+                    {userInfo.city}, {userInfo.state} • All questions available
+                  </p>
+                </div>
+              </div>
             </div>
-
-            {hasPersonalInfo ? (
-              <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
-                <p className="text-sm font-bold text-green-900 mb-1">✓ Personalized test enabled</p>
-                <p className="text-sm text-green-800">
-                  {userInfo.city}, {userInfo.state} • All questions available
-                </p>
+          ) : (
+            <div className="mb-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-blue-600 dark:text-blue-400 text-xl flex-shrink-0">💡</span>
+                <div>
+                  <p className="text-sm font-bold text-blue-900 dark:text-blue-200 mb-1">Tip: Personalize state questions</p>
+                  <p className="text-xs text-blue-800 dark:text-blue-300">
+                    We&apos;ll ask for your ZIP code if a question about YOUR state appears.
+                  </p>
+                </div>
               </div>
-            ) : (
-              <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-600 rounded-r-lg">
-                <p className="text-sm font-bold text-blue-900 mb-1">💡 Tip: Personalize state questions</p>
-                <p className="text-sm text-blue-800">
-                  We&apos;ll ask for your ZIP code if a question about YOUR state appears.
-                  <Link href="/settings" className="ml-1 underline font-semibold text-blue-900">
-                    Or add it now in Settings
-                  </Link>
-                </p>
-              </div>
-            )}
-
-            <div className="mb-6">
-              <label className="block text-base font-bold text-gray-900 mb-3">
-                Category
-              </label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  const newCategory = e.target.value;
-                  setSelectedCategory(newCategory);
-                  // Calculate available questions for new category
-                  const newFilteredQuestions = newCategory === 'all'
-                    ? questionSet
-                    : questionSet.filter(q => q.category === newCategory);
-                  const newAvailableQuestions = newFilteredQuestions.length;
-                  // Set testSize to min of current size and available questions
-                  setTestSize(Math.min(testSize, newAvailableQuestions));
-                }}
-                className="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none text-gray-900 font-medium bg-white"
-              >
-                <option value="all">All Categories ({questionSet.length} questions)</option>
-                {categories.filter(c => c !== 'all').map(cat => (
-                  <option key={cat} value={cat}>
-                    {cat} ({categoryQuestionCounts[cat]} questions)
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-600 mt-2">
-                💡 &quot;All Categories&quot; recommended for realistic test simulation
-              </p>
             </div>
+          )}
 
-            <div className="mb-6">
-              <label className="block text-base font-bold text-gray-900 mb-3">
-                Number of Questions
-                {availableQuestions < testSize && (
-                  <span className="ml-2 text-sm font-normal text-orange-600">
-                    (Only {availableQuestions} available in this category)
-                  </span>
-                )}
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[10, 20, 50, 100].map(num => {
-                  const isDisabled = num > availableQuestions;
-                  const isSelected = testSize === num;
+          {/* Category Selection Card */}
+          <div className="mb-4 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-slate-700">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+              📚 Category
+            </label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                const newCategory = e.target.value;
+                setSelectedCategory(newCategory);
+                // Calculate available questions for new category
+                const newFilteredQuestions = newCategory === 'all'
+                  ? questionSet
+                  : questionSet.filter(q => q.category === newCategory);
+                const newAvailableQuestions = newFilteredQuestions.length;
+                // Set testSize to min of current size and available questions
+                setTestSize(Math.min(testSize, newAvailableQuestions));
+              }}
+              className="w-full p-3 border-2 border-gray-300 dark:border-slate-600 rounded-xl focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none text-gray-900 dark:text-white font-medium bg-white dark:bg-slate-700 text-sm"
+            >
+              <option value="all">All Categories ({questionSet.length} questions)</option>
+              {categories.filter(c => c !== 'all').map(cat => (
+                <option key={cat} value={cat}>
+                  {cat} ({categoryQuestionCounts[cat]} questions)
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-600 dark:text-slate-400 mt-2">
+              💡 &quot;All Categories&quot; recommended for realistic test simulation
+            </p>
+          </div>
 
-                  return (
-                    <button
-                      key={num}
-                      onClick={() => setTestSize(num)}
-                      disabled={isDisabled}
-                      className={`p-4 rounded-lg border-2 font-bold text-lg transition-all ${
-                        isSelected
-                          ? 'border-blue-600 bg-blue-600 text-white shadow-lg'
-                          : isDisabled
-                          ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
-                          : 'border-gray-300 text-gray-900 hover:border-blue-400 hover:bg-blue-50'
-                      }`}
-                    >
-                      {num}
-                    </button>
-                  );
-                })}
-              </div>
+          {/* Test Size Selection Card */}
+          <div className="mb-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-slate-700">
+            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+              🔢 Number of Questions
+              {availableQuestions < testSize && (
+                <span className="ml-2 text-xs font-normal text-orange-600 dark:text-orange-400">
+                  (Only {availableQuestions} available)
+                </span>
+              )}
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {[10, 20, 50, 100].map(num => {
+                const isDisabled = num > availableQuestions;
+                const isSelected = testSize === num;
+
+                return (
+                  <button
+                    key={num}
+                    onClick={() => setTestSize(num)}
+                    disabled={isDisabled}
+                    className={`p-3 rounded-xl border-2 font-bold text-base transition-all ${
+                      isSelected
+                        ? 'border-blue-600 dark:border-blue-500 bg-blue-600 dark:bg-blue-700 text-white shadow-lg'
+                        : isDisabled
+                        ? 'border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed'
+                        : 'border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {num}
+                  </button>
+                );
+              })}
             </div>
 
             {availableQuestions < testSize && (
-              <div className="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
-                <p className="text-sm font-bold text-yellow-900 mb-1">⚠️ Limited Questions</p>
-                <p className="text-sm text-yellow-800">
+              <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                <p className="text-xs font-bold text-yellow-900 dark:text-yellow-200 mb-1">⚠️ Limited Questions</p>
+                <p className="text-xs text-yellow-800 dark:text-yellow-300">
                   This category only has {availableQuestions} question{availableQuestions !== 1 ? 's' : ''}.
-                  Your test will include all {availableQuestions} question{availableQuestions !== 1 ? 's' : ''} instead of {testSize}.
+                  Your test will include all {availableQuestions}.
                 </p>
               </div>
             )}
+          </div>
 
-            <button
-              onClick={handleBeginTest}
-              className="w-full py-4 bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 text-white rounded-lg text-lg font-bold hover:shadow-xl transition-all shadow-md"
-            >
-              Begin Test ({effectiveTestSize} question{effectiveTestSize !== 1 ? 's' : ''})
-            </button>
+          {/* Begin Test Button */}
+          <button
+            onClick={handleBeginTest}
+            className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl text-base font-bold hover:shadow-xl transition-all shadow-lg mb-4"
+          >
+            Begin Test ({effectiveTestSize} question{effectiveTestSize !== 1 ? 's' : ''})
+          </button>
 
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-600">
-              <p className="text-sm text-gray-900 font-semibold">
-                📝 You need {Math.ceil(effectiveTestSize * 0.6)}/{effectiveTestSize} correct to pass (60%)
-              </p>
-            </div>
+          {/* Passing Info */}
+          <div className="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
+            <p className="text-xs text-gray-900 dark:text-white font-semibold text-center">
+              📝 You need {Math.ceil(effectiveTestSize * 0.6)}/{effectiveTestSize} correct to pass (60%)
+            </p>
           </div>
         </div>
       </main>
+      </>
     );
   }
 
   // Test in progress
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 py-4 sm:py-8 pb-20">
+    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-4 sm:py-8 pb-20">
       <QuitModal
         isOpen={showQuitModal}
         onClose={() => setShowQuitModal(false)}
@@ -866,7 +859,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4">
           <button
             onClick={handleBack}
-            className="flex items-center text-blue-700 hover:text-blue-900 font-bold text-sm sm:text-base bg-white px-4 py-2 rounded-lg shadow-md"
+            className="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-bold text-sm sm:text-base bg-white dark:bg-slate-800 px-4 py-2 rounded-lg shadow-md"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

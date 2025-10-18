@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ResultsScreen from '@/components/ResultsScreen';
+import AppHeader from '@/components/AppHeader';
 
 export default function Stats() {
   const [results, setResults] = useState([]);
@@ -115,74 +116,63 @@ export default function Stats() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 pb-20">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 text-white py-6 px-4 sm:px-6 shadow-lg">
-        <div className="max-w-4xl mx-auto">
-          <Link 
-            href="/"
-            className="inline-flex items-center text-white hover:text-blue-100 mb-4 font-semibold"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Home
-          </Link>
-          <h1 className="text-3xl sm:text-4xl font-bold">Your Progress</h1>
-        </div>
-      </div>
+    <>
+      <AppHeader title="Your Progress" showBack={true} backHref="/" />
+      <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 pb-20">
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         
         {results.length === 0 ? (
           // Empty state
-          <div className="bg-white rounded-xl shadow-xl p-8 sm:p-12 text-center border-t-4 border-blue-600">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-8 sm:p-12 text-center border-t-4 border-blue-600 dark:border-blue-500">
             <div className="text-6xl mb-4">📊</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">No tests taken yet</h2>
-            <p className="text-gray-700 mb-6 font-medium">Start your first practice test to see your progress here!</p>
-            <Link 
-              href="/"
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tests taken yet</h2>
+            <p className="text-gray-700 dark:text-slate-300 mb-6 font-medium">Start your first practice test to see your progress here!</p>
+            <button
+              onClick={() => {
+                window.location.href = '/?startTest=true';
+              }}
               className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-md"
             >
               Take Your First Test
-            </Link>
+            </button>
           </div>
         ) : (
           <>
             {/* Summary Stats */}
-            <div className="bg-white rounded-xl shadow-xl p-6 sm:p-8 mb-6 border-t-4 border-blue-600">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">Overview</h2>
-              
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6 sm:p-8 mb-6 border-t-4 border-blue-600 dark:border-blue-500">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Overview</h2>
+
               {/* Main stat - Average Score */}
-              <div className="text-center mb-6 pb-6 border-b">
-                <div className="text-sm text-gray-700 font-semibold mb-1">Average Score</div>
-                <div className="text-5xl sm:text-6xl font-bold text-blue-600">{stats.averageScore}%</div>
+              <div className="text-center mb-6 pb-6 border-b dark:border-slate-700">
+                <div className="text-sm text-gray-700 dark:text-slate-300 font-semibold mb-1">Average Score</div>
+                <div className="text-5xl sm:text-6xl font-bold text-blue-600 dark:text-blue-400">{stats.averageScore}%</div>
               </div>
 
               {/* Grid of stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">{stats.totalTests}</div>
-                  <div className="text-xs sm:text-sm text-gray-700 font-semibold">Tests Taken</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{stats.totalTests}</div>
+                  <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 font-semibold">Tests Taken</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-green-600">{stats.passed}</div>
-                  <div className="text-xs sm:text-sm text-gray-700 font-semibold">Passed</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">{stats.passed}</div>
+                  <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 font-semibold">Passed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-red-600">{stats.failed}</div>
-                  <div className="text-xs sm:text-sm text-gray-700 font-semibold">Failed</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-400">{stats.failed}</div>
+                  <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 font-semibold">Failed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-purple-600">{stats.bestScore}%</div>
-                  <div className="text-xs sm:text-sm text-gray-700 font-semibold">Best Score</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.bestScore}%</div>
+                  <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 font-semibold">Best Score</div>
                 </div>
               </div>
 
               {/* Streak */}
               {stats.streak > 0 && (
-                <div className="mt-6 pt-6 border-t text-center">
-                  <div className="inline-flex items-center bg-orange-100 text-orange-800 px-4 py-2 rounded-full">
+                <div className="mt-6 pt-6 border-t dark:border-slate-700 text-center">
+                  <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 px-4 py-2 rounded-full">
                     <span className="text-2xl mr-2">🔥</span>
                     <span className="font-bold">{stats.streak} day{stats.streak !== 1 ? 's' : ''} streak!</span>
                   </div>
@@ -191,39 +181,39 @@ export default function Stats() {
             </div>
 
             {/* Past Results List */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden border-t-4 border-red-600">
-              <div className="p-4 sm:p-6 border-b flex items-center justify-between bg-gray-50">
-                <h2 className="text-xl font-bold text-gray-900">Past Results</h2>
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl overflow-hidden border-t-4 border-red-600 dark:border-red-500">
+              <div className="p-4 sm:p-6 border-b dark:border-slate-700 flex items-center justify-between bg-gray-50 dark:bg-slate-700/50">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Past Results</h2>
                 <button
                   onClick={clearAllResults}
-                  className="text-sm text-red-700 hover:text-red-900 font-bold"
+                  className="text-sm text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-bold"
                 >
                   Clear All
                 </button>
               </div>
 
-              <div className="divide-y">
+              <div className="divide-y dark:divide-slate-700">
                 {results.map((result, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedResult(result)}
-                    className="w-full p-4 sm:p-6 hover:bg-blue-50 transition-colors text-left cursor-pointer group"
+                    className="w-full p-4 sm:p-6 hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-colors text-left cursor-pointer group"
                   >
                     <div className="flex items-center justify-between">
                       {/* Left side - Score and status */}
                       <div className="flex items-center gap-4">
-                        <div 
+                        <div
                           className={`w-1 h-16 rounded-full ${
                             result.passed ? 'bg-green-500' : 'bg-red-500'
                           }`}
                         />
-                        
+
                         <div>
-                          <div className="text-2xl sm:text-3xl font-bold text-gray-900">
+                          <div className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                             {result.percentage}%
                           </div>
                           <div className={`text-sm font-bold ${
-                            result.passed ? 'text-green-700' : 'text-red-700'
+                            result.passed ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
                           }`}>
                             {result.passed ? 'Passed' : 'Failed'}
                           </div>
@@ -232,18 +222,18 @@ export default function Stats() {
 
                       {/* Right side - Details */}
                       <div className="text-right">
-                        <div className="font-bold text-gray-900">
+                        <div className="font-bold text-gray-900 dark:text-white">
                           {result.score} out of {result.total}
                         </div>
-                        <div className="text-sm text-gray-700 font-medium">
+                        <div className="text-sm text-gray-700 dark:text-slate-300 font-medium">
                           {formatDate(result.date)}
                         </div>
                         {result.category && result.category !== 'all' && (
-                          <div className="text-xs text-gray-600 mt-1 font-medium">
+                          <div className="text-xs text-gray-600 dark:text-slate-400 mt-1 font-medium">
                             {result.category}
                           </div>
                         )}
-                        <div className="text-xs text-blue-600 font-semibold mt-1 group-hover:underline">
+                        <div className="text-xs text-blue-600 dark:text-blue-400 font-semibold mt-1 group-hover:underline">
                           Click to view details →
                         </div>
                       </div>
@@ -254,14 +244,14 @@ export default function Stats() {
             </div>
 
             {/* Tips based on performance */}
-            <div className="mt-6 bg-blue-50 border-l-4 border-blue-600 rounded-r-lg p-4 sm:p-6">
-              <h3 className="font-bold text-blue-900 mb-2 flex items-center">
+            <div className="mt-6 bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600 dark:border-blue-500 rounded-r-lg p-4 sm:p-6">
+              <h3 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
                 Tips for Improvement
               </h3>
-              <div className="text-sm text-blue-900 font-medium space-y-1">
+              <div className="text-sm text-blue-900 dark:text-blue-100 font-medium space-y-1">
                 {stats.averageScore < 60 && (
                   <p>• Your average is below passing. Focus on studying all questions first.</p>
                 )}
@@ -282,5 +272,6 @@ export default function Stats() {
         )}
       </div>
     </main>
+    </>
   );
 }

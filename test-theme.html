@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+</head>
+<body class="bg-white dark:bg-slate-900 text-gray-900 dark:text-white min-h-screen p-8">
+  <h1 class="text-3xl font-bold mb-4">Theme Toggle Test</h1>
+
+  <button
+    onclick="toggleTheme()"
+    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+  >
+    Toggle Theme
+  </button>
+
+  <div class="mt-4 p-4 border rounded">
+    <p>Current classes on html: <span id="classes"></span></p>
+    <p>LocalStorage theme: <span id="storage"></span></p>
+  </div>
+
+  <script>
+    function updateDisplay() {
+      document.getElementById('classes').textContent = document.documentElement.className;
+      document.getElementById('storage').textContent = localStorage.getItem('theme') || 'not set';
+    }
+
+    function toggleTheme() {
+      
+      const html = document.documentElement;
+      const isDark = html.classList.contains('dark');
+
+      if (isDark) {
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+
+      updateDisplay();
+    }
+
+    // Initialize
+    updateDisplay();
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+    updateDisplay();
+  </script>
+</body>
+</html>
