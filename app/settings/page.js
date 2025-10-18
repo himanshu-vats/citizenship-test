@@ -87,9 +87,9 @@ export default function Settings() {
   };
 
   return (
-    <>
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900">
       <AppHeader title="Settings" showBack={true} backHref="/" />
-      <main className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900 p-4 pb-20">
+      <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 border-t-4 border-blue-600 dark:border-blue-500">
             <div className="flex items-center mb-6">
@@ -274,7 +274,7 @@ export default function Settings() {
           </section>
         </div>
       </div>
-    </main>
-    </>
+      </main>
+    </div>
   );
 }

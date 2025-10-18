@@ -116,11 +116,10 @@ export default function Stats() {
   }
 
   return (
-    <>
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
       <AppHeader title="Your Progress" showBack={true} backHref="/" />
-      <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 pb-20">
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
+      <div className="max-w-4xl mx-auto">
         
         {results.length === 0 ? (
           // Empty state
@@ -271,7 +270,7 @@ export default function Stats() {
           </>
         )}
       </div>
-    </main>
-    </>
+      </main>
+    </div>
   );
 }

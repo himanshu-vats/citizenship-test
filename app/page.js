@@ -318,20 +318,20 @@ export default function Home() {
   // Home screen
   if (!testStarted && !showResults && !showOptions && !showVersionSelect && !showZipPrompt) {
     return (
-      <>
+      <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         <AppHeader showBack={false} />
-        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
-          <div className="max-w-2xl mx-auto">
+        <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
+          <div className="max-w-2xl mx-auto h-full flex flex-col justify-center">
 
             {/* Hero Section */}
-            <div className="text-center mb-4 pt-4">
-              <div className="mx-auto mb-6">
-                <span className="text-9xl sm:text-[10rem] md:text-[12rem]">🗽</span>
+            <div className="text-center mb-2">
+              <div className="mx-auto mb-2">
+                <span className="text-5xl">🗽</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-3 leading-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white mb-1 leading-tight">
                 US Citizenship Test
               </h1>
-              <p className="text-gray-600 dark:text-slate-400 text-base sm:text-lg font-medium max-w-md mx-auto">
+              <p className="text-gray-600 dark:text-slate-400 text-xs font-medium max-w-md mx-auto">
                 Official USCIS questions • 2008 & 2025 versions
               </p>
             </div>
@@ -339,20 +339,20 @@ export default function Home() {
             {/* Primary Action - Study Mode (Hero CTA) */}
             <Link
               href="/study"
-              className="block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 mb-4 overflow-hidden"
+              className="block bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-2 overflow-hidden"
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <span className="text-3xl">📚</span>
+              <div className="p-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
+                      <span className="text-xl">📚</span>
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-white text-xl">Study Mode</div>
-                      <div className="text-blue-100 text-sm">Learn before you test</div>
+                      <div className="font-bold text-white text-sm">Study Mode</div>
+                      <div className="text-blue-100 text-xs">Learn before you test</div>
                     </div>
                   </div>
-                  <svg className="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -360,35 +360,35 @@ export default function Home() {
             </Link>
 
             {/* Secondary Actions Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-2 gap-2 mb-2">
               {/* Practice Test */}
               <button
                 onClick={handleStartTest}
-                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 rounded-2xl transition-all shadow-md hover:shadow-lg p-5 text-center group relative"
+                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 rounded-xl transition-all shadow-md hover:shadow-lg p-3 text-center group relative"
               >
-                <div className="text-4xl mb-2">✍️</div>
-                <div className="font-bold text-gray-900 dark:text-white text-base mb-1">Practice Test</div>
+                <div className="text-2xl mb-1">✍️</div>
+                <div className="font-bold text-gray-900 dark:text-white text-xs mb-0.5">Practice Test</div>
                 <div className="text-xs text-gray-600 dark:text-slate-400">Take a quiz</div>
               </button>
 
               {/* Stats */}
               <Link
                 href="/stats"
-                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-green-400 dark:hover:border-green-500 rounded-2xl transition-all shadow-md hover:shadow-lg p-5 text-center group"
+                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-green-400 dark:hover:border-green-500 rounded-xl transition-all shadow-md hover:shadow-lg p-3 text-center group"
               >
-                <div className="text-4xl mb-2">📊</div>
-                <div className="font-bold text-gray-900 dark:text-white text-base mb-1">Your Stats</div>
+                <div className="text-2xl mb-1">📊</div>
+                <div className="font-bold text-gray-900 dark:text-white text-xs mb-0.5">Your Stats</div>
                 <div className="text-xs text-gray-600 dark:text-slate-400">View progress</div>
               </Link>
             </div>
 
             {/* Quick Stats (if user has history) */}
             {testCount > 0 && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 mb-6 border border-green-200 dark:border-green-800">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-2 mb-2 border border-green-200 dark:border-green-800">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600 dark:text-green-400 text-xl">🎯</span>
-                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                    <span className="text-green-600 dark:text-green-400 text-lg">🎯</span>
+                    <span className="text-xs font-semibold text-gray-900 dark:text-white">
                       {testCount} test{testCount !== 1 ? 's' : ''} completed
                     </span>
                   </div>
@@ -405,17 +405,17 @@ export default function Home() {
             {/* Settings Quick Access */}
             <Link
               href="/settings"
-              className="block bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-xl p-4 transition-all border border-gray-200 dark:border-slate-700"
+              className="block bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg p-2 transition-all border border-gray-200 dark:border-slate-700"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">⚙️</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">⚙️</span>
                   <div>
-                    <div className="text-sm font-semibold text-gray-900 dark:text-white">Settings</div>
+                    <div className="text-xs font-semibold text-gray-900 dark:text-white">Settings</div>
                     <div className="text-xs text-gray-600 dark:text-slate-400">Version, ZIP code & more</div>
                   </div>
                 </div>
-                <svg className="w-5 h-5 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -423,67 +423,64 @@ export default function Home() {
 
           </div>
         </main>
-      </>
+      </div>
     );
   }
 
   // Test version selection screen
   if (showVersionSelect && !showZipPrompt && !showOptions) {
     return (
-      <>
+      <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         <AppHeader
           title="Choose Version"
           showBack={true}
           onBackClick={() => setShowVersionSelect(false)}
         />
-        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
-          <div className="max-w-2xl mx-auto">
+        <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
+          <div className="max-w-2xl mx-auto h-full flex flex-col justify-center">
 
             {/* Info Alert */}
-            <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-xl p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <span className="text-yellow-600 dark:text-yellow-400 text-xl flex-shrink-0">📅</span>
+            <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg p-2 mb-2">
+              <div className="flex items-start gap-2">
+                <span className="text-yellow-600 dark:text-yellow-400 text-base flex-shrink-0">📅</span>
                 <div>
-                  <p className="text-sm font-bold text-yellow-900 dark:text-yellow-200 mb-1">Choose based on your filing date</p>
+                  <p className="text-xs font-bold text-yellow-900 dark:text-yellow-200 mb-0.5">Choose based on your filing date</p>
                   <p className="text-xs text-yellow-800 dark:text-yellow-300">
-                    Filed <strong>before Oct 20, 2025</strong> → 2008 version<br/>
-                    Filed <strong>on/after Oct 20, 2025</strong> → 2025 version
+                    Before Oct 20, 2025 → 2008 • On/After Oct 20 → 2025
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Version Cards */}
-            <div className="space-y-4 mb-6">
+            <div className="space-y-2 mb-2">
               {/* 2025 Version (Featured) */}
               <button
                 onClick={() => handleVersionSelect('2025')}
-                className="w-full bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl p-6 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-left"
+                className="w-full bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl p-3 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-left"
               >
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-2xl font-bold">2025 Test</h3>
-                    <span className="px-2 py-1 bg-white/20 backdrop-blur-sm text-xs font-bold rounded">NEW</span>
+                    <h3 className="text-base font-bold">2025 Test</h3>
+                    <span className="px-1.5 py-0.5 bg-white/20 backdrop-blur-sm text-xs font-bold rounded">NEW</span>
                   </div>
-                  <svg className="w-6 h-6 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
-                <div className="space-y-2 text-sm text-white/90">
-                  <p className="font-semibold">Filed on/after October 20, 2025</p>
-                  <div className="grid grid-cols-3 gap-2 pt-2">
-                    <div className="bg-white/10 rounded-lg p-2 text-center">
-                      <div className="font-bold text-lg">128</div>
-                      <div className="text-xs opacity-80">Questions</div>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-2 text-center">
-                      <div className="font-bold text-lg">20</div>
-                      <div className="text-xs opacity-80">Asked</div>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-2 text-center">
-                      <div className="font-bold text-lg">12</div>
-                      <div className="text-xs opacity-80">To pass</div>
-                    </div>
+                <div className="text-xs text-white/90 mb-2">Filed on/after October 20, 2025</div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-white/10 rounded-lg p-1.5 text-center">
+                    <div className="font-bold text-sm">128</div>
+                    <div className="text-xs opacity-80">Questions</div>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-1.5 text-center">
+                    <div className="font-bold text-sm">20</div>
+                    <div className="text-xs opacity-80">Asked</div>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-1.5 text-center">
+                    <div className="font-bold text-sm">12</div>
+                    <div className="text-xs opacity-80">To pass</div>
                   </div>
                 </div>
               </button>
@@ -491,44 +488,42 @@ export default function Home() {
               {/* 2008 Version */}
               <button
                 onClick={() => handleVersionSelect('2008')}
-                className="w-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 rounded-2xl p-6 transition-all shadow-md hover:shadow-lg text-left"
+                className="w-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 transition-all shadow-md hover:shadow-lg text-left"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">2008 Test</h3>
-                  <svg className="w-6 h-6 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">2008 Test</h3>
+                  <svg className="w-4 h-4 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-slate-400">
-                  <p className="font-semibold text-gray-700 dark:text-slate-300">Filed before October 20, 2025</p>
-                  <div className="grid grid-cols-3 gap-2 pt-2">
-                    <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-2 text-center">
-                      <div className="font-bold text-lg text-gray-900 dark:text-white">100</div>
-                      <div className="text-xs">Questions</div>
-                    </div>
-                    <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-2 text-center">
-                      <div className="font-bold text-lg text-gray-900 dark:text-white">10</div>
-                      <div className="text-xs">Asked</div>
-                    </div>
-                    <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-2 text-center">
-                      <div className="font-bold text-lg text-gray-900 dark:text-white">6</div>
-                      <div className="text-xs">To pass</div>
-                    </div>
+                <div className="text-xs text-gray-600 dark:text-slate-400 mb-2">Filed before October 20, 2025</div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-1.5 text-center">
+                    <div className="font-bold text-sm text-gray-900 dark:text-white">100</div>
+                    <div className="text-xs text-gray-600 dark:text-slate-400">Questions</div>
+                  </div>
+                  <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-1.5 text-center">
+                    <div className="font-bold text-sm text-gray-900 dark:text-white">10</div>
+                    <div className="text-xs text-gray-600 dark:text-slate-400">Asked</div>
+                  </div>
+                  <div className="bg-gray-100 dark:bg-slate-700 rounded-lg p-1.5 text-center">
+                    <div className="font-bold text-sm text-gray-900 dark:text-white">6</div>
+                    <div className="text-xs text-gray-600 dark:text-slate-400">To pass</div>
                   </div>
                 </div>
               </button>
             </div>
 
             {/* Help Text */}
-            <div className="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
+            <div className="bg-gray-50 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-slate-700">
               <p className="text-xs text-gray-600 dark:text-slate-400 text-center">
-                <strong className="text-gray-900 dark:text-white">Not sure?</strong> Check your N-400 receipt notice or contact USCIS
+                <strong className="text-gray-900 dark:text-white">Not sure?</strong> Check your N-400 receipt notice
               </p>
             </div>
 
           </div>
         </main>
-      </>
+      </div>
     );
   }
 
@@ -669,27 +664,27 @@ export default function Home() {
     const effectiveTestSize = Math.min(testSize, availableQuestions);
 
     return (
-      <>
+      <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
         <AppHeader title="Customize Your Test" showBack={true} onBackClick={() => {
           setShowOptions(false);
           setShowVersionSelect(true);
         }} />
-        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6">
-        <div className="max-w-2xl mx-auto">
+        <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
+        <div className="max-w-2xl mx-auto h-full flex flex-col justify-center">
           {/* Version Badge */}
-          <div className="mb-4">
-            <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white text-sm font-bold rounded-xl shadow-md">
+          <div className="mb-2">
+            <span className="inline-block px-3 py-1 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white text-xs font-bold rounded-lg shadow-md">
               {testVersion === '2025' ? '2025 Test Version' : '2008 Test Version'}
             </span>
           </div>
 
           {/* Personalization Status */}
           {hasPersonalInfo ? (
-            <div className="mb-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-xl p-4">
-              <div className="flex items-start gap-3">
-                <span className="text-green-600 dark:text-green-400 text-xl flex-shrink-0">✓</span>
+            <div className="mb-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-2">
+              <div className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 text-base flex-shrink-0">✓</span>
                 <div>
-                  <p className="text-sm font-bold text-green-900 dark:text-green-200 mb-1">Personalized test enabled</p>
+                  <p className="text-xs font-bold text-green-900 dark:text-green-200 mb-0.5">Personalized test enabled</p>
                   <p className="text-xs text-green-800 dark:text-green-300">
                     {userInfo.city}, {userInfo.state} • All questions available
                   </p>
@@ -697,11 +692,11 @@ export default function Home() {
               </div>
             </div>
           ) : (
-            <div className="mb-6 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-xl p-4">
-              <div className="flex items-start gap-3">
-                <span className="text-blue-600 dark:text-blue-400 text-xl flex-shrink-0">💡</span>
+            <div className="mb-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-2">
+              <div className="flex items-start gap-2">
+                <span className="text-blue-600 dark:text-blue-400 text-base flex-shrink-0">💡</span>
                 <div>
-                  <p className="text-sm font-bold text-blue-900 dark:text-blue-200 mb-1">Tip: Personalize state questions</p>
+                  <p className="text-xs font-bold text-blue-900 dark:text-blue-200 mb-0.5">Tip: Personalize state questions</p>
                   <p className="text-xs text-blue-800 dark:text-blue-300">
                     We&apos;ll ask for your ZIP code if a question about YOUR state appears.
                   </p>
@@ -711,8 +706,8 @@ export default function Home() {
           )}
 
           {/* Category Selection Card */}
-          <div className="mb-4 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-slate-700">
-            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+          <div className="mb-2 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-3 border border-gray-200 dark:border-slate-700">
+            <label className="block text-xs font-bold text-gray-900 dark:text-white mb-2">
               📚 Category
             </label>
             <select
@@ -728,7 +723,7 @@ export default function Home() {
                 // Set testSize to min of current size and available questions
                 setTestSize(Math.min(testSize, newAvailableQuestions));
               }}
-              className="w-full p-3 border-2 border-gray-300 dark:border-slate-600 rounded-xl focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none text-gray-900 dark:text-white font-medium bg-white dark:bg-slate-700 text-sm"
+              className="w-full p-2 border-2 border-gray-300 dark:border-slate-600 rounded-lg focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none text-gray-900 dark:text-white font-medium bg-white dark:bg-slate-700 text-xs"
             >
               <option value="all">All Categories ({questionSet.length} questions)</option>
               {categories.filter(c => c !== 'all').map(cat => (
@@ -737,14 +732,14 @@ export default function Home() {
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-600 dark:text-slate-400 mt-2">
+            <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
               💡 &quot;All Categories&quot; recommended for realistic test simulation
             </p>
           </div>
 
           {/* Test Size Selection Card */}
-          <div className="mb-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-slate-700">
-            <label className="block text-sm font-bold text-gray-900 dark:text-white mb-3">
+          <div className="mb-2 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-3 border border-gray-200 dark:border-slate-700">
+            <label className="block text-xs font-bold text-gray-900 dark:text-white mb-2">
               🔢 Number of Questions
               {availableQuestions < testSize && (
                 <span className="ml-2 text-xs font-normal text-orange-600 dark:text-orange-400">
@@ -762,7 +757,7 @@ export default function Home() {
                     key={num}
                     onClick={() => setTestSize(num)}
                     disabled={isDisabled}
-                    className={`p-3 rounded-xl border-2 font-bold text-base transition-all ${
+                    className={`p-2 rounded-lg border-2 font-bold text-sm transition-all ${
                       isSelected
                         ? 'border-blue-600 dark:border-blue-500 bg-blue-600 dark:bg-blue-700 text-white shadow-lg'
                         : isDisabled
@@ -777,8 +772,8 @@ export default function Home() {
             </div>
 
             {availableQuestions < testSize && (
-              <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg">
-                <p className="text-xs font-bold text-yellow-900 dark:text-yellow-200 mb-1">⚠️ Limited Questions</p>
+              <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                <p className="text-xs font-bold text-yellow-900 dark:text-yellow-200 mb-0.5">⚠️ Limited Questions</p>
                 <p className="text-xs text-yellow-800 dark:text-yellow-300">
                   This category only has {availableQuestions} question{availableQuestions !== 1 ? 's' : ''}.
                   Your test will include all {availableQuestions}.
@@ -790,26 +785,26 @@ export default function Home() {
           {/* Begin Test Button */}
           <button
             onClick={handleBeginTest}
-            className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl text-base font-bold hover:shadow-xl transition-all shadow-lg mb-4"
+            className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl text-sm font-bold hover:shadow-xl transition-all shadow-lg mb-2"
           >
             Begin Test ({effectiveTestSize} question{effectiveTestSize !== 1 ? 's' : ''})
           </button>
 
           {/* Passing Info */}
-          <div className="bg-gray-50 dark:bg-slate-800/50 rounded-xl p-4 border border-gray-200 dark:border-slate-700">
+          <div className="bg-gray-50 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-slate-700">
             <p className="text-xs text-gray-900 dark:text-white font-semibold text-center">
               📝 You need {Math.ceil(effectiveTestSize * 0.6)}/{effectiveTestSize} correct to pass (60%)
             </p>
           </div>
         </div>
       </main>
-      </>
+      </div>
     );
   }
 
   // Test in progress
   return (
-    <main className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-4 sm:py-8 pb-20">
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       <QuitModal
         isOpen={showQuitModal}
         onClose={() => setShowQuitModal(false)}
@@ -827,13 +822,14 @@ export default function Home() {
         />
       )}
 
+      <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
       {currentIndex > 0 && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-4">
+        <div className="max-w-4xl mx-auto mb-2">
           <button
             onClick={handleBack}
-            className="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-bold text-sm sm:text-base bg-white dark:bg-slate-800 px-4 py-2 rounded-lg shadow-md"
+            className="flex items-center text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-bold text-xs bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg shadow-md"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back to Previous Question
@@ -857,6 +853,7 @@ export default function Home() {
         hasSubmitted={hasSubmitted}
         score={score}
       />
-    </main>
+      </main>
+    </div>
   );
 }
