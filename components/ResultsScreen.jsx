@@ -18,7 +18,7 @@ export default function ResultsScreen({
 
   return (
     <>
-      <AppHeader title="Test Results" showBack={true} backHref="/" />
+      <AppHeader title="Test Results" showBack={true} onBackClick={onGoHome} />
       <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900 p-4 sm:p-8">
       <div className="max-w-3xl w-full mx-auto">
         {/* Main Results Card */}

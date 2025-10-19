@@ -36,7 +36,7 @@ export default function Question({
             onClick={onQuit}
             className="bg-red-600 dark:bg-red-700 text-white hover:bg-red-700 dark:hover:bg-red-600 font-bold text-xs px-3 py-1.5 rounded-lg shadow-md hover:shadow-lg transition-all"
           >
-            Quit Test
+            End Test
           </button>
         </div>
 

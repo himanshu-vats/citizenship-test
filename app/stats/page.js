@@ -185,7 +185,7 @@ export default function Stats() {
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Past Results</h2>
                 <button
                   onClick={clearAllResults}
-                  className="text-sm sm:text-base text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-bold"
+                  className="px-3 py-1.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 text-xs font-bold rounded-lg transition-colors"
                 >
                   Clear All
                 </button>
@@ -232,8 +232,8 @@ export default function Stats() {
                             {result.category}
                           </div>
                         )}
-                        <div className="text-xs text-blue-600 dark:text-blue-400 font-semibold mt-1 group-hover:underline">
-                          Click to view details →
+                        <div className="mt-2 inline-block bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-bold px-2 py-1 rounded-md group-hover:bg-blue-200 dark:group-hover:bg-blue-900">
+                          View Details
                         </div>
                       </div>
                     </div>

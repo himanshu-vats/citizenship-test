@@ -302,9 +302,12 @@ export default function StudyMode() {
       <main className="h-screen bg-white dark:bg-slate-900 flex flex-col overflow-hidden">
         {/* Compact Header with Theme Toggle */}
         <div className="border-b border-gray-200 dark:border-slate-700 flex-shrink-0">
-          <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
-            <Link href="/" className="text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white text-sm font-medium">
-              ← Back
+          <div className="max-w-5xl mx-auto px-3 py-2 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-all border border-gray-200 dark:border-slate-700">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
             </Link>
             <h1 className="text-base font-bold text-gray-900 dark:text-white">Study Mode</h1>
             <div className="w-12"></div> {/* Spacer */}
@@ -424,12 +427,12 @@ export default function StudyMode() {
       <div className="flex-shrink-0 px-3 py-2">
         <button
           onClick={handleExitStudy}
-          className="flex items-center gap-2 px-3 py-1.5 bg-white/90 dark:bg-slate-700/50 hover:bg-white dark:hover:bg-slate-700 text-gray-900 dark:text-white rounded-lg text-sm font-semibold transition-all backdrop-blur-sm border border-gray-200 dark:border-transparent shadow-sm"
+          className="bg-red-600 dark:bg-red-700 text-white hover:bg-red-700 dark:hover:bg-red-600 font-bold text-xs px-3 py-1.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-1"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
-          <span className="text-sm sm:text-base">Exit</span>
+          Exit
         </button>
       </div>
 
@@ -484,20 +487,6 @@ export default function StudyMode() {
                     WebkitBackfaceVisibility: 'hidden'
                   }}
                 >
-                  {/* Audio Icon */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSpeak();
-                    }}
-                    className="absolute top-3 right-3 z-10 w-10 h-10 bg-white/20 dark:bg-slate-900/50 hover:bg-white/30 dark:hover:bg-slate-900 rounded-full flex items-center justify-center text-white transition-all backdrop-blur-sm"
-                    aria-label="Read aloud"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                  </button>
-
                   {/* Question Content */}
                   <div className="absolute inset-0 p-4 sm:p-6 flex flex-col items-center justify-center">
                     <div className="text-center w-full flex flex-col items-center justify-center gap-4">
@@ -523,20 +512,6 @@ export default function StudyMode() {
                     transform: 'rotateY(180deg)'
                   }}
                 >
-                  {/* Audio Icon */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSpeak();
-                    }}
-                    className="absolute top-3 right-3 z-10 w-10 h-10 bg-white/20 dark:bg-slate-900/50 hover:bg-white/30 dark:hover:bg-slate-900 rounded-full flex items-center justify-center text-white transition-all backdrop-blur-sm"
-                    aria-label="Read aloud"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                  </button>
-
                   {/* Answer Content */}
                   <div className="absolute inset-0 p-4 sm:p-6 flex flex-col items-center justify-center overflow-y-auto">
                     <div className="text-center w-full flex flex-col items-center justify-center">

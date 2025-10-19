@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Question from '@/components/Question';
-import QuitModal from '@/components/QuitModal';
 import ResultsScreen from '@/components/ResultsScreen';
 import InlineZipPrompt from '@/components/InlineZipPrompt';
 import AppHeader from '@/components/AppHeader';
@@ -33,7 +32,6 @@ export default function Home() {
   const [answers, setAnswers] = useState([]);
   const [score, setScore] = useState(0);
   const [testQuestions, setTestQuestions] = useState([]);
-  const [showQuitModal, setShowQuitModal] = useState(false);
   const [showInlineZipPrompt, setShowInlineZipPrompt] = useState(false);
   const [zipPromptDismissed, setZipPromptDismissed] = useState(false);
   const [testCount, setTestCount] = useState(0);
@@ -259,12 +257,7 @@ export default function Home() {
     }
   };
 
-  const handleQuit = () => {
-    setShowQuitModal(true);
-  };
-
-  const confirmQuit = () => {
-    setShowQuitModal(false);
+  const resetTestState = () => {
     setTestStarted(false);
     setShowResults(false);
     setTestResults(null);
@@ -278,6 +271,40 @@ export default function Home() {
     setExplanation('');
     setAnswers([]);
     setScore(0);
+  };
+
+  const endTest = () => {
+    // Even if the last question wasn't submitted, we end the test.
+    // The score is what it is up to the last completed question.
+    const finalScore = score;
+    const totalQuestionsInTest = testQuestions.length;
+    const questionsAttempted = answers.filter(Boolean).length;
+
+    // The passing criteria is based on the full test length, which is more realistic.
+    const passingScore = testVersion === '2025' ? 12 : 6;
+    const passed = finalScore >= passingScore;
+
+    const results = {
+      date: new Date().toISOString(),
+      score: finalScore,
+      total: questionsAttempted, // Show total attempted questions
+      percentage: questionsAttempted > 0 ? Math.round((finalScore / questionsAttempted) * 100) : 0,
+      passed: passed,
+      category: selectedCategory,
+      testVersion: testVersion,
+      answers: answers.filter(Boolean) // Only save answered questions
+    };
+
+    saveTestResult(results);
+    setTestResults(results);
+    setTestStarted(false);
+    setShowResults(true);
+  };
+
+  const handleEndTest = () => {
+    // This function is now called by the "End Test" button.
+    // It directly proceeds to end the test and show results.
+    endTest();
   };
 
   const saveTestResult = (result) => {
@@ -354,7 +381,7 @@ export default function Home() {
             {/* Primary Action - Study Mode (Hero CTA) */}
             <Link
               href="/study"
-              className="block bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-2 overflow-hidden"
+              className="block bg-gradient-to-r from-purple-600 to-blue-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-2 overflow-hidden"
             >
               <div className="p-3">
                 <div className="flex items-center justify-between">
@@ -409,9 +436,9 @@ export default function Home() {
                   </div>
                   <Link
                     href="/stats"
-                    className="text-xs font-bold text-green-700 dark:text-green-400 hover:underline"
+                    className="text-xs font-bold text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50 px-2 py-1 rounded-md transition-colors"
                   >
-                    View all →
+                    View All
                   </Link>
                 </div>
               </div>
@@ -696,7 +723,7 @@ export default function Home() {
                 setShowOptions(false);
                 setShowVersionSelect(true);
               }}
-              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 px-2 py-1 rounded-md transition-colors"
             >
               Change
             </button>
@@ -829,14 +856,6 @@ export default function Home() {
   // Test in progress
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      <QuitModal
-        isOpen={showQuitModal}
-        onClose={() => setShowQuitModal(false)}
-        onConfirm={confirmQuit}
-        currentQuestion={currentIndex + 1}
-        totalQuestions={testQuestions.length}
-        score={score}
-      />
 
       {showInlineZipPrompt && (
         <InlineZipPrompt
@@ -869,7 +888,7 @@ export default function Home() {
         explanation={explanation}
         onAnswer={handleAnswer}
         onNext={handleNext}
-        onQuit={handleQuit}
+        onQuit={handleEndTest}
         questionNumber={currentIndex + 1}
         totalQuestions={testQuestions.length}
         selectedAnswer={selectedAnswer}
