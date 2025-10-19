@@ -27,13 +27,13 @@ export default function QuitModal({ isOpen, onClose, onConfirm, currentQuestion,
 
           {/* Content */}
           <div className="p-6 sm:p-8">
-            <p className="text-gray-700 dark:text-slate-300 text-center mb-6 text-lg">
+            <p className="text-gray-700 dark:text-slate-300 text-center mb-6 text-base sm:text-lg">
               Your progress won&apos;t be saved if you quit now.
             </p>
 
             {/* Current Progress - Cleaner Design */}
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-2xl p-5 mb-6 border border-blue-100 dark:border-blue-800">
-              <p className="text-sm font-bold text-gray-900 dark:text-white mb-3 text-center">Your Progress</p>
+              <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-3 text-center">Your Progress</p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{currentQuestion}/{totalQuestions}</div>
@@ -50,13 +50,13 @@ export default function QuitModal({ isOpen, onClose, onConfirm, currentQuestion,
             <div className="space-y-3">
               <button
                 onClick={onClose}
-                className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl active:scale-98"
+                className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl active:scale-98 text-sm sm:text-base"
               >
                 Continue Test
               </button>
               <button
                 onClick={onConfirm}
-                className="w-full px-6 py-4 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 rounded-xl font-bold transition-all active:scale-98"
+                className="w-full px-6 py-4 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 rounded-xl font-bold transition-all active:scale-98 text-sm sm:text-base"
               >
                 End Test
               </button>

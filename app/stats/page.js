@@ -125,13 +125,13 @@ export default function Stats() {
           // Empty state
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-8 sm:p-12 text-center border-t-4 border-blue-600 dark:border-blue-500">
             <div className="text-6xl mb-4">📊</div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tests taken yet</h2>
-            <p className="text-gray-700 dark:text-slate-300 mb-6 font-medium">Start your first practice test to see your progress here!</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">No tests taken yet</h2>
+            <p className="text-gray-700 dark:text-slate-300 mb-6 font-medium text-sm sm:text-base">Start your first practice test to see your progress here!</p>
             <button
               onClick={() => {
                 window.location.href = '/?startTest=true';
               }}
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-md"
+              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-md text-sm sm:text-base"
             >
               Take Your First Test
             </button>
@@ -140,7 +140,7 @@ export default function Stats() {
           <>
             {/* Summary Stats */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6 sm:p-8 mb-6 border-t-4 border-blue-600 dark:border-blue-500">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Overview</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-6">Overview</h2>
 
               {/* Main stat - Average Score */}
               <div className="text-center mb-6 pb-6 border-b dark:border-slate-700">
@@ -171,7 +171,7 @@ export default function Stats() {
               {/* Streak */}
               {stats.streak > 0 && (
                 <div className="mt-6 pt-6 border-t dark:border-slate-700 text-center">
-                  <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 px-4 py-2 rounded-full">
+                  <div className="inline-flex items-center bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 px-4 py-2 rounded-full text-sm sm:text-base">
                     <span className="text-2xl mr-2">🔥</span>
                     <span className="font-bold">{stats.streak} day{stats.streak !== 1 ? 's' : ''} streak!</span>
                   </div>
@@ -182,10 +182,10 @@ export default function Stats() {
             {/* Past Results List */}
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl overflow-hidden border-t-4 border-red-600 dark:border-red-500">
               <div className="p-4 sm:p-6 border-b dark:border-slate-700 flex items-center justify-between bg-gray-50 dark:bg-slate-700/50">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Past Results</h2>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Past Results</h2>
                 <button
                   onClick={clearAllResults}
-                  className="text-sm text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-bold"
+                  className="text-sm sm:text-base text-red-700 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-bold"
                 >
                   Clear All
                 </button>
@@ -221,13 +221,13 @@ export default function Stats() {
 
                       {/* Right side - Details */}
                       <div className="text-right">
-                        <div className="font-bold text-gray-900 dark:text-white">
+                        <div className="font-bold text-gray-900 dark:text-white text-sm sm:text-base">
                           {result.score} out of {result.total}
                         </div>
-                        <div className="text-sm text-gray-700 dark:text-slate-300 font-medium">
+                        <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 font-medium">
                           {formatDate(result.date)}
                         </div>
-                        {result.category && result.category !== 'all' && (
+                        {result.category && result.category !== 'all' && ( // text-xs is fine here
                           <div className="text-xs text-gray-600 dark:text-slate-400 mt-1 font-medium">
                             {result.category}
                           </div>
@@ -244,13 +244,13 @@ export default function Stats() {
 
             {/* Tips based on performance */}
             <div className="mt-6 bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600 dark:border-blue-500 rounded-r-lg p-4 sm:p-6">
-              <h3 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center">
+              <h3 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center text-sm sm:text-base">
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
                 Tips for Improvement
               </h3>
-              <div className="text-sm text-blue-900 dark:text-blue-100 font-medium space-y-1">
+              <div className="text-sm sm:text-base text-blue-900 dark:text-blue-100 font-medium space-y-1">
                 {stats.averageScore < 60 && (
                   <p>• Your average is below passing. Focus on studying all questions first.</p>
                 )}

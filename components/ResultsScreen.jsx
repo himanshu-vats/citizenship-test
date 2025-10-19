@@ -31,7 +31,7 @@ export default function ResultsScreen({
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
               {passed ? 'Congratulations!' : 'Keep Practicing!'}
             </h1>
-            <p className="text-white text-opacity-90">
+            <p className="text-white text-opacity-90 text-sm sm:text-base">
               {passed ? 'You passed the practice test!' : 'You are getting there!'}
             </p>
           </div>
@@ -39,10 +39,10 @@ export default function ResultsScreen({
           {/* Score Display */}
           <div className="p-8">
             <div className="text-center mb-8">
-              <div className="text-6xl font-bold text-gray-900 dark:text-white mb-2">
+              <div className="text-5xl sm:text-6xl font-bold text-gray-900 dark:text-white mb-2">
                 {score}/{total}
               </div>
-              <div className={`text-3xl font-bold mb-4 ${passed ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}`}>
+              <div className={`text-2xl sm:text-3xl font-bold mb-4 ${passed ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}`}>
                 {percentage}%
               </div>
               <div className={`inline-block px-6 py-3 rounded-full text-lg font-bold ${
@@ -53,7 +53,7 @@ export default function ResultsScreen({
                 {passed ? '✓ PASSED' : '○ NEED MORE PRACTICE'}
               </div>
 
-              <div className="mt-4 text-sm text-gray-600 dark:text-slate-400">
+              <div className="mt-4 text-sm sm:text-base text-gray-600 dark:text-slate-400">
                 Test Version: <span className="font-semibold">{testVersion === '2025' ? '2025 (need 12/20)' : '2008 (need 6/10)'}</span>
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function ResultsScreen({
             <div className="space-y-3 mb-6">
               <button
                 onClick={() => setShowReview(!showReview)}
-                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -72,7 +72,7 @@ export default function ResultsScreen({
 
               <button
                 onClick={onRetake}
-                className="w-full py-4 bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 hover:shadow-xl text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 hover:shadow-xl text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -84,7 +84,7 @@ export default function ResultsScreen({
             {/* Performance Tip */}
             {!passed && (
               <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-500 dark:border-yellow-600 rounded-r-lg p-4">
-                <p className="text-sm text-yellow-900 dark:text-yellow-200">
+                <p className="text-sm sm:text-base text-yellow-900 dark:text-yellow-200">
                   <strong>💡 Tip:</strong> Try using Study Mode to review all questions with answers before taking another test.
                 </p>
               </div>
@@ -92,7 +92,7 @@ export default function ResultsScreen({
 
             {passed && (
               <div className="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 dark:border-green-600 rounded-r-lg p-4">
-                <p className="text-sm text-green-900 dark:text-green-200">
+                <p className="text-sm sm:text-base text-green-900 dark:text-green-200">
                   <strong>🎯 Great job!</strong> Keep practicing to maintain your knowledge for the real interview.
                 </p>
               </div>
@@ -103,7 +103,7 @@ export default function ResultsScreen({
         {/* Review Section (Expandable) */}
         {showReview && answers && answers.length > 0 && (
           <div className="mt-6 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 border dark:border-slate-700">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -127,26 +127,26 @@ export default function ResultsScreen({
                       {answer.isCorrect ? '✓' : '✗'}
                     </div>
                     <div className="flex-1">
-                      <p className="font-semibold text-gray-900 dark:text-white mb-2">
+                      <p className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white mb-2">
                         Q{index + 1}: {answer.question}
                       </p>
 
                       {!answer.isCorrect && (
                         <div className="mb-2">
-                          <p className="text-sm text-red-800 dark:text-red-300">
+                          <p className="text-sm sm:text-base text-red-800 dark:text-red-300">
                             <span className="font-semibold">Your answer:</span> {answer.selected}
                           </p>
                         </div>
                       )}
 
                       <div className="mb-2">
-                        <p className="text-sm text-green-800 dark:text-green-300">
+                        <p className="text-sm sm:text-base text-green-800 dark:text-green-300">
                           <span className="font-semibold">Correct answer:</span> {answer.correct}
                         </p>
                       </div>
 
                       {answer.explanation && (
-                        <div className="mt-2 pt-2 border-t border-gray-300 dark:border-slate-600">
+                        <div className="mt-2 pt-2 border-t border-gray-300 dark:border-slate-600 text-sm sm:text-base">
                           <p className="text-xs text-gray-700 dark:text-slate-300 whitespace-pre-line">
                             {answer.explanation}
                           </p>
@@ -163,7 +163,7 @@ export default function ResultsScreen({
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
                 <Link
                   href="/study"
-                  className="block w-full py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-center"
+                  className="block w-full py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-center text-sm sm:text-base"
                 >
                   📖 Study Questions You Missed ({answers.filter(a => !a.isCorrect).length} questions)
                 </Link>
