@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import AppHeader from '@/components/AppHeader';
+import MenuDrawer from '@/components/MenuDrawer';
 
 export default function Settings() {
   const [zipCode, setZipCode] = useState('');
-  const [testVersion, setTestVersion] = useState('2025');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [savedInfo, setSavedInfo] = useState(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     // Load saved representatives
@@ -19,12 +19,6 @@ export default function Settings() {
       const data = JSON.parse(saved);
       setSavedInfo(data);
       setZipCode(data.zipCode || '');
-    }
-
-    // Load test version preference
-    const version = localStorage.getItem('testVersion');
-    if (version) {
-      setTestVersion(version);
     }
   }, []);
 
@@ -67,11 +61,6 @@ export default function Settings() {
     setZipCode('');
   };
 
-  const handleVersionChange = (version) => {
-    setTestVersion(version);
-    localStorage.setItem('testVersion', version);
-  };
-
   const handleClearAllData = () => {
     if (showClearConfirm) {
       // Clear all localStorage data
@@ -87,77 +76,43 @@ export default function Settings() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900">
-      <AppHeader title="Settings" showBack={true} backHref="/" />
-      <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
-        <div className="max-w-2xl mx-auto">
+    <>
+      <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
+        <main className="px-4 py-6">
+          <div className="max-w-2xl mx-auto">
+
+            {/* Hamburger Menu - Floating Top Right */}
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="p-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors border border-gray-200 dark:border-slate-700"
+                aria-label="Menu"
+              >
+                <svg className="w-5 h-5 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 border-t-4 border-blue-600 dark:border-blue-500">
             <div className="flex items-center mb-6">
-              <span className="text-4xl mr-3">⚙️</span>
+              <span className="text-4xl mr-3">📍</span>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-                <p className="text-gray-600 dark:text-slate-300 mt-1">Manage your preferences</p>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">ZIP Code & Personalization</h1>
+                <p className="text-gray-600 dark:text-slate-300 mt-1">Personalize your state questions</p>
               </div>
             </div>
 
-          {/* Test Version Selection */}
-          <section className="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Test Version</h2>
-            <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
-              Choose which test version to use based on your N-400 filing date.
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 dark:border-blue-600 rounded-r-lg">
+            <p className="text-sm text-blue-900 dark:text-blue-200">
+              💡 <strong>Quick settings</strong> like Dark Mode and Test Version are in the menu (☰) at the top right.
             </p>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <button
-                onClick={() => handleVersionChange('2025')}
-                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                  testVersion === '2025'
-                    ? 'border-blue-500 bg-blue-500 text-white shadow-lg'
-                    : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-bold text-gray-900 dark:text-white">
-                      2025 Test (128 Questions)
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1 opacity-90">
-                      For N-400 filed on/after October 20, 2025
-                    </div>
-                  </div>
-                  {testVersion === '2025' && (
-                    <span className="text-2xl text-white">✓</span>
-                  )}
-                </div>
-              </button>
-
-              <button
-                onClick={() => handleVersionChange('2008')}
-                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                  testVersion === '2008'
-                    ? 'border-blue-500 bg-blue-500 text-white shadow-lg'
-                    : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-bold text-gray-900 dark:text-white">
-                      2008 Test (100 Questions)
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1 opacity-90">
-                      For N-400 filed before October 20, 2025
-                    </div>
-                  </div>
-                  {testVersion === '2008' && (
-                    <span className="text-2xl text-white">✓</span>
-                  )}
-                </div>
-              </button>
-            </div>
-          </section>
+          </div>
 
           {/* ZIP Code / Representatives */}
           <section className="mb-8 pb-8 border-b border-gray-200 dark:border-slate-700">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">My State Info</h2>
             <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
               Enter your ZIP code to personalize questions about YOUR state officials.
             </p>
@@ -203,31 +158,41 @@ export default function Settings() {
             </form>
 
             {savedInfo && (
-              <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4 border border-gray-200 dark:border-slate-600">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-bold text-gray-900 dark:text-white">Saved Information</span>
-                  <button
-                    onClick={handleClearZip}
-                    className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 text-xs font-bold rounded-lg transition-colors"
-                  >
-                    Clear
-                  </button>
+              <>
+                <div className="bg-gray-50 dark:bg-slate-700 rounded-lg p-4 border border-gray-200 dark:border-slate-600 mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-gray-900 dark:text-white">Saved Information</span>
+                    <button
+                      onClick={handleClearZip}
+                      className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 text-xs font-bold rounded-lg transition-colors"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                  <div className="space-y-1 text-sm text-gray-700 dark:text-slate-300">
+                    {savedInfo.stateName && (
+                      <p><strong>State:</strong> {savedInfo.stateName}</p>
+                    )}
+                    {savedInfo.capital && (
+                      <p><strong>Capital:</strong> {savedInfo.capital}</p>
+                    )}
+                    {savedInfo.governor && (
+                      <p><strong>Governor:</strong> {savedInfo.governor}</p>
+                    )}
+                    {savedInfo.senators && Array.isArray(savedInfo.senators) && (
+                      <p><strong>Senators:</strong> {savedInfo.senators.join(', ')}</p>
+                    )}
+                  </div>
                 </div>
-                <div className="space-y-1 text-sm text-gray-700 dark:text-slate-300">
-                  {savedInfo.stateName && (
-                    <p><strong>State:</strong> {savedInfo.stateName}</p>
-                  )}
-                  {savedInfo.capital && (
-                    <p><strong>Capital:</strong> {savedInfo.capital}</p>
-                  )}
-                  {savedInfo.governor && (
-                    <p><strong>Governor:</strong> {savedInfo.governor}</p>
-                  )}
-                  {savedInfo.senators && Array.isArray(savedInfo.senators) && (
-                    <p><strong>Senators:</strong> {savedInfo.senators.join(', ')}</p>
-                  )}
-                </div>
-              </div>
+
+                {/* Back to Home - Prominent Button */}
+                <Link
+                  href="/"
+                  className="block w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-lg font-bold transition-all shadow-md hover:shadow-lg text-center"
+                >
+                  ← Back to Home
+                </Link>
+              </>
             )}
           </section>
 
@@ -276,5 +241,6 @@ export default function Settings() {
       </div>
       </main>
     </div>
+    </>
   );
 }

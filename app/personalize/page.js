@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import AppHeader from '@/components/AppHeader';
+import MenuDrawer from '@/components/MenuDrawer';
 
 export default function Personalize() {
   const [zipCode, setZipCode] = useState('');
@@ -10,6 +10,7 @@ export default function Personalize() {
   const [error, setError] = useState('');
   const [representatives, setRepresentatives] = useState(null);
   const [savedInfo, setSavedInfo] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('userRepresentatives');
@@ -61,11 +62,27 @@ export default function Personalize() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900">
-      <AppHeader title="Learn Your Representatives" showBack={true} backHref="/" />
-      <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 border-t-4 border-blue-600 dark:border-blue-500">
+    <>
+      <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900">
+        <main className="px-4 py-6">
+          <div className="max-w-4xl mx-auto">
+
+            {/* Hamburger Menu - Floating Top Right */}
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="p-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors border border-gray-200 dark:border-slate-700"
+                aria-label="Menu"
+              >
+                <svg className="w-5 h-5 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 border-t-4 border-blue-600 dark:border-blue-500">
             <div className="flex items-center mb-6">
               <span className="text-4xl mr-3">📍</span>
               <div>
@@ -228,6 +245,7 @@ export default function Personalize() {
               )}
             </div>
           )}
+          </div>
 
           <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg border-l-4 border-blue-600 dark:border-blue-500">
             <h3 className="font-bold text-gray-900 dark:text-white mb-2">💡 Study Tip</h3>
@@ -237,8 +255,8 @@ export default function Personalize() {
             </p>
           </div>
         </div>
+        </main>
       </div>
-      </main>
-    </div>
+    </>
   );
 }

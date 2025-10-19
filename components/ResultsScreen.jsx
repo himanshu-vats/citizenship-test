@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import AppHeader from './AppHeader';
+import MenuDrawer from './MenuDrawer';
 
 export default function ResultsScreen({
   score,
@@ -15,12 +15,27 @@ export default function ResultsScreen({
   onGoHome
 }) {
   const [showReview, setShowReview] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <AppHeader title="Test Results" showBack={true} onBackClick={onGoHome} />
-      <div className="min-h-screen bg-gradient-to-br from-red-600 via-white to-blue-700 dark:from-red-900 dark:via-slate-900 dark:to-blue-900 p-4 sm:p-8">
-      <div className="max-w-3xl w-full mx-auto">
+      <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-8">
+        <div className="max-w-3xl w-full mx-auto">
+
+          {/* Hamburger Menu - Floating Top Right */}
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="p-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors border border-gray-200 dark:border-slate-700"
+              aria-label="Menu"
+            >
+              <svg className="w-5 h-5 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
         {/* Main Results Card */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border dark:border-slate-700">
           {/* Header with confetti background for pass */}
@@ -72,20 +87,30 @@ export default function ResultsScreen({
 
               <button
                 onClick={onRetake}
-                className="w-full py-4 bg-gradient-to-r from-red-600 via-blue-600 to-blue-700 hover:shadow-xl text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full py-4 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-900 dark:text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 Take Another Test
               </button>
+
+              <Link
+                href="/study"
+                className="w-full py-4 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-900 dark:text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Study with Flashcards
+              </Link>
             </div>
 
             {/* Performance Tip */}
             {!passed && (
               <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-500 dark:border-yellow-600 rounded-r-lg p-4">
                 <p className="text-sm sm:text-base text-yellow-900 dark:text-yellow-200">
-                  <strong>💡 Tip:</strong> Try using Study Mode to review all questions with answers before taking another test.
+                  <strong>💡 Tip:</strong> Try using "Study with Flashcards" to review all questions with answers before taking another test.
                 </p>
               </div>
             )}
@@ -157,22 +182,10 @@ export default function ResultsScreen({
                 </div>
               ))}
             </div>
-
-            {/* Study Weak Areas Button */}
-            {answers.filter(a => !a.isCorrect).length > 0 && (
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
-                <Link
-                  href="/study"
-                  className="block w-full py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg text-center text-sm sm:text-base"
-                >
-                  📖 Study Questions You Missed ({answers.filter(a => !a.isCorrect).length} questions)
-                </Link>
-              </div>
-            )}
           </div>
         )}
+        </div>
       </div>
-    </div>
     </>
   );
 }
