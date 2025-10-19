@@ -106,13 +106,13 @@ export default function Settings() {
             <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">
               Choose which test version to use based on your N-400 filing date.
             </p>
-            <div className="space-y-3">
+            <div className="grid sm:grid-cols-2 gap-3">
               <button
                 onClick={() => handleVersionChange('2025')}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                   testVersion === '2025'
-                    ? 'border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30'
-                    : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 dark:hover:border-slate-500'
+                    ? 'border-blue-500 bg-blue-500 text-white shadow-lg'
+                    : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -120,22 +120,22 @@ export default function Settings() {
                     <div className="font-bold text-gray-900 dark:text-white">
                       2025 Test (128 Questions)
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1">
+                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1 opacity-90">
                       For N-400 filed on/after October 20, 2025
                     </div>
                   </div>
                   {testVersion === '2025' && (
-                    <span className="text-2xl">✓</span>
+                    <span className="text-2xl text-white">✓</span>
                   )}
                 </div>
               </button>
 
               <button
                 onClick={() => handleVersionChange('2008')}
-                className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                   testVersion === '2008'
-                    ? 'border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30'
-                    : 'border-gray-300 dark:border-slate-600 hover:border-gray-400 dark:hover:border-slate-500'
+                    ? 'border-blue-500 bg-blue-500 text-white shadow-lg'
+                    : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -143,12 +143,12 @@ export default function Settings() {
                     <div className="font-bold text-gray-900 dark:text-white">
                       2008 Test (100 Questions)
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1">
+                    <div className="text-sm text-gray-600 dark:text-slate-300 mt-1 opacity-90">
                       For N-400 filed before October 20, 2025
                     </div>
                   </div>
                   {testVersion === '2008' && (
-                    <span className="text-2xl">✓</span>
+                    <span className="text-2xl text-white">✓</span>
                   )}
                 </div>
               </button>
@@ -162,7 +162,7 @@ export default function Settings() {
               Enter your ZIP code to personalize questions about YOUR state officials.
             </p>
 
-            <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600 dark:border-blue-500 p-3 mb-4 rounded-r-lg">
+            <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 dark:border-blue-600 p-3 mb-4 rounded-r-lg">
               <p className="text-xs font-bold text-blue-900 dark:text-blue-200 mb-1">What we can determine from your ZIP:</p>
               <div className="text-xs text-blue-800 dark:text-blue-300 space-y-1">
                 <p>✓ Your 2 U.S. Senators</p>
@@ -192,7 +192,7 @@ export default function Settings() {
                 <button
                   type="submit"
                   disabled={loading || zipCode.length !== 5}
-                  className="px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-bold hover:bg-blue-700 dark:hover:bg-blue-600 transition-all disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-all disabled:bg-gray-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Loading...' : 'Save'}
                 </button>

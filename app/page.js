@@ -84,11 +84,20 @@ export default function Home() {
   }, [testStarted, currentIndex, testQuestions, userInfo, zipPromptDismissed, hasSubmitted, selectedAnswer]);
 
   const handleStartTest = () => {
-    setShowVersionSelect(true);
+    const savedVersion = localStorage.getItem('testVersion');
+    if (savedVersion) {
+      // A version is already saved. Skip the selection screen.
+      setTestVersion(savedVersion); // Make sure state is in sync
+      setShowOptions(true);
+    } else {
+      // No version saved, show the selection screen for the first time.
+      setShowVersionSelect(true);
+    }
   };
 
   const handleVersionSelect = (version) => {
     setTestVersion(version);
+    localStorage.setItem('testVersion', version); // Save the user's choice
     setShowVersionSelect(false);
     setShowOptions(true);
   };
@@ -370,7 +379,7 @@ export default function Home() {
               {/* Practice Test */}
               <button
                 onClick={handleStartTest}
-                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 rounded-xl transition-all shadow-md hover:shadow-lg p-3 text-center group relative"
+                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700 hover:border-blue-500 hover:shadow-md rounded-xl transition-all p-3 text-center group"
               >
                 <div className="text-2xl mb-1">✍️</div>
                 <div className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm mb-0.5">Practice Test</div>
@@ -380,7 +389,7 @@ export default function Home() {
               {/* Stats */}
               <Link
                 href="/stats"
-                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 hover:border-green-400 dark:hover:border-green-500 rounded-xl transition-all shadow-md hover:shadow-lg p-3 text-center group"
+                className="bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700 hover:border-green-500 hover:shadow-md rounded-xl transition-all p-3 text-center group"
               >
                 <div className="text-2xl mb-1">📊</div>
                 <div className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm mb-0.5">Your Stats</div>
@@ -390,7 +399,7 @@ export default function Home() {
 
             {/* Quick Stats (if user has history) */}
             {testCount > 0 && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-2 mb-2 border border-green-200 dark:border-green-800">
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-2 mb-2 border-l-4 border-green-500 dark:border-green-600">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-green-600 dark:text-green-400 text-lg">🎯</span>
@@ -411,7 +420,7 @@ export default function Home() {
             {/* Settings Quick Access */}
             <Link
               href="/settings"
-              className="block bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg p-2 transition-all border border-gray-200 dark:border-slate-700"
+              className="block bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg p-2 transition-all border border-gray-200 dark:border-slate-700"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -446,7 +455,7 @@ export default function Home() {
           <div className="max-w-2xl mx-auto h-full flex flex-col justify-center">
 
             {/* Info Alert */}
-            <div className="bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg p-2 mb-2">
+            <div className="bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-500 dark:border-yellow-600 rounded-r-lg p-3 mb-3">
               <div className="flex items-start gap-2">
                 <span className="text-yellow-600 dark:text-yellow-400 text-base flex-shrink-0">📅</span>
                 <div>
@@ -494,7 +503,7 @@ export default function Home() {
               {/* 2008 Version */}
               <button
                 onClick={() => handleVersionSelect('2008')}
-                className="w-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border-2 border-gray-200 dark:border-slate-700 rounded-xl p-3 transition-all shadow-md hover:shadow-lg text-left"
+                className="w-full bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700 rounded-xl p-3 transition-all hover:shadow-md text-left"
               >
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">2008 Test</h3>
@@ -521,7 +530,7 @@ export default function Home() {
             </div>
 
             {/* Help Text */}
-            <div className="bg-gray-50 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-slate-700">
+            <div className="bg-gray-100 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-slate-700">
               <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 text-center">
                 <strong className="text-gray-900 dark:text-white">Not sure?</strong> Check your N-400 receipt notice
               </p>
@@ -678,15 +687,24 @@ export default function Home() {
         <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
         <div className="max-w-2xl mx-auto h-full flex flex-col justify-center">
           {/* Version Badge */}
-          <div className="mb-2 text-sm sm:text-base">
+          <div className="mb-2 text-sm sm:text-base flex items-center gap-2">
             <span className="inline-block px-3 py-1 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 text-white text-xs font-bold rounded-lg shadow-md">
               {testVersion === '2025' ? '2025 Test Version' : '2008 Test Version'}
             </span>
+            <button
+              onClick={() => {
+                setShowOptions(false);
+                setShowVersionSelect(true);
+              }}
+              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Change
+            </button>
           </div>
 
           {/* Personalization Status */}
-          {hasPersonalInfo ? (
-            <div className="mb-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-2">
+          {hasPersonalInfo ? ( // This is an info block
+            <div className="mb-2 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 dark:border-green-600 rounded-r-lg p-3">
               <div className="flex items-start gap-2">
                 <span className="text-green-600 dark:text-green-400 text-base flex-shrink-0">✓</span>
                 <div>
@@ -697,8 +715,8 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className="mb-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-2">
+          ) : ( // This is an info block
+            <div className="mb-2 bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 dark:border-blue-600 rounded-r-lg p-3">
               <div className="flex items-start gap-2">
                 <span className="text-blue-600 dark:text-blue-400 text-base flex-shrink-0">💡</span>
                 <div>
@@ -712,7 +730,7 @@ export default function Home() {
           )}
 
           {/* Category Selection Card */}
-          <div className="mb-2 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-3 border border-gray-200 dark:border-slate-700">
+          <div className="mb-2 bg-white dark:bg-slate-800 rounded-xl shadow-md p-3 border border-gray-200 dark:border-slate-700">
             <label className="block text-xs sm:text-sm font-bold text-gray-900 dark:text-white mb-2">
               📚 Category
             </label>
@@ -729,7 +747,7 @@ export default function Home() {
                 // Set testSize to min of current size and available questions
                 setTestSize(Math.min(testSize, newAvailableQuestions));
               }}
-              className="w-full p-2 border-2 border-gray-300 dark:border-slate-600 rounded-lg focus:border-blue-600 dark:focus:border-blue-500 focus:outline-none text-gray-900 dark:text-white font-medium bg-white dark:bg-slate-700 text-xs sm:text-sm"
+              className="w-full p-2 border border-gray-300 dark:border-slate-600 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none text-gray-900 dark:text-white font-medium bg-white dark:bg-slate-700 text-xs sm:text-sm"
             >
               <option value="all">All Categories ({questionSet.length} questions)</option>
               {categories.filter(c => c !== 'all').map(cat => (
@@ -744,7 +762,7 @@ export default function Home() {
           </div>
 
           {/* Test Size Selection Card */}
-          <div className="mb-2 bg-white dark:bg-slate-800 rounded-xl shadow-lg p-3 border border-gray-200 dark:border-slate-700">
+          <div className="mb-2 bg-white dark:bg-slate-800 rounded-xl shadow-md p-3 border border-gray-200 dark:border-slate-700">
             <label className="block text-xs sm:text-sm font-bold text-gray-900 dark:text-white mb-2">
               🔢 Number of Questions
               {availableQuestions < testSize && (
@@ -763,12 +781,12 @@ export default function Home() {
                     key={num}
                     onClick={() => setTestSize(num)}
                     disabled={isDisabled}
-                    className={`p-2 rounded-lg border-2 font-bold text-sm sm:text-base transition-all ${
+                    className={`p-2 rounded-lg border font-bold text-sm sm:text-base transition-all ${
                       isSelected
-                        ? 'border-blue-600 dark:border-blue-500 bg-blue-600 dark:bg-blue-700 text-white shadow-lg'
+                        ? 'border-blue-600 bg-blue-600 text-white shadow-md'
                         : isDisabled
-                        ? 'border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed'
-                        : 'border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-700'
+                        ? 'border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed opacity-70'
+                        : 'border-gray-300 dark:border-slate-600 text-gray-900 dark:text-white hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-700'
                     }`}
                   >
                     {num}
@@ -777,8 +795,8 @@ export default function Home() {
               })}
             </div>
 
-            {availableQuestions < testSize && (
-              <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+            {availableQuestions < testSize && ( // This is an info block
+              <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-500 dark:border-yellow-600 rounded-r-lg">
                 <p className="text-xs sm:text-sm font-bold text-yellow-900 dark:text-yellow-200 mb-0.5">⚠️ Limited Questions</p>
                 <p className="text-xs sm:text-sm text-yellow-800 dark:text-yellow-300">
                   This category only has {availableQuestions} question{availableQuestions !== 1 ? 's' : ''}.
@@ -791,13 +809,13 @@ export default function Home() {
           {/* Begin Test Button */}
           <button
             onClick={handleBeginTest}
-            className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl text-sm sm:text-base font-bold hover:shadow-xl transition-all shadow-lg mb-2"
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl text-base sm:text-lg font-bold hover:shadow-xl transition-all shadow-lg mb-2 transform hover:-translate-y-0.5"
           >
             Begin Test ({effectiveTestSize} question{effectiveTestSize !== 1 ? 's' : ''})
           </button>
 
           {/* Passing Info */}
-          <div className="bg-gray-50 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-slate-700">
+          <div className="bg-gray-100 dark:bg-slate-800/50 rounded-lg p-2 border border-gray-200 dark:border-slate-700">
             <p className="text-xs sm:text-sm text-gray-900 dark:text-white font-semibold text-center">
               📝 You need {Math.ceil(effectiveTestSize * 0.6)}/{effectiveTestSize} correct to pass (60%)
             </p>

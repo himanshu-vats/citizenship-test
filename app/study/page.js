@@ -89,6 +89,7 @@ export default function StudyMode() {
 
     // Visual feedback
     setSwipeDirection('right');
+    setShowAnswer(false); // Reset flip state immediately
     setTimeout(() => {
       moveToNextCard();
       setSwipeDirection(null);
@@ -110,6 +111,7 @@ export default function StudyMode() {
 
     // Visual feedback
     setSwipeDirection('left');
+    setShowAnswer(false); // Reset flip state immediately
     setTimeout(() => {
       moveToNextCard();
       setSwipeDirection(null);
@@ -148,7 +150,6 @@ export default function StudyMode() {
   };
 
   const moveToNextCard = () => {
-    setShowAnswer(false);
     if (currentIndex < filteredQuestions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -315,16 +316,16 @@ export default function StudyMode() {
           <div className="w-full max-w-3xl space-y-3">
 
             {/* Progress Stats - Inline */}
-            <div className="grid grid-cols-3 gap-2">
-              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-2 text-center">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-orange-50 dark:bg-orange-900/30 border-l-4 border-orange-500 dark:border-orange-600 rounded-r-lg p-2 text-center">
                 <div className="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400">{stillLearningCount}</div>
                 <div className="text-xs sm:text-sm text-orange-700 dark:text-orange-300 font-medium">Review</div>
               </div>
-              <div className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-2 text-center">
+              <div className="bg-gray-100 dark:bg-slate-800/50 border-l-4 border-gray-400 dark:border-slate-600 rounded-r-lg p-2 text-center">
                 <div className="text-xl sm:text-2xl font-bold text-gray-600 dark:text-slate-300">{unstudiedCount}</div>
                 <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-400 font-medium">Unstudied</div>
               </div>
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-2 text-center">
+              <div className="bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 dark:border-green-600 rounded-r-lg p-2 text-center">
                 <div className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">{knownCount}</div>
                 <div className="text-xs sm:text-sm text-green-700 dark:text-green-300 font-medium">Know</div>
               </div>
@@ -338,20 +339,20 @@ export default function StudyMode() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleVersionChange('2008')}
-                    className={`p-2 rounded-lg font-bold text-xs transition-all ${
+                    className={`p-3 rounded-lg font-bold text-sm transition-all border ${
                       testVersion === '2008'
-                        ? 'bg-purple-600 text-white ring-2 ring-purple-400'
-                        : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                        ? 'bg-purple-600 text-white border-purple-600 shadow-md'
+                        : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700'
                     }`}
                   >
                     2008<span className="text-xs sm:text-sm block opacity-75">(100Q)</span>
                   </button>
                   <button
                     onClick={() => handleVersionChange('2025')}
-                    className={`p-2 rounded-lg font-bold text-xs transition-all ${
+                    className={`p-3 rounded-lg font-bold text-sm transition-all border ${
                       testVersion === '2025'
-                        ? 'bg-purple-600 text-white ring-2 ring-purple-400'
-                        : 'bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700'
+                        ? 'bg-purple-600 text-white border-purple-600 shadow-md'
+                        : 'bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700'
                     }`}
                   >
                     2025<span className="text-xs sm:text-sm block opacity-75">(128Q)</span>
@@ -365,7 +366,7 @@ export default function StudyMode() {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full p-2 text-sm rounded-lg border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white font-semibold focus:border-purple-500 dark:focus:border-purple-400 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-900 transition-all"
+                  className="w-full p-3 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white font-semibold focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 transition-all"
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
@@ -377,7 +378,7 @@ export default function StudyMode() {
             </div>
 
             {/* Filter Checkbox - Inline */}
-            <label className="flex items-center gap-2 p-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+            <label className="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
               <input
                 type="checkbox"
                 checked={showOnlyUnknown}
@@ -393,7 +394,7 @@ export default function StudyMode() {
             <button
               onClick={handleStartStudy}
               disabled={filteredQuestions.length === 0}
-              className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold text-base shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
             >
               {filteredQuestions.length === 0
                 ? 'No cards available'
