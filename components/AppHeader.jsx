@@ -13,43 +13,46 @@ export default function AppHeader({ title, showBack = false, backHref = '/', onB
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-        <div className="relative flex items-center justify-center">
-          {/* Left: Back button (Absolute positioned) */}
-          {showBack && (
-            <div className="absolute left-0">
-              {onBackClick ? (
-                <button
-                  onClick={onBackClick}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-all border border-gray-200 dark:border-slate-700"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Back
-                </button>
-              ) : (
-                <Link
-                  href={backHref}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-all border border-gray-200 dark:border-slate-700"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Back
-                </Link>
-              )}
-            </div>
-          )}
+        {/* Three-column grid layout - modern app pattern */}
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2">
+          {/* Left: Back button */}
+          <div className="flex items-center">
+            {showBack && (
+              <>
+                {onBackClick ? (
+                  <button
+                    onClick={onBackClick}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-all border border-gray-200 dark:border-slate-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                  </button>
+                ) : (
+                  <Link
+                    href={backHref}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 rounded-lg text-sm font-semibold transition-all border border-gray-200 dark:border-slate-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                  </Link>
+                )}
+              </>
+            )}
+          </div>
 
-          {/* Center: Title */}
+          {/* Center: Title with truncation for long titles */}
           {title && (
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-base sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white text-center truncate px-2">
               {title}
             </h1>
           )}
 
-          {/* Right: Theme Toggle (Absolute positioned) */}
-          <div className="absolute right-0">
+          {/* Right: Theme Toggle */}
+          <div className="flex items-center justify-end">
             <button
               onClick={handleToggle}
               className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
