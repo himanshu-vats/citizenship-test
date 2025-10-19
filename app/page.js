@@ -317,14 +317,14 @@ export default function Home() {
               </div>
 
             {/* Hero Section */}
-            <div className="mb-6">
-              <div className="flex items-center gap-3 mb-2">
+            <div className="mb-6 text-center">
+              <div className="flex items-center justify-center gap-3 mb-2">
                 <span className="text-5xl sm:text-6xl">🗽</span>
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
                   US Citizenship Test
                 </h1>
               </div>
-              <p className="text-gray-600 dark:text-slate-400 text-base ml-1">
+              <p className="text-gray-600 dark:text-slate-400 text-base">
                 Official USCIS practice questions
               </p>
             </div>
@@ -373,8 +373,8 @@ export default function Home() {
 
             {/* Quick Stats */}
             {testCount > 0 && (
-              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-700">
-                <div className="flex items-center gap-2">
+              <div className="p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-700 text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
                   <span className="text-green-600 dark:text-green-400">🎯</span>
                   <span className="text-sm font-medium text-gray-900 dark:text-white">
                     {testCount} test{testCount !== 1 ? 's' : ''} completed
