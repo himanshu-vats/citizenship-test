@@ -74,9 +74,22 @@ export default async function handler(req, res) {
               const token = "${access_token}";
               const provider = "github";
 
+              // Helper to log to both popup and parent console
+              function log(message, data) {
+                console.log(message, data || "");
+                if (window.opener) {
+                  window.opener.postMessage({
+                    type: "OAUTH_DEBUG_LOG",
+                    message: message,
+                    data: data
+                  }, "*");
+                }
+              }
+
               // Function to send auth data back to CMS
               function sendAuthData() {
-                console.log("[Popup] Preparing to send token to parent");
+                log("[Popup] Preparing to send token to parent");
+                log("[Popup] Token received:", token.substring(0, 20) + "...");
 
                 if (window.opener) {
                   // The exact format Decap CMS expects (string format)
@@ -85,38 +98,43 @@ export default async function handler(req, res) {
                     provider: provider
                   });
 
-                  console.log("[Popup] Sending message:", message);
-                  console.log("[Popup] Using wildcard origin for compatibility");
+                  log("[Popup] Sending auth message");
+                  log("[Popup] Message format:", message.substring(0, 50) + "...");
+                  log("[Popup] Using wildcard origin for compatibility");
 
                   // Use wildcard "*" to send to any origin (CMS handles validation)
                   window.opener.postMessage(message, "*");
 
-                  console.log("[Popup] Message sent successfully");
+                  log("[Popup] ✅ Message sent successfully!");
+                  log("[Popup] Window will close in 5 seconds...");
 
-                  // Close popup after delay
+                  // Close popup after longer delay so logs are visible
                   setTimeout(function() {
-                    console.log("[Popup] Closing window");
+                    log("[Popup] Closing window now");
                     window.close();
-                  }, 2000);
+                  }, 5000);
                 } else {
-                  console.error("[Popup] No window.opener found!");
+                  log("[Popup] ❌ ERROR: No window.opener found!");
                 }
               }
 
               // Send immediately when page loads
-              console.log("[Popup] Page loaded, sending auth data");
+              log("[Popup] 🚀 Page loaded, starting OAuth flow");
+              log("[Popup] Provider:", provider);
               sendAuthData();
 
               // Also respond to messages from parent
               window.addEventListener("message", function(event) {
-                console.log("[Popup] Received message from parent:", event.data);
+                log("[Popup] Received message from parent:", event.data);
                 sendAuthData();
               });
             })();
           </script>
           <h2>✓ Authorization Successful!</h2>
-          <p>This window should close automatically in 1.5 seconds.</p>
-          <p>If it doesn't, you can close it manually.</p>
+          <p>This window will close automatically in 5 seconds.</p>
+          <p><strong>Check the main window's console for debug logs.</strong></p>
+          <p>If the window doesn't close, you can close it manually.</p>
+          <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Close Now</button>
         </body>
       </html>
     `;

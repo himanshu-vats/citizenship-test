@@ -7,6 +7,22 @@
     <title>Content Manager</title>
   </head>
   <body>
+    <!-- OAuth Debug Logger -->
+    <script>
+      console.log("=== CMS Admin Page Loaded ===");
+
+      // Listen for debug logs from OAuth popup
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'OAUTH_DEBUG_LOG') {
+          console.log(event.data.message, event.data.data || '');
+        } else {
+          // Log all other messages for debugging
+          console.log('[Admin] Received message:', event.data);
+          console.log('[Admin] From origin:', event.origin);
+        }
+      }, false);
+    </script>
+
     <!-- Include the script that builds the page and powers Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
   </body>
