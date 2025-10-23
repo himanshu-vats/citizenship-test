@@ -1,40 +1,15 @@
-'use client';
-
 import Link from 'next/link';
 import TopNav from '@/components/TopNav';
+import { getAllPosts } from '@/lib/blog';
 
-// Sample articles - will be replaced with automated content generation
-const sampleArticles = [
-  {
-    id: 1,
-    slug: 'supreme-law-of-the-land',
-    title: 'What is the Supreme Law of the Land? Understanding the Constitution',
-    excerpt: 'Learn about the US Constitution and why it matters for your citizenship test.',
-    category: 'Question Deep Dive',
-    date: '2025-01-15',
-    readTime: '5 min read',
-  },
-  {
-    id: 2,
-    slug: 'n400-application-guide-2025',
-    title: 'N-400 Application Guide 2025: Complete Step-by-Step Process',
-    excerpt: 'Everything you need to know about filling out your N-400 application for US citizenship.',
-    category: 'Process Guide',
-    date: '2025-01-14',
-    readTime: '8 min read',
-  },
-  {
-    id: 3,
-    slug: 'citizenship-interview-tips',
-    title: 'USCIS Interview Tips: What to Expect at Your Citizenship Interview',
-    excerpt: 'Prepare for your citizenship interview with these essential tips and common questions.',
-    category: 'Process Guide',
-    date: '2025-01-13',
-    readTime: '6 min read',
-  },
-];
+export const metadata = {
+  title: 'Latest Updates & Guides | CivicsPass Blog',
+  description: 'Stay informed with the latest news, tips, and comprehensive guides for US citizenship applicants',
+};
 
 export default function BlogPage() {
+  const articles = getAllPosts();
+
   return (
     <>
       <TopNav />
@@ -65,41 +40,58 @@ export default function BlogPage() {
           </div>
 
           {/* Articles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {sampleArticles.map((article) => (
+          {articles.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {articles.map((article) => (
+                <Link
+                  key={article.slug}
+                  href={`/blog/${article.slug}`}
+                  className="group bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-200 dark:border-slate-700 overflow-hidden"
+                >
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-semibold px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">
+                        {article.category}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-slate-500">
+                        {article.readTime}
+                      </span>
+                    </div>
+
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {article.title}
+                    </h2>
+
+                    <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
+                      {article.excerpt}
+                    </p>
+
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-500">
+                      <span>{new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <span className="text-blue-600 dark:text-blue-400 group-hover:underline">
+                        Read more →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center p-12 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 mb-12">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                No Articles Yet
+              </h3>
+              <p className="text-gray-600 dark:text-slate-400 mb-4">
+                Articles will appear here once they are published through the admin panel.
+              </p>
               <Link
-                key={article.id}
-                href={`/blog/${article.slug}`}
-                className="group bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-200 dark:border-slate-700 overflow-hidden"
+                href="/admin"
+                className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"
               >
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">
-                      {article.category}
-                    </span>
-                    <span className="text-xs text-gray-500 dark:text-slate-500">
-                      {article.readTime}
-                    </span>
-                  </div>
-
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {article.title}
-                  </h2>
-
-                  <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
-                    {article.excerpt}
-                  </p>
-
-                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-slate-500">
-                    <span>{new Date(article.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                    <span className="text-blue-600 dark:text-blue-400 group-hover:underline">
-                      Read more →
-                    </span>
-                  </div>
-                </div>
+                Go to Admin Panel
               </Link>
-            ))}
-          </div>
+            </div>
+          )}
 
           {/* Coming Soon Notice */}
           <div className="text-center p-8 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-700">
