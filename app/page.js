@@ -341,25 +341,57 @@ export default function Home() {
             {/* Main Card */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 mb-4">
 
-              {/* Current Test Version Info */}
-              <div className="mb-6 text-center">
-                <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">
-                  Current test version
+              {/* Test Version Toggle */}
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 dark:text-slate-400 mb-3 text-center">
+                  Select test version
                 </p>
-                <div className="inline-block px-4 py-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
-                  <span className="text-lg font-bold text-blue-900 dark:text-blue-100">
-                    {testVersion === '2025' ? '2025 Test' : '2008 Test'}
-                  </span>
+
+                {/* Toggle Switch */}
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <button
+                    onClick={() => {
+                      const newVersion = '2008';
+                      setTestVersion(newVersion);
+                      localStorage.setItem('testVersion', newVersion);
+                    }}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      testVersion === '2008'
+                        ? 'bg-blue-600 text-white shadow-md scale-105'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-600'
+                    }`}
+                  >
+                    2008
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const newVersion = '2025';
+                      setTestVersion(newVersion);
+                      localStorage.setItem('testVersion', newVersion);
+                    }}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                      testVersion === '2025'
+                        ? 'bg-blue-600 text-white shadow-md scale-105'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-600'
+                    }`}
+                  >
+                    2025
+                  </button>
+                </div>
+
+                {/* Version Info */}
+                <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                    {testVersion === '2025' ? '2025 Test Version' : '2008 Test Version'}
+                  </p>
                   <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
                     {testVersion === '2025'
-                      ? '20 questions • 12 to pass'
-                      : '10 questions • 6 to pass'
+                      ? '20 questions • Need 12 correct to pass'
+                      : '10 questions • Need 6 correct to pass'
                     }
                   </p>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-slate-500 mt-2">
-                  Change version in menu (☰)
-                </p>
               </div>
 
               {/* Primary CTA */}
