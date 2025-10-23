@@ -4,7 +4,7 @@ Your blog now has a web-based content management system using **Decap CMS** with
 
 ## 🚀 Quick Start (One-Time Setup - 5 Minutes)
 
-### Step 1: Create GitHub OAuth App
+### Step 1: Create GitHub OAuth App (2 minutes)
 
 1. **Go to GitHub Settings**:
    - Visit: https://github.com/settings/developers
@@ -14,7 +14,7 @@ Your blog now has a web-based content management system using **Decap CMS** with
    ```
    Application name: CivicsPass CMS
    Homepage URL: https://civicspass.com
-   Authorization callback URL: https://api.netlify.com/auth/done
+   Authorization callback URL: https://civicspass.com/api/auth
    ```
 
 3. **Register application**
@@ -24,28 +24,19 @@ Your blog now has a web-based content management system using **Decap CMS** with
    - Click "Generate a new client secret"
    - Copy the **Client Secret** (save it somewhere secure!)
 
-### Step 2: Set Up Netlify (Free - Just for OAuth Handling)
+### Step 2: Add Environment Variables to Vercel (2 minutes)
 
-Even though Netlify Identity is deprecated, we use Netlify's **free OAuth proxy service** (which is NOT deprecated):
+1. **Go to your Vercel dashboard**: https://vercel.com/dashboard
+2. **Select your project** (citizenship-test)
+3. **Go to Settings** → **Environment Variables**
+4. **Add two variables**:
+   - Key: `GITHUB_CLIENT_ID` → Value: [paste your Client ID]
+   - Key: `GITHUB_CLIENT_SECRET` → Value: [paste your Client Secret]
+5. **Redeploy**: Settings → Deployments → Click the "..." menu on latest → "Redeploy"
 
-1. **Sign up for Netlify** (if you haven't): https://app.netlify.com/signup
-2. **Import your GitHub repo**:
-   - Click "Add new site" → "Import an existing project"
-   - Connect GitHub → Select `himanshu-vats/citizenship-test`
-   - Just click "Deploy site" (we're only using it as an OAuth proxy)
+### Step 3: Access Your CMS! 🎉
 
-3. **Add environment variables** in Netlify:
-   - Go to your site dashboard
-   - Click "Site configuration" → "Environment variables"
-   - Add two variables:
-     - Key: `GITHUB_CLIENT_ID` → Value: [paste your Client ID]
-     - Key: `GITHUB_CLIENT_SECRET` → Value: [paste your Client Secret]
-
-4. **Redeploy** (Netlify will pick up the env vars)
-
-### Step 3: Access Your CMS
-
-1. **Wait 2-3 minutes** for Vercel to redeploy your site
+1. **Wait 2-3 minutes** for redeployment
 2. **Visit**: `https://civicspass.com/admin`
 3. **Click "Login with GitHub"**
 4. **Authorize the app** (one-time permission)
@@ -89,7 +80,7 @@ Even though Netlify Identity is deprecated, we use Netlify's **free OAuth proxy 
 
 This is the **easiest way** to create articles:
 
-### Step 1: Generate with AI
+### Method 1: Generate Full Article with AI
 
 Ask ChatGPT or Claude:
 
@@ -107,17 +98,23 @@ Meta Description: [150 character SEO description]
 [Article content in Markdown format with ## headings and bullet points]
 ```
 
-### Step 2: Copy & Paste into CMS
-
+Then:
 1. Go to `civicspass.com/admin`
 2. Click "New Blog Articles"
-3. Copy each field from AI output:
-   - AI's Title → Title field
-   - AI's Excerpt → Excerpt field
-   - AI's Category → Category dropdown
-   - AI's content → Body field
-4. Set today's date
-5. Click "Publish"
+3. Copy/paste each field from AI output
+4. Click "Publish"
+
+### Method 2: Use AI While Writing in CMS
+
+1. Open `civicspass.com/admin` in one tab
+2. Open ChatGPT/Claude in another tab
+3. Ask AI for sections as you write:
+   - "Write an introduction about [topic]"
+   - "List 5 tips for [topic]"
+   - "Write a conclusion"
+4. Copy/paste sections into the Body field
+5. Edit as needed
+6. Publish!
 
 **That's it!** Article goes live in 2-3 minutes.
 
@@ -170,25 +167,33 @@ Choose the best fit for your article:
 ## 🔧 Troubleshooting
 
 ### "Login with GitHub" button doesn't work
-- Check that your GitHub OAuth app is created
-- Verify the callback URL is exactly: `https://api.netlify.com/auth/done`
-- Make sure you added GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET to Netlify
+- Check that your GitHub OAuth app callback URL is exactly: `https://civicspass.com/api/auth`
+- Verify GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are set in Vercel
+- Make sure you redeployed after adding env vars
+- Try in an incognito window (clear cache issue)
 
 ### "Failed to load entries"
-- Check that your GitHub OAuth app has access to the repo
+- Check that your GitHub account has write access to the repo
 - Try logging out and back in
-- Clear browser cache
+- Clear browser cache and try again
+
+### "Error: Missing GitHub OAuth credentials"
+- You forgot to add environment variables to Vercel
+- Go to Vercel → Settings → Environment Variables
+- Add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
+- Redeploy the site
 
 ### Changes not showing on site
 - Changes commit to GitHub automatically
 - Vercel rebuilds take 2-3 minutes
-- Check Vercel dashboard for build status
-- Look for the commit in your GitHub repo
+- Check your Vercel dashboard for build status
+- Look for the commit in your GitHub repo history
 
 ### Images not uploading
 - Make sure file size is under 5MB
 - Supported formats: JPG, PNG, GIF, SVG, WebP
 - Try refreshing the page and uploading again
+- Check browser console for errors
 
 ---
 
@@ -200,12 +205,13 @@ Want to save drafts before publishing?
 
 1. Edit `/public/admin/config.yml`
 2. Change `publish_mode: simple` to `publish_mode: editorial_workflow`
-3. This gives you: **Draft → In Review → Ready** workflow
-4. Only "Ready" articles appear on site
+3. Commit and push changes
+4. This gives you: **Draft → In Review → Ready** workflow
+5. Only "Ready" articles appear on site
 
 ### Local Development
 
-Test CMS changes locally:
+Test CMS locally:
 
 ```bash
 npx decap-server
@@ -229,13 +235,14 @@ See docs: https://decapcms.org/docs/widgets/
 ## 🔐 Security & Permissions
 
 - ✅ Only people with **write access** to your GitHub repo can use the CMS
+- ✅ OAuth secrets stored securely in Vercel (never exposed to frontend)
 - ✅ All changes are tracked in Git (full audit log)
-- ✅ Can revert any change via GitHub
+- ✅ Can revert any change via GitHub history
 - ✅ No database to hack
 - ✅ No passwords to manage (uses GitHub authentication)
 
 **To add another editor:**
-1. Add them as a collaborator on GitHub
+1. Add them as a collaborator on your GitHub repo
 2. They visit `civicspass.com/admin`
 3. They log in with their GitHub account
 4. Done!
@@ -249,21 +256,41 @@ See docs: https://decapcms.org/docs/widgets/
 | Service | Cost | Used For |
 |---------|------|----------|
 | Decap CMS | Free | CMS software |
-| GitHub | Free | Content storage |
-| Netlify OAuth Proxy | Free | GitHub login |
-| Vercel Hosting | Free | Website deployment |
+| GitHub | Free | Content storage & authentication |
+| Vercel | Free | Hosting & OAuth handler |
 
-No credit card needed for any of these!
+No credit card needed! Everything runs on free tiers.
 
 ---
 
 ## 📱 Mobile Access
 
-The CMS works on mobile browsers:
+The CMS works perfectly on mobile browsers:
 - Visit `civicspass.com/admin` on your phone
 - Log in with GitHub
 - Write or edit articles
 - Upload images from camera roll
+- Full-featured mobile experience
+
+---
+
+## 🏗️ How It Works (Technical Overview)
+
+For those curious:
+
+1. **Frontend**: Decap CMS runs entirely in your browser at `/admin`
+2. **Authentication**: When you click "Login with GitHub":
+   - Redirects to GitHub OAuth
+   - GitHub redirects back to `/api/auth` (Vercel serverless function)
+   - Function exchanges code for access token
+   - Token sent back to CMS in browser
+3. **Content Management**: CMS uses token to make GitHub API calls:
+   - Read files from `content/blog/`
+   - Commit changes directly to GitHub
+   - Upload images to `public/images/blog/`
+4. **Publishing**: Vercel detects GitHub commits → rebuilds site automatically
+
+**All secure. All free. No databases. No servers to maintain.**
 
 ---
 
@@ -271,7 +298,8 @@ The CMS works on mobile browsers:
 
 - **Decap CMS Docs**: https://decapcms.org/docs/
 - **Markdown Guide**: https://www.markdownguide.org/cheat-sheet/
-- **GitHub OAuth Setup**: https://docs.github.com/en/developers/apps/building-oauth-apps
+- **GitHub OAuth Docs**: https://docs.github.com/en/developers/apps/building-oauth-apps
+- **Vercel Environment Variables**: https://vercel.com/docs/concepts/projects/environment-variables
 - **Report Issues**: https://github.com/himanshu-vats/citizenship-test/issues
 
 ---
@@ -280,10 +308,30 @@ The CMS works on mobile browsers:
 
 You now have a **professional, zero-cost CMS** for your blog:
 
-1. Visit `civicspass.com/admin`
-2. Log in with GitHub (one-time setup)
-3. Write articles (or paste from ChatGPT/Claude)
-4. Click Publish
-5. Live in 2-3 minutes
+1. ✅ Create GitHub OAuth app (one-time, 2 min)
+2. ✅ Add env vars to Vercel (one-time, 2 min)
+3. ✅ Visit `civicspass.com/admin`
+4. ✅ Log in with GitHub
+5. ✅ Write articles (or paste from AI)
+6. ✅ Click Publish
+7. ✅ Live in 2-3 minutes!
 
-**No more VS Code. No more command line. Just write and publish!** ✨
+**No more VS Code. No more command line. No more complex deployments. Just write and publish!** ✨
+
+---
+
+## 📋 Quick Reference Card
+
+| Task | How To |
+|------|--------|
+| **Write new article** | civicspass.com/admin → New Blog Articles |
+| **Edit article** | civicspass.com/admin → Click article → Edit → Publish |
+| **Add images** | In editor → Click image icon → Upload |
+| **Use AI** | ChatGPT/Claude → Copy content → Paste in CMS |
+| **Check if published** | Wait 2-3 min → Visit civicspass.com/blog |
+| **Add editor** | GitHub repo → Settings → Collaborators |
+| **Troubleshoot** | Vercel dashboard → Check deployment logs |
+
+---
+
+**Happy writing! 🚀**
