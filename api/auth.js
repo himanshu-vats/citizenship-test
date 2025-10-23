@@ -79,16 +79,6 @@ export default async function handler(req, res) {
                 console.log("[Popup] Preparing to send token to parent");
 
                 if (window.opener) {
-                  // Try to get parent origin, fallback to known origins
-                  let targetOrigin;
-                  try {
-                    targetOrigin = window.opener.location.origin;
-                  } catch (e) {
-                    // CORS error, use wildcard or known origin
-                    targetOrigin = "https://civicspass.com";
-                  }
-                  console.log("[Popup] Target origin:", targetOrigin);
-
                   // The exact format Decap CMS expects (string format)
                   const message = "authorization:" + provider + ":success:" + JSON.stringify({
                     token: token,
@@ -96,12 +86,12 @@ export default async function handler(req, res) {
                   });
 
                   console.log("[Popup] Sending message:", message);
+                  console.log("[Popup] Using wildcard origin for compatibility");
 
-                  // Send to both possible origins to be safe
-                  window.opener.postMessage(message, "https://civicspass.com");
-                  window.opener.postMessage(message, "https://www.civicspass.com");
+                  // Use wildcard "*" to send to any origin (CMS handles validation)
+                  window.opener.postMessage(message, "*");
 
-                  console.log("[Popup] Messages sent to both origins");
+                  console.log("[Popup] Message sent successfully");
 
                   // Close popup after delay
                   setTimeout(function() {
