@@ -70,21 +70,50 @@ export default async function handler(req, res) {
         <body>
           <script>
             (function() {
-              function receiveMessage(e) {
-                console.log("receiveMessage", e);
-                // send message to popup
-                e.source.postMessage(
-                  'authorization:github:success:${JSON.stringify({ token: access_token, provider: 'github' })}',
-                  e.origin
-                );
+              const token = "${access_token}";
+              const provider = "github";
+
+              function sendMessage() {
+                const message = "authorization:github:success:" + JSON.stringify({
+                  token: token,
+                  provider: provider
+                });
+
+                console.log("Sending message to parent:", message);
+
+                // Send to opener (parent window)
+                if (window.opener) {
+                  window.opener.postMessage(message, "*");
+                  console.log("Message sent to opener");
+
+                  // Close this window after a short delay
+                  setTimeout(function() {
+                    window.close();
+                  }, 1000);
+                } else {
+                  console.error("No window.opener found");
+                }
               }
-              window.addEventListener("message", receiveMessage, false);
-              // Start handshake with parent
-              console.log("Sending message");
-              window.opener.postMessage("authorizing:github", "*");
+
+              // Send message immediately
+              sendMessage();
+
+              // Also listen for messages from parent (Decap CMS handshake)
+              window.addEventListener("message", function(e) {
+                console.log("Received message from parent:", e.data);
+                if (e.data === "authorizing:github") {
+                  sendMessage();
+                }
+              }, false);
+
+              // Notify parent we're ready
+              if (window.opener) {
+                window.opener.postMessage("authorizing:github", "*");
+              }
             })();
           </script>
           <p>Authorization successful! This window should close automatically.</p>
+          <p>If it doesn't close, you can close it manually.</p>
         </body>
       </html>
     `;
