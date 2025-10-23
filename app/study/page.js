@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import MenuDrawer from '@/components/MenuDrawer';
+import TopNav from '@/components/TopNav';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
 
@@ -20,7 +20,6 @@ export default function StudyMode() {
   const [swipeDirection, setSwipeDirection] = useState(null);
   const [history, setHistory] = useState([]); // For undo functionality
   const [showFilters, setShowFilters] = useState(false); // Toggle for filters
-  const [menuOpen, setMenuOpen] = useState(false);
 
   // Get the appropriate question set
   const allQuestions = testVersion === '2008' ? questions2008 : questions2025;
@@ -400,55 +399,35 @@ export default function StudyMode() {
   // IMMERSIVE STUDY SCREEN (Quizlet-inspired)
   return (
     <>
-      <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <TopNav />
 
-      <main className="fixed inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex flex-col overflow-hidden">
-        {/* Header with Back Button and Progress */}
-        <div className="flex-shrink-0 px-3 py-2 border-b border-gray-200/50 dark:border-slate-700/50">
-          <div className="flex items-center justify-between mb-2">
-            <Link
-              href="/"
-              className="bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 font-bold text-xs px-3 py-1.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-1 border border-gray-200 dark:border-slate-700"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Home
-            </Link>
+      <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        {/* Header with Progress and Filters */}
+        <div className="px-4 py-4 border-b border-gray-200/50 dark:border-slate-700/50">
+          <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
 
-          {/* Progress Stats */}
-          <div className="flex gap-2">
-            <div className="px-2 py-1 bg-orange-50 dark:bg-orange-900/30 rounded-lg border border-orange-200 dark:border-orange-700">
-              <span className="text-xs font-bold text-orange-600 dark:text-orange-400">{stillLearningCount} Review</span>
+            {/* Progress Stats */}
+            <div className="flex gap-2">
+              <div className="px-3 py-1.5 bg-orange-50 dark:bg-orange-900/30 rounded-lg border border-orange-200 dark:border-orange-700">
+                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">{stillLearningCount} Review</span>
+              </div>
+              <div className="px-3 py-1.5 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-600">
+                <span className="text-sm font-bold text-gray-600 dark:text-slate-300">{unstudiedCount} New</span>
+              </div>
+              <div className="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
+                <span className="text-sm font-bold text-green-600 dark:text-green-400">{knownCount} Know</span>
+              </div>
             </div>
-            <div className="px-2 py-1 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-600">
-              <span className="text-xs font-bold text-gray-600 dark:text-slate-300">{unstudiedCount} New</span>
-            </div>
-            <div className="px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
-              <span className="text-xs font-bold text-green-600 dark:text-green-400">{knownCount} Know</span>
-            </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-2">
+            {/* Filter Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 font-bold text-xs px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 border border-gray-200 dark:border-slate-700"
+              className="bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 font-semibold text-sm px-4 py-2 rounded-lg transition-all flex items-center gap-2 border border-gray-200 dark:border-slate-700 shadow-sm"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
               Filters
-            </button>
-
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 font-bold text-xs px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 border border-gray-200 dark:border-slate-700"
-              aria-label="Menu"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
             </button>
           </div>
         </div>
@@ -494,10 +473,9 @@ export default function StudyMode() {
             </button>
           </div>
         )}
-      </div>
 
-      {/* Flashcard Container - Dynamically sized */}
-      <div className="flex-1 flex items-center justify-center px-3 py-2 overflow-hidden min-h-0">
+        {/* Flashcard Container - Dynamically sized */}
+        <div className="flex-1 flex items-center justify-center px-3 py-2 overflow-hidden min-h-0">
         {filteredQuestions.length === 0 ? (
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 text-center max-w-md border border-gray-200 dark:border-slate-700">
             <div className="text-5xl mb-3">🎉</div>

@@ -2,8 +2,53 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/ThemeContext";
 
 export const metadata = {
-  title: "US Citizenship Test Prep - 2008 & 2025 USCIS Questions | Free Practice",
-  description: "Pass your USCIS civics test! Practice with official questions from both 2008 (100Q) and 2025 (128Q) test versions. Study mode, practice tests, personalized for your state. Start free, unlock unlimited for $14.99.",
+  metadataBase: new URL('https://civicspass.com'),
+  title: 'US Citizenship Test Practice 2025 | Free USCIS Civics Test Prep - CivicsPass',
+  description: 'Free US citizenship test practice with official USCIS questions. Study 2025 & 2008 test versions with flashcards, practice tests, and personalized learning. Pass your naturalization interview with confidence.',
+  keywords: 'US citizenship test, USCIS civics test, naturalization test, citizenship practice test, civics test 2025, N-400 test prep, citizenship interview questions, USCIS test questions, naturalization interview, citizenship exam',
+  authors: [{ name: 'CivicsPass' }],
+  creator: 'CivicsPass',
+  publisher: 'CivicsPass',
+  openGraph: {
+    title: 'CivicsPass - Free US Citizenship Test Practice',
+    description: 'Master the USCIS citizenship test with free practice tests, flashcards, and study guides. Official 2025 & 2008 civics questions.',
+    url: 'https://civicspass.com',
+    siteName: 'CivicsPass',
+    locale: 'en_US',
+    type: 'website',
+    images: [{
+      url: '/og-image.png',
+      width: 1200,
+      height: 630,
+      alt: 'CivicsPass - US Citizenship Test Practice',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CivicsPass - Free US Citizenship Test Practice',
+    description: 'Master the USCIS citizenship test with free practice tests and flashcards',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://civicspass.com',
+  },
+  verification: {
+    // Add your verification codes here when you get them
+    // google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
+    // bing: 'your-bing-verification-code',
+  },
 };
 
 export default function RootLayout({ children }) {

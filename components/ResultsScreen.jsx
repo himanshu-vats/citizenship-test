@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import MenuDrawer from './MenuDrawer';
+import TopNav from './TopNav';
 
 export default function ResultsScreen({
   score,
@@ -15,27 +15,13 @@ export default function ResultsScreen({
   onGoHome
 }) {
   const [showReview, setShowReview] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
-      <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <TopNav />
 
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-8">
         <div className="max-w-3xl w-full mx-auto">
-
-          {/* Hamburger Menu - Floating Top Right */}
-          <div className="flex justify-end mb-4">
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="p-2 rounded-lg bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors border border-gray-200 dark:border-slate-700"
-              aria-label="Menu"
-            >
-              <svg className="w-5 h-5 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
         {/* Main Results Card */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border dark:border-slate-700">
           {/* Header with confetti background for pass */}
@@ -104,6 +90,16 @@ export default function ResultsScreen({
                 </svg>
                 Study with Flashcards
               </Link>
+
+              <button
+                onClick={onGoHome}
+                className="w-full py-4 bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800 text-gray-900 dark:text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base border-2 border-gray-300 dark:border-slate-600"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Back to Home
+              </button>
             </div>
 
             {/* Performance Tip */}
