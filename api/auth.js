@@ -24,7 +24,8 @@ export default async function handler(req, res) {
 
   // Step 1: Initial OAuth request - Redirect to GitHub
   if (!code && provider === 'github') {
-    const redirectUri = `https://${req.headers.host}/api/auth`;
+    // Use the exact base URL from the config (without www to match)
+    const redirectUri = `https://civicspass.com/api/auth`;
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope || 'repo,user'}`;
 
     return res.redirect(302, githubAuthUrl);
@@ -77,36 +78,36 @@ export default async function handler(req, res) {
               function sendAuthData() {
                 console.log("[Popup] Preparing to send token to parent");
 
-                // Try multiple message formats that Decap CMS might expect
-                const data = {
-                  token: token,
-                  provider: provider
-                };
-
                 if (window.opener) {
-                  // Format 1: Object with token and provider
-                  console.log("[Popup] Sending data object:", data);
-                  window.opener.postMessage(data, "*");
+                  // Try to get parent origin, fallback to known origins
+                  let targetOrigin;
+                  try {
+                    targetOrigin = window.opener.location.origin;
+                  } catch (e) {
+                    // CORS error, use wildcard or known origin
+                    targetOrigin = "https://civicspass.com";
+                  }
+                  console.log("[Popup] Target origin:", targetOrigin);
 
-                  // Format 2: String format (legacy)
-                  const message = "authorization:" + provider + ":success:" + JSON.stringify(data);
-                  console.log("[Popup] Sending string message:", message);
-                  window.opener.postMessage(message, "*");
+                  // The exact format Decap CMS expects (string format)
+                  const message = "authorization:" + provider + ":success:" + JSON.stringify({
+                    token: token,
+                    provider: provider
+                  });
 
-                  // Format 3: Wrapped in event type
-                  window.opener.postMessage({
-                    type: "authorization",
-                    provider: provider,
-                    token: token
-                  }, "*");
+                  console.log("[Popup] Sending message:", message);
 
-                  console.log("[Popup] All message formats sent");
+                  // Send to both possible origins to be safe
+                  window.opener.postMessage(message, "https://civicspass.com");
+                  window.opener.postMessage(message, "https://www.civicspass.com");
+
+                  console.log("[Popup] Messages sent to both origins");
 
                   // Close popup after delay
                   setTimeout(function() {
                     console.log("[Popup] Closing window");
                     window.close();
-                  }, 1500);
+                  }, 2000);
                 } else {
                   console.error("[Popup] No window.opener found!");
                 }
