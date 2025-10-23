@@ -64,9 +64,6 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Citizenship" />
-
-        {/* Netlify Identity for CMS Authentication */}
-        <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" async></script>
       </head>
       <body className="antialiased bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors" suppressHydrationWarning>
         <ThemeProvider>
