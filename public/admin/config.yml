@@ -2,7 +2,8 @@
 # For CivicsPass Blog Management
 
 backend:
-  name: git-gateway
+  name: github
+  repo: himanshu-vats/citizenship-test
   branch: main
 
 # Optional: Use local backend for development
