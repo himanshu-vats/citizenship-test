@@ -73,47 +73,59 @@ export default async function handler(req, res) {
               const token = "${access_token}";
               const provider = "github";
 
-              function sendMessage() {
-                const message = "authorization:github:success:" + JSON.stringify({
+              // Function to send auth data back to CMS
+              function sendAuthData() {
+                console.log("[Popup] Preparing to send token to parent");
+
+                // Try multiple message formats that Decap CMS might expect
+                const data = {
                   token: token,
                   provider: provider
-                });
+                };
 
-                console.log("Sending message to parent:", message);
-
-                // Send to opener (parent window)
                 if (window.opener) {
+                  // Format 1: Object with token and provider
+                  console.log("[Popup] Sending data object:", data);
+                  window.opener.postMessage(data, "*");
+
+                  // Format 2: String format (legacy)
+                  const message = "authorization:" + provider + ":success:" + JSON.stringify(data);
+                  console.log("[Popup] Sending string message:", message);
                   window.opener.postMessage(message, "*");
-                  console.log("Message sent to opener");
 
-                  // Close this window after a short delay
+                  // Format 3: Wrapped in event type
+                  window.opener.postMessage({
+                    type: "authorization",
+                    provider: provider,
+                    token: token
+                  }, "*");
+
+                  console.log("[Popup] All message formats sent");
+
+                  // Close popup after delay
                   setTimeout(function() {
+                    console.log("[Popup] Closing window");
                     window.close();
-                  }, 1000);
+                  }, 1500);
                 } else {
-                  console.error("No window.opener found");
+                  console.error("[Popup] No window.opener found!");
                 }
               }
 
-              // Send message immediately
-              sendMessage();
+              // Send immediately when page loads
+              console.log("[Popup] Page loaded, sending auth data");
+              sendAuthData();
 
-              // Also listen for messages from parent (Decap CMS handshake)
-              window.addEventListener("message", function(e) {
-                console.log("Received message from parent:", e.data);
-                if (e.data === "authorizing:github") {
-                  sendMessage();
-                }
-              }, false);
-
-              // Notify parent we're ready
-              if (window.opener) {
-                window.opener.postMessage("authorizing:github", "*");
-              }
+              // Also respond to messages from parent
+              window.addEventListener("message", function(event) {
+                console.log("[Popup] Received message from parent:", event.data);
+                sendAuthData();
+              });
             })();
           </script>
-          <p>Authorization successful! This window should close automatically.</p>
-          <p>If it doesn't close, you can close it manually.</p>
+          <h2>✓ Authorization Successful!</h2>
+          <p>This window should close automatically in 1.5 seconds.</p>
+          <p>If it doesn't, you can close it manually.</p>
         </body>
       </html>
     `;
