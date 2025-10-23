@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Question from '@/components/Question';
 import ResultsScreen from '@/components/ResultsScreen';
 import InlineZipPrompt from '@/components/InlineZipPrompt';
-import MenuDrawer from '@/components/MenuDrawer';
+import TopNav from '@/components/TopNav';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
@@ -13,7 +13,6 @@ import questions2025 from '@/data/questions-2025.json';
 export default function Home() {
   const [testStarted, setTestStarted] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [testResults, setTestResults] = useState(null);
   const [showOptions, setShowOptions] = useState(false);
   const [showVersionSelect, setShowVersionSelect] = useState(false);
@@ -297,101 +296,127 @@ export default function Home() {
   if (!testStarted && !showResults && !showOptions && !showVersionSelect && !showZipPrompt) {
     return (
       <>
-        <MenuDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+        <TopNav />
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
 
-        <div className="min-h-screen bg-white dark:bg-slate-900">
-          <main className="px-4 py-6">
-            <div className="max-w-lg mx-auto">
+          <main className="px-4 py-8">
+            <div className="max-w-5xl mx-auto">
 
-              {/* Hamburger Menu - Floating Top Right */}
-              <div className="flex justify-end mb-4">
-                <button
-                  onClick={() => setMenuOpen(true)}
-                  className="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-                  aria-label="Menu"
-                >
-                  <svg className="w-5 h-5 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-              </div>
-
-            {/* Hero Section */}
-            <div className="mb-6 text-center">
-              <div className="flex items-center justify-center gap-3 mb-2">
-                <span className="text-5xl sm:text-6xl">🗽</span>
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
-                  US Citizenship Test
+              {/* Hero Section */}
+              <div className="text-center mb-12">
+                <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-red-600 dark:from-blue-400 dark:via-purple-400 dark:to-red-400 bg-clip-text text-transparent mb-4">
+                  U.S. Citizenship Test Prep 2025
                 </h1>
-              </div>
-              <p className="text-gray-600 dark:text-slate-400 text-base">
-                Official USCIS practice questions
-              </p>
-            </div>
-
-            {/* Study Mode - Prominent CTA */}
-            <Link
-              href="/study"
-              className="block w-full py-3 bg-purple-100 dark:bg-purple-900/30 hover:bg-purple-200 dark:hover:bg-purple-900/50 text-purple-900 dark:text-purple-100 rounded-xl text-base font-semibold transition-all border-2 border-purple-300 dark:border-purple-700 mb-6 text-center"
-            >
-              <span className="mr-2">📚</span>
-              Study with Flashcards First
-            </Link>
-
-            {/* Main Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-6 mb-4">
-
-              {/* Current Test Version Info */}
-              <div className="mb-6 text-center">
-                <p className="text-sm text-gray-600 dark:text-slate-400 mb-2">
-                  Current test version
-                </p>
-                <div className="inline-block px-4 py-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
-                  <span className="text-lg font-bold text-blue-900 dark:text-blue-100">
-                    {testVersion === '2025' ? '2025 Test' : '2008 Test'}
-                  </span>
-                  <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                    {testVersion === '2025'
-                      ? '20 questions • 12 to pass'
-                      : '10 questions • 6 to pass'
-                    }
-                  </p>
-                </div>
-                <p className="text-xs text-gray-500 dark:text-slate-500 mt-2">
-                  Change version in menu (☰)
+                <p className="text-base sm:text-lg text-gray-600 dark:text-slate-400">
+                  Master the {testVersion === '2025' ? '128' : '100'} civics questions for your U.S. citizenship journey
                 </p>
               </div>
 
-              {/* Primary CTA */}
-              <button
-                onClick={() => handleVersionSelect(testVersion)}
-                className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-lg font-bold transition-all shadow-md hover:shadow-lg"
-              >
-                Start Practice Test
-              </button>
-            </div>
-
-            {/* Quick Stats */}
-            {testCount > 0 && (
-              <div className="p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-700 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <span className="text-green-600 dark:text-green-400">🎯</span>
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    {testCount} test{testCount !== 1 ? 's' : ''} completed
-                  </span>
+              {/* Test Version Selector */}
+              <div className="flex justify-center mb-8">
+                <div className="inline-flex gap-3 bg-white dark:bg-slate-800 rounded-lg p-1.5 shadow-md border border-gray-200 dark:border-slate-700">
+                  <button
+                    onClick={() => {
+                      const newVersion = '2008';
+                      setTestVersion(newVersion);
+                      localStorage.setItem('testVersion', newVersion);
+                    }}
+                    className={`px-5 py-2 rounded-md font-medium transition-all ${
+                      testVersion === '2008'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    2008 Test
+                  </button>
+                  <button
+                    onClick={() => {
+                      const newVersion = '2025';
+                      setTestVersion(newVersion);
+                      localStorage.setItem('testVersion', newVersion);
+                    }}
+                    className={`px-5 py-2 rounded-md font-medium transition-all ${
+                      testVersion === '2025'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    2025 Test
+                  </button>
                 </div>
+              </div>
+
+              {/* Three Main Action Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+
+                {/* Study Card */}
                 <Link
-                  href="/stats"
-                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                  href="/study"
+                  className="group bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 text-center border border-gray-200 dark:border-slate-700 hover:scale-105"
                 >
-                  View Stats
+                  <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
+                    <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    Study
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    Review all questions with interactive flashcards
+                  </p>
                 </Link>
-              </div>
-            )}
 
-          </div>
-        </main>
-      </div>
+                {/* Test Card */}
+                <button
+                  onClick={() => handleVersionSelect(testVersion)}
+                  className="group bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 text-center border border-gray-200 dark:border-slate-700 hover:scale-105"
+                >
+                  <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors">
+                    <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    Test
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    Take practice tests to assess your knowledge
+                  </p>
+                </button>
+
+                {/* Latest Updates Card */}
+                <Link
+                  href="/blog"
+                  className="group bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 text-center border border-gray-200 dark:border-slate-700 hover:scale-105"
+                >
+                  <div className="w-16 h-16 mx-auto mb-4 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center group-hover:bg-green-200 dark:group-hover:bg-green-900/50 transition-colors">
+                    <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                    Latest Updates
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    News, tips, and guides for citizenship applicants
+                  </p>
+                </Link>
+
+              </div>
+
+              {/* Quick Stats Summary */}
+              {testCount > 0 && (
+                <div className="mt-8 max-w-md mx-auto text-center p-4 bg-white dark:bg-slate-800 rounded-lg shadow border border-gray-200 dark:border-slate-700">
+                  <span className="text-sm text-gray-600 dark:text-slate-400">
+                    🎯 <strong>{testCount}</strong> test{testCount !== 1 ? 's' : ''} completed
+                  </span>
+                </div>
+              )}
+
+            </div>
+          </main>
+        </div>
       </>
     );
   }
@@ -399,17 +424,20 @@ export default function Home() {
 
   // Test in progress
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <>
+      <TopNav />
 
-      {showInlineZipPrompt && (
-        <InlineZipPrompt
-          onSave={handleInlineZipSave}
-          onSkip={handleInlineZipSkip}
-          currentQuestion={testQuestions[currentIndex]}
-        />
-      )}
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
 
-      <main className="flex-1 overflow-y-auto px-3 py-2 min-h-0">
+        {showInlineZipPrompt && (
+          <InlineZipPrompt
+            onSave={handleInlineZipSave}
+            onSkip={handleInlineZipSkip}
+            currentQuestion={testQuestions[currentIndex]}
+          />
+        )}
+
+        <main className="px-3 py-6 max-w-4xl mx-auto">
       {currentIndex > 0 && (
         <div className="max-w-4xl mx-auto mb-2">
           <button
@@ -442,5 +470,6 @@ export default function Home() {
       />
       </main>
     </div>
+    </>
   );
 }

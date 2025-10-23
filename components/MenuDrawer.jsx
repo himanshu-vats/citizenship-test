@@ -6,16 +6,12 @@ import { useTheme } from '@/lib/ThemeContext';
 
 export default function MenuDrawer({ isOpen, onClose }) {
   const { theme, toggleTheme } = useTheme();
-  const [testVersion, setTestVersion] = useState('2025');
   const [zipCode, setZipCode] = useState('');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       // Load current settings
-      const savedVersion = localStorage.getItem('testVersion') || '2025';
-      setTestVersion(savedVersion);
-
       const savedInfo = localStorage.getItem('userRepresentatives');
       if (savedInfo) {
         try {
@@ -30,22 +26,10 @@ export default function MenuDrawer({ isOpen, onClose }) {
     }
   }, [isOpen]);
 
-  const handleVersionToggle = () => {
-    const newVersion = testVersion === '2025' ? '2008' : '2025';
-    setTestVersion(newVersion);
-    localStorage.setItem('testVersion', newVersion);
-  };
-
-  const handleClearZip = () => {
-    localStorage.removeItem('userRepresentatives');
-    setZipCode('');
-  };
-
   const handleClearAllData = () => {
     if (showClearConfirm) {
       localStorage.clear();
       setZipCode('');
-      setTestVersion('2025');
       setShowClearConfirm(false);
       onClose();
       window.location.reload(); // Refresh to show cleared state
@@ -116,31 +100,6 @@ export default function MenuDrawer({ isOpen, onClose }) {
                 }`}>
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                     theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
-                  }`} />
-                </div>
-              </button>
-            </div>
-
-            {/* Test Version Toggle */}
-            <div className="border-b border-gray-200 dark:border-slate-700 pb-4">
-              <button
-                onClick={handleVersionToggle}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">📝</span>
-                  <div className="text-left">
-                    <div className="font-semibold text-gray-900 dark:text-white">Test Version</div>
-                    <div className="text-xs text-gray-600 dark:text-slate-400">{testVersion} Test</div>
-                  </div>
-                </div>
-
-                {/* Toggle Switch */}
-                <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  testVersion === '2025' ? 'bg-blue-600' : 'bg-gray-300'
-                }`}>
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    testVersion === '2025' ? 'translate-x-6' : 'translate-x-1'
                   }`} />
                 </div>
               </button>
