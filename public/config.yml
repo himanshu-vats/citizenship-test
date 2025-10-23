@@ -5,8 +5,8 @@ backend:
   name: github
   repo: himanshu-vats/citizenship-test
   branch: main
-  base_url: https://civicspass.com
-  auth_endpoint: api/auth
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
 
 # Optional: Use local backend for development
 # To enable: Run `npx decap-server` in terminal

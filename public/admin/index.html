@@ -7,6 +7,15 @@
     <title>Content Manager</title>
   </head>
   <body>
+    <!-- Debug: Listen for all postMessages -->
+    <script>
+      window.addEventListener('message', function(event) {
+        console.log('[Admin Page] Received message:', event.data);
+        console.log('[Admin Page] Message origin:', event.origin);
+      }, false);
+      console.log('[Admin Page] Message listener installed');
+    </script>
+
     <!-- Include the script that builds the page and powers Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
   </body>
