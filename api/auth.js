@@ -14,17 +14,25 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  // Get the authorization code from the query
-  const { code } = req.query;
-
-  if (!code) {
-    return res.status(400).json({ error: 'No code provided' });
-  }
-
   if (!CLIENT_ID || !CLIENT_SECRET) {
     return res.status(500).json({
       error: 'Missing GitHub OAuth credentials. Add GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET to Vercel environment variables.'
     });
+  }
+
+  const { code, provider, scope } = req.query;
+
+  // Step 1: Initial OAuth request - Redirect to GitHub
+  if (!code && provider === 'github') {
+    const redirectUri = `https://${req.headers.host}/api/auth`;
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope || 'repo,user'}`;
+
+    return res.redirect(302, githubAuthUrl);
+  }
+
+  // Step 2: OAuth callback - Exchange code for token
+  if (!code) {
+    return res.status(400).json({ error: 'No code or provider provided' });
   }
 
   try {
