@@ -1,5 +1,6 @@
 import "./globals.css";
 import { ThemeProvider } from "@/lib/ThemeContext";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   metadataBase: new URL('https://civicspass.com'),
@@ -69,6 +70,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
