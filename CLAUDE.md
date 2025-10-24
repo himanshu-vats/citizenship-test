@@ -377,7 +377,6 @@ All pages now start with `<AppHeader />` followed by `<main>` content.
 - Removed debug console.log statements from API route
 - Cleaned up unused imports
 - Consistent spacing and formatting
-- Added test infrastructure files (`run-tests-with-report.sh`)
 - Debug HTML files for theme testing
 
 ---

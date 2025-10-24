@@ -8,12 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "verify-data": "node scripts/sync-uscis-data.js",
-    "monthly-check": "node scripts/sync-uscis-data.js",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report",
-    "test:headed": "playwright test --headed"
+    "monthly-check": "node scripts/sync-uscis-data.js"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
@@ -27,7 +22,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@playwright/test": "^1.56.0",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
