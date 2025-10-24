@@ -90,11 +90,12 @@
         const existingAuth = localStorage.getItem('netlify-cms-user');
 
         if (!existingAuth) {
-          console.log('[Admin] ❌ Not authenticated, showing login screen');
+          console.log('[Admin] ❌ Not authenticated, showing custom login screen');
           document.getElementById('custom-login').style.display = 'flex';
-          document.getElementById('cms-root').style.display = 'none';
+          // Don't initialize CMS at all - just show our login
         } else {
           console.log('[Admin] ✅ Already authenticated, loading CMS');
+          document.getElementById('custom-login').style.display = 'none';
           console.log('[Admin] Token data:', existingAuth);
 
           // Parse and verify token
@@ -118,7 +119,7 @@
                   return;
                 }
 
-                console.log('[Admin] ✅ CMS loaded, initializing...');
+                console.log('[Admin] ✅ CMS loaded, initializing with token...');
 
                 // Use Decap CMS's GitHub backend with our token
                 const CMSConfig = {
@@ -149,21 +150,28 @@
                 };
 
                 console.log('[Admin] 🚀 Calling CMS.init()...');
+                console.log('[Admin] Config:', CMSConfig);
                 try {
                   window.CMS.init({ config: CMSConfig });
-                  console.log('[Admin] ✅ CMS initialized successfully!');
+                  console.log('[Admin] ✅ CMS.init() called successfully!');
                 } catch (error) {
                   console.error('[Admin] ❌ CMS initialization error:', error);
                 }
               };
 
               initCMS();
+            } else {
+              console.error('[Admin] ❌ No token found in auth data!');
+              // Clear bad auth and show login
+              localStorage.removeItem('netlify-cms-user');
+              document.getElementById('custom-login').style.display = 'flex';
             }
           } catch (error) {
             console.error('[Admin] ❌ Error parsing auth data:', error);
+            // Clear bad auth and show login
+            localStorage.removeItem('netlify-cms-user');
+            document.getElementById('custom-login').style.display = 'flex';
           }
-
-          document.getElementById('custom-login').style.display = 'none';
         }
       }
     </script>
