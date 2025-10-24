@@ -20,6 +20,7 @@ export default function StudyMode() {
   const [swipeDirection, setSwipeDirection] = useState(null);
   const [history, setHistory] = useState([]); // For undo functionality
   const [showFilters, setShowFilters] = useState(false); // Toggle for filters
+  const [shuffledQuestions, setShuffledQuestions] = useState([]); // Shuffled question list
 
   // Get the appropriate question set
   const allQuestions = testVersion === '2008' ? questions2008 : questions2025;
@@ -27,7 +28,7 @@ export default function StudyMode() {
   // Get unique categories
   const categories = ['all', ...new Set(allQuestions.map(q => q.category))];
 
-  // Filter questions
+  // Filter and shuffle questions
   const getFilteredQuestions = () => {
     let filtered = selectedCategory === 'all'
       ? allQuestions
@@ -40,7 +41,8 @@ export default function StudyMode() {
     return filtered;
   };
 
-  const filteredQuestions = getFilteredQuestions();
+  // Use shuffled questions if available, otherwise use filtered
+  const filteredQuestions = shuffledQuestions.length > 0 ? shuffledQuestions : getFilteredQuestions();
   const currentQuestion = filteredQuestions[currentIndex] || allQuestions[0];
 
   // Load saved data from localStorage
@@ -69,6 +71,15 @@ export default function StudyMode() {
       setTestVersion(savedVersion);
     }
   }, []);
+
+  // Shuffle questions whenever filters change or on initial load
+  useEffect(() => {
+    const filtered = getFilteredQuestions();
+    // Shuffle using Fisher-Yates algorithm
+    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+    setShuffledQuestions(shuffled);
+    setCurrentIndex(0); // Reset to first card when questions change
+  }, [testVersion, selectedCategory, showOnlyUnknown, knownQuestions.length]);
 
   // Save to localStorage
   useEffect(() => {
