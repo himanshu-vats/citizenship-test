@@ -78,6 +78,43 @@ export default function Home() {
     };
   }, []);
 
+  // Add/remove body class when test is active to help BottomNav highlight correctly
+  useEffect(() => {
+    if (testStarted) {
+      document.body.classList.add('test-mode-active');
+    } else {
+      document.body.classList.remove('test-mode-active');
+    }
+
+    return () => {
+      document.body.classList.remove('test-mode-active');
+    };
+  }, [testStarted]);
+
+  // Check for startTest query parameter and automatically start test
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('startTest') === 'true' && !testStarted) {
+      // Automatically start test with the current test version
+      const version = testVersion;
+      const smartTestSize = version === '2025' ? 20 : 10;
+      const questionSet = version === '2008' ? questions2008 : questions2025;
+      const shuffled = [...questionSet].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, smartTestSize);
+
+      setTestQuestions(selected.map(q => prepareQuestionForTest(q, version, userInfo)));
+      setTestStarted(true);
+      setCurrentIndex(0);
+      setSelectedAnswer(null);
+      setHasSubmitted(false);
+      setIsCorrect(null);
+      setExplanation('');
+      setAnswers([]);
+      setScore(0);
+      setZipPromptDismissed(false);
+    }
+  }, []); // Empty dependency array - only run once on mount
+
   // Check if current question is personalized and show inline prompt if needed
   useEffect(() => {
     if (!testStarted || !testQuestions.length || hasSubmitted) return;
@@ -296,7 +333,7 @@ export default function Home() {
   if (!testStarted && !showResults && !showOptions && !showVersionSelect && !showZipPrompt) {
     return (
       <>
-        <TopNav />
+        <TopNav onTestClick={() => handleVersionSelect(testVersion)} />
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
 
           <main className="px-4 py-8">
@@ -425,7 +462,23 @@ export default function Home() {
   // Test in progress
   return (
     <>
-      <TopNav />
+      <TopNav
+        activeSection="test"
+        onHomeClick={() => {
+          // Reset test state and go back to home
+          setTestStarted(false);
+          setShowResults(false);
+          setTestResults(null);
+          setCurrentIndex(0);
+          setSelectedAnswer(null);
+          setHasSubmitted(false);
+          setIsCorrect(null);
+          setExplanation('');
+          setAnswers([]);
+          setScore(0);
+          setTestQuestions([]);
+        }}
+      />
 
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
 

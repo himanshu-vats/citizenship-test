@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/lib/ThemeContext';
 
-export default function TopNav({ activeSection = null, onTestClick = null }) {
+export default function TopNav({ activeSection = null, onTestClick = null, onHomeClick = null }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
@@ -13,7 +13,7 @@ export default function TopNav({ activeSection = null, onTestClick = null }) {
   const navItems = [
     { label: 'Home', href: '/', id: 'home' },
     { label: 'Study', href: '/study', id: 'study' },
-    { label: 'Test', href: '/', id: 'test' },
+    { label: 'Test', href: '/?startTest=true', id: 'test' },
     { label: 'Stats', href: '/stats', id: 'stats' },
   ];
 
@@ -41,6 +41,10 @@ export default function TopNav({ activeSection = null, onTestClick = null }) {
       e.preventDefault();
       onTestClick();
       setMenuOpen(false);
+    } else if (item.id === 'home' && onHomeClick) {
+      e.preventDefault();
+      onHomeClick();
+      setMenuOpen(false);
     }
   };
 
@@ -62,6 +66,7 @@ export default function TopNav({ activeSection = null, onTestClick = null }) {
               <Link
                 key={item.id}
                 href={item.href}
+                onClick={(e) => handleItemClick(e, item)}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                   isActive(item)
                     ? 'bg-white text-blue-600 dark:bg-slate-100 dark:text-blue-700'
@@ -105,7 +110,10 @@ export default function TopNav({ activeSection = null, onTestClick = null }) {
               <Link
                 key={item.id}
                 href={item.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={(e) => {
+                  handleItemClick(e, item);
+                  setMenuOpen(false);
+                }}
                 className={`block px-4 py-3 rounded-lg font-semibold transition-all ${
                   isActive(item)
                     ? 'bg-white text-blue-600 dark:bg-slate-100 dark:text-blue-700'

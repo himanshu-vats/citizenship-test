@@ -7,12 +7,16 @@ import { useEffect, useState } from 'react';
 export default function BottomNav() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
+  const [isTestActive, setIsTestActive] = useState(false);
 
   useEffect(() => {
     // Hide nav when study-mode-active class is present on body
+    // Track when test-mode-active class is present for highlighting
     const checkVisibility = () => {
       const isStudyModeActive = document.body.classList.contains('study-mode-active');
+      const isTestModeActive = document.body.classList.contains('test-mode-active');
       setIsVisible(!isStudyModeActive);
+      setIsTestActive(isTestModeActive);
     };
 
     checkVisibility();
@@ -79,7 +83,10 @@ export default function BottomNav() {
       <div className="max-w-md mx-auto px-2">
         <div className="flex justify-around items-center">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            // Home tab is active if on home page OR test is running
+            const isActive = item.href === '/'
+              ? (pathname === item.href || isTestActive)
+              : pathname === item.href;
 
             return (
               <Link
