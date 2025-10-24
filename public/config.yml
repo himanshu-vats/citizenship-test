@@ -1,0 +1,40 @@
+# Decap CMS Configuration
+# Using Netlify OAuth Proxy (official supported method)
+
+backend:
+  name: github
+  repo: himanshu-vats/citizenship-test
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+publish_mode: simple
+
+media_folder: "public/images/blog"
+public_folder: "/images/blog"
+
+collections:
+  - name: "blog"
+    label: "Blog Articles"
+    folder: "content/blog"
+    create: true
+    slug: "{{slug}}"
+    identifier_field: title
+    extension: md
+    format: frontmatter
+    editor:
+      preview: true
+    fields:
+      - { label: "Title", name: "title", widget: "string", hint: "Article headline" }
+      - { label: "Excerpt", name: "excerpt", widget: "text", hint: "Short summary (1-2 sentences)" }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "select",
+          options: ["Getting Started", "Process Guide", "Study Tips", "Civics Questions", "Immigration Updates", "Success Stories"],
+          default: "Process Guide"
+        }
+      - { label: "Publish Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Read Time", name: "readTime", widget: "string", hint: 'e.g., "5 min read"', default: "5 min read" }
+      - { label: "Meta Description", name: "metaDescription", widget: "text", hint: "SEO description (150-160 chars)" }
+      - { label: "Body", name: "body", widget: "markdown", hint: "Article content in Markdown format" }
