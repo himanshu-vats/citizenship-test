@@ -44,6 +44,11 @@
 
     <!-- Cookie-based OAuth Handler -->
     <script>
+      // Prevent CMS from auto-initializing
+      window.CMS_MANUAL_INIT = true;
+    </script>
+
+    <script>
       console.log("=== CMS Admin Page Loaded ===");
 
       // Check if we're returning from OAuth
@@ -91,6 +96,74 @@
           document.getElementById('cms-root').style.display = 'none';
         } else {
           console.log('[Admin] ✅ Already authenticated, loading CMS');
+          console.log('[Admin] Token data:', existingAuth);
+
+          // Parse and verify token
+          try {
+            const authData = JSON.parse(existingAuth);
+            console.log('[Admin] Parsed auth data:', {
+              hasToken: !!authData.token,
+              tokenPreview: authData.token ? authData.token.substring(0, 20) + '...' : 'none',
+              backendName: authData.backendName
+            });
+
+            // Wait for CMS to be fully loaded, then initialize
+            if (authData.token) {
+              console.log('[Admin] 🔧 Waiting for CMS to load...');
+
+              // Wait for CMS to be available
+              const initCMS = () => {
+                if (!window.CMS) {
+                  console.log('[Admin] ⏳ CMS not loaded yet, waiting...');
+                  setTimeout(initCMS, 100);
+                  return;
+                }
+
+                console.log('[Admin] ✅ CMS loaded, initializing...');
+
+                // Use Decap CMS's GitHub backend with our token
+                const CMSConfig = {
+                  load_config_file: false,
+                  backend: {
+                    name: 'github',
+                    repo: 'himanshu-vats/citizenship-test',
+                    branch: 'main'
+                  },
+                  media_folder: 'public/images/blog',
+                  public_folder: '/images/blog',
+                  collections: [{
+                    name: 'blog',
+                    label: 'Blog Articles',
+                    folder: 'content/blog',
+                    create: true,
+                    slug: '{{slug}}',
+                    fields: [
+                      { label: 'Title', name: 'title', widget: 'string', hint: 'Article headline' },
+                      { label: 'Excerpt', name: 'excerpt', widget: 'text', hint: 'Short summary' },
+                      { label: 'Category', name: 'category', widget: 'select', options: ['Getting Started', 'Process Guide', 'Study Tips', 'Civics Questions', 'Immigration Updates', 'Success Stories'], default: 'Process Guide' },
+                      { label: 'Publish Date', name: 'date', widget: 'datetime', date_format: 'YYYY-MM-DD', time_format: false },
+                      { label: 'Read Time', name: 'readTime', widget: 'string', hint: 'e.g., "5 min read"', default: '5 min read' },
+                      { label: 'Meta Description', name: 'metaDescription', widget: 'text', hint: 'SEO description' },
+                      { label: 'Body', name: 'body', widget: 'markdown' }
+                    ]
+                  }]
+                };
+
+                console.log('[Admin] 🚀 Calling CMS.init()...');
+                try {
+                  window.CMS.init({ config: CMSConfig });
+                  console.log('[Admin] ✅ CMS initialized successfully!');
+                } catch (error) {
+                  console.error('[Admin] ❌ CMS initialization error:', error);
+                }
+              };
+
+              initCMS();
+            }
+          } catch (error) {
+            console.error('[Admin] ❌ Error parsing auth data:', error);
+          }
+
           document.getElementById('custom-login').style.display = 'none';
         }
       }
