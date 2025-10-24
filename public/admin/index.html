@@ -27,6 +27,12 @@
       }
       #custom-login button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
     </style>
+
+    <!-- CRITICAL: Set this BEFORE loading CMS script -->
+    <script>
+      window.CMS_MANUAL_INIT = true;
+      console.log('[Init] CMS_MANUAL_INIT set to true');
+    </script>
   </head>
   <body>
     <!-- Custom login screen (shown before auth) -->
@@ -36,17 +42,10 @@
       </button>
     </div>
 
-    <!-- CMS container (shown after auth) -->
-    <div id="cms-root"></div>
-
     <!-- Include the script that builds the page and powers Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.3.0/dist/decap-cms.js"></script>
 
     <!-- Cookie-based OAuth Handler -->
-    <script>
-      // Prevent CMS from auto-initializing
-      window.CMS_MANUAL_INIT = true;
-    </script>
 
     <script>
       console.log("=== CMS Admin Page Loaded ===");
