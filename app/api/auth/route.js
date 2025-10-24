@@ -73,7 +73,6 @@ export async function GET(request) {
   <script>
     (function() {
       function receiveMessage(e) {
-        console.log("receiveMessage %o", e);
         // send message to main window with the token
         window.opener.postMessage(
           'authorization:github:success:${JSON.stringify({ token: data.access_token, provider: 'github' })}',

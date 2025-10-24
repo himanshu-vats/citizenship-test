@@ -401,24 +401,10 @@ export default function StudyMode() {
     <>
       <TopNav />
 
-      <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        {/* Header with Progress and Filters */}
+      <main className="min-h-screen bg-gray-50 dark:bg-slate-900">
+        {/* Header with Filters Button Only */}
         <div className="px-4 py-4 border-b border-gray-200/50 dark:border-slate-700/50">
-          <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
-
-            {/* Progress Stats */}
-            <div className="flex gap-2">
-              <div className="px-3 py-1.5 bg-orange-50 dark:bg-orange-900/30 rounded-lg border border-orange-200 dark:border-orange-700">
-                <span className="text-sm font-bold text-orange-600 dark:text-orange-400">{stillLearningCount} Review</span>
-              </div>
-              <div className="px-3 py-1.5 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-600">
-                <span className="text-sm font-bold text-gray-600 dark:text-slate-300">{unstudiedCount} New</span>
-              </div>
-              <div className="px-3 py-1.5 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-700">
-                <span className="text-sm font-bold text-green-600 dark:text-green-400">{knownCount} Know</span>
-              </div>
-            </div>
-
+          <div className="max-w-6xl mx-auto flex justify-end">
             {/* Filter Button */}
             <button
               onClick={() => setShowFilters(!showFilters)}
@@ -474,8 +460,8 @@ export default function StudyMode() {
           </div>
         )}
 
-        {/* Flashcard Container - Dynamically sized */}
-        <div className="flex-1 flex items-center justify-center px-3 py-2 overflow-hidden min-h-0">
+        {/* Flashcard Container - Fixed max height to keep buttons visible */}
+        <div className="flex items-center justify-center px-3 py-6">
         {filteredQuestions.length === 0 ? (
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 text-center max-w-md border border-gray-200 dark:border-slate-700">
             <div className="text-5xl mb-3">🎉</div>
@@ -493,20 +479,19 @@ export default function StudyMode() {
             </Link>
           </div>
         ) : (
-          <div className="w-full max-w-3xl h-full flex items-center justify-center">
-            {/* Large Immersive Flashcard with 3D Flip */}
+          <div className="w-full max-w-4xl">
+            {/* Flashcard with 3D Flip - Limited height */}
             <div
               id="flashcard"
-              className={`relative w-full max-h-full rounded-2xl sm:rounded-3xl shadow-2xl ${!isFlipping ? 'cursor-pointer' : 'pointer-events-none'} ${
+              className={`relative w-full rounded-2xl sm:rounded-3xl shadow-xl ${!isFlipping ? 'cursor-pointer' : 'pointer-events-none'} ${
                 swipeDirection === 'left' ? 'transform -translate-x-full opacity-0 transition-all duration-300' :
                 swipeDirection === 'right' ? 'transform translate-x-full opacity-0 transition-all duration-300' : ''
               }`}
               onClick={handleFlipCard}
               style={{
                 perspective: '1000px',
-                aspectRatio: '3/2',
-                maxWidth: '100%',
-                maxHeight: '100%'
+                height: 'clamp(300px, 50vh, 500px)', // Responsive height with max 500px
+                maxWidth: '100%'
               }}
             >
               {/* Card Inner Container with 3D Transform */}
@@ -519,7 +504,7 @@ export default function StudyMode() {
               >
                 {/* Question Side (Front) */}
                 <div
-                  className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-600 to-purple-600 dark:from-slate-800 dark:to-slate-700 rounded-3xl border border-blue-500/30 dark:border-slate-600/50 overflow-hidden"
+                  className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-800 dark:to-slate-700 rounded-3xl border-2 border-blue-200/50 dark:border-slate-600 overflow-hidden shadow-lg"
                   style={{
                     backfaceVisibility: 'hidden',
                     WebkitBackfaceVisibility: 'hidden'
@@ -528,14 +513,14 @@ export default function StudyMode() {
                   {/* Question Content */}
                   <div className="absolute inset-0 p-4 sm:p-6 flex flex-col items-center justify-center">
                     <div className="text-center w-full flex flex-col items-center justify-center gap-4">
-                      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white leading-relaxed px-2">
+                      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed px-2">
                         {currentQuestion.question}
                       </h2>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/20 dark:bg-slate-900/50 rounded-xl backdrop-blur-sm">
-                        <svg className="w-3.5 h-3.5 text-white dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm rounded-lg border border-blue-200 dark:border-slate-600">
+                        <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                         </svg>
-                        <span className="text-white dark:text-slate-300 font-medium text-xs sm:text-sm">Tap to flip</span>
+                        <span className="text-blue-700 dark:text-blue-300 font-medium text-xs sm:text-sm">Tap to flip</span>
                       </div>
                     </div>
                   </div>
@@ -543,7 +528,7 @@ export default function StudyMode() {
 
                 {/* Answer Side (Back) */}
                 <div
-                  className="absolute inset-0 w-full h-full bg-gradient-to-br from-green-600 to-emerald-600 dark:from-slate-800 dark:to-slate-700 rounded-3xl border border-green-500/30 dark:border-slate-600/50 overflow-hidden"
+                  className="absolute inset-0 w-full h-full bg-gradient-to-br from-emerald-50 to-teal-100 dark:from-slate-800 dark:to-slate-700 rounded-3xl border-2 border-emerald-200/50 dark:border-slate-600 overflow-hidden shadow-lg"
                   style={{
                     backfaceVisibility: 'hidden',
                     WebkitBackfaceVisibility: 'hidden',
@@ -553,24 +538,24 @@ export default function StudyMode() {
                   {/* Answer Content */}
                   <div className="absolute inset-0 p-4 sm:p-6 flex flex-col items-center justify-center overflow-y-auto">
                     <div className="text-center w-full flex flex-col items-center justify-center">
-                      <div className="inline-block bg-white/20 dark:bg-green-600/20 text-white dark:text-green-400 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold mb-3 border border-white/30 dark:border-green-500/30">
+                      <div className="inline-block bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold mb-3 border border-emerald-200 dark:border-emerald-700">
                         Answer
                       </div>
                       {currentQuestion.answers.length === 1 ? (
-                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white px-2">
+                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white px-2">
                           {currentQuestion.answers[0]}
                         </p>
                       ) : (
                         <div>
-                          <p className="text-xs sm:text-sm font-bold text-white dark:text-slate-300 mb-2">Any of these answers:</p>
+                          <p className="text-xs sm:text-sm font-bold text-gray-700 dark:text-slate-300 mb-2">Any of these answers:</p>
                           <div className="space-y-1">
                             {currentQuestion.answers.map((answer, index) => (
-                              <p key={index} className="text-sm sm:text-base md:text-lg font-semibold text-white">
+                              <p key={index} className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-white">
                                 • {answer}
                               </p>
                             ))}
                           </div>
-                          <p className="text-xs sm:text-sm text-white/80 dark:text-slate-400 italic mt-3">
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 italic mt-3">
                             💡 You only need to know ONE of these for the test
                           </p>
                         </div>
@@ -590,17 +575,11 @@ export default function StudyMode() {
           {/* Static Progress Stats - Always Visible */}
           <div className="border-b border-gray-200 dark:border-slate-700 px-3 py-1.5">
             <div className="max-w-3xl mx-auto flex items-center justify-center gap-2 text-xs sm:text-sm">
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-orange-500"></div>
-                <span className="font-semibold text-gray-700 dark:text-slate-300">{stillLearningCount}</span>
-              </div>
-              <div className="w-px h-3 bg-gray-300 dark:bg-slate-600"></div>
+              <span className="font-semibold text-amber-700 dark:text-amber-500">{stillLearningCount} Review</span>
+              <span className="text-gray-400 dark:text-slate-600">|</span>
               <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base">{currentIndex + 1}/{filteredQuestions.length}</span>
-              <div className="w-px h-3 bg-gray-300 dark:bg-slate-600"></div>
-              <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                <span className="font-semibold text-gray-700 dark:text-slate-300">{knownCount}</span>
-              </div>
+              <span className="text-gray-400 dark:text-slate-600">|</span>
+              <span className="font-semibold text-emerald-700 dark:text-emerald-500">{knownCount} Know</span>
             </div>
           </div>
 
@@ -622,7 +601,7 @@ export default function StudyMode() {
               {/* Need Review Button - Orange */}
               <button
                 onClick={handleStillLearning}
-                className="flex-1 max-w-[160px] h-10 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold transition-all active:scale-95 shadow-md flex items-center justify-center gap-1.5"
+                className="flex-1 max-w-[160px] h-10 bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800 text-white rounded-lg font-semibold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5"
                 aria-label="Need to review"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
@@ -634,7 +613,7 @@ export default function StudyMode() {
               {/* Know Button - Green */}
               <button
                 onClick={handleKnow}
-                className="flex-1 max-w-[160px] h-10 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold transition-all active:scale-95 shadow-md flex items-center justify-center gap-1.5"
+                className="flex-1 max-w-[160px] h-10 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800 text-white rounded-lg font-semibold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5"
                 aria-label="I know"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>

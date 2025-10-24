@@ -49,15 +49,14 @@ export default function TopNav({ activeSection = null, onTestClick = null, onHom
   };
 
   return (
-    <nav className="bg-blue-600 dark:bg-blue-700 shadow-md sticky top-0 z-50">
+    <nav className="bg-blue-600 dark:bg-blue-700 shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo/Title */}
           <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl">
             <span className="text-2xl">🗽</span>
-            <span className="hidden sm:inline">US Citizenship Test</span>
-            <span className="sm:hidden">USCIS</span>
+            <span>CivicsPass.com</span>
           </Link>
 
           {/* Desktop Navigation */}
