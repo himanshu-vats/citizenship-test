@@ -11,15 +11,17 @@
     <script>
       console.log("=== CMS Admin Page Loaded ===");
 
-      // Listen for debug logs from OAuth popup
+      // Listen ONLY for debug logs, don't interfere with auth messages
       window.addEventListener('message', function(event) {
         if (event.data && event.data.type === 'OAUTH_DEBUG_LOG') {
+          // Only log our debug messages
           console.log(event.data.message, event.data.data || '');
-        } else {
-          // Log all other messages for debugging
-          console.log('[Admin] Received message:', event.data);
-          console.log('[Admin] From origin:', event.origin);
+        } else if (typeof event.data === 'string' && event.data.startsWith('authorization:')) {
+          // Log auth messages but don't prevent Decap CMS from processing them
+          console.log('[Admin] ✅ Auth message received, Decap CMS should process it now');
+          console.log('[Admin] Message:', event.data.substring(0, 60) + '...');
         }
+        // Don't preventDefault or stopPropagation - let Decap CMS also receive it
       }, false);
     </script>
 

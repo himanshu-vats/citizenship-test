@@ -118,16 +118,28 @@ export default async function handler(req, res) {
                 }
               }
 
-              // Send immediately when page loads
-              log("[Popup] 🚀 Page loaded, starting OAuth flow");
+              log("[Popup] 🚀 Page loaded");
               log("[Popup] Provider:", provider);
-              sendAuthData();
 
-              // Also respond to messages from parent
+              // Notify parent that we're ready
+              if (window.opener) {
+                log("[Popup] Notifying parent window we're authorizing");
+                window.opener.postMessage("authorizing:" + provider, "*");
+              }
+
+              // Listen for handshake from Decap CMS, then send auth
               window.addEventListener("message", function(event) {
-                log("[Popup] Received message from parent:", event.data);
+                log("[Popup] Received message from parent:", typeof event.data === 'string' ? event.data.substring(0, 50) : event.data);
+
+                // Any message from parent triggers auth send
                 sendAuthData();
               });
+
+              // Also send after delay (in case CMS doesn't send handshake)
+              setTimeout(function() {
+                log("[Popup] ⏰ Timeout reached, sending auth");
+                sendAuthData();
+              }, 1000);
             })();
           </script>
           <h2>✓ Authorization Successful!</h2>
