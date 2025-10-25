@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { notFound } from 'next/navigation';
+import ArticleWrapper from '@/components/ArticleWrapper';
 
 export async function generateStaticParams() {
   const articlesDirectory = path.join(process.cwd(), 'articles');
@@ -50,40 +51,10 @@ export default async function ArticlePage({ params }) {
     notFound();
   }
 
-  // Inject our app's styles and make it work within our layout
-  const styledContent = `
-    <style>
-      .article-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        background: white;
-        min-height: 100vh;
-      }
+  // Remove the original <html>, <head>, and <body> tags since we're embedding this
+  // Keep only the content inside <body>
+  const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  const bodyContent = bodyMatch ? bodyMatch[1] : htmlContent;
 
-      /* Dark mode support */
-      @media (prefers-color-scheme: dark) {
-        .article-container {
-          background: #0f172a;
-          color: #e2e8f0;
-        }
-        .sidebar {
-          background: linear-gradient(180deg, #1e3a8a 0%, #1e293b 100%) !important;
-        }
-      }
-
-      /* Ensure the article uses full viewport */
-      body {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-    ${htmlContent}
-  `;
-
-  return (
-    <div
-      className="min-h-screen"
-      dangerouslySetInnerHTML={{ __html: styledContent }}
-    />
-  );
+  return <ArticleWrapper htmlContent={bodyContent} slug={slug} />;
 }
