@@ -6,6 +6,7 @@ import Question from '@/components/Question';
 import ResultsScreen from '@/components/ResultsScreen';
 import InlineZipPrompt from '@/components/InlineZipPrompt';
 import TopNav from '@/components/TopNav';
+import ContentHub from '@/components/ContentHub';
 import { prepareQuestionForTest } from '@/lib/answerGenerator';
 import questions2008 from '@/data/questions-2008.json';
 import questions2025 from '@/data/questions-2025.json';
@@ -337,28 +338,29 @@ export default function Home() {
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
 
           <main className="px-4 py-8">
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-6xl mx-auto">
 
-              {/* Hero Section */}
-              <div className="text-center mb-12">
-                <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-red-600 dark:from-blue-400 dark:via-purple-400 dark:to-red-400 bg-clip-text text-transparent mb-4">
+              {/* Compact Hero Section */}
+              <div className="text-center mb-8">
+                <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-red-600 dark:from-blue-400 dark:via-purple-400 dark:to-red-400 bg-clip-text text-transparent mb-3">
                   U.S. Citizenship Test Prep 2025
                 </h1>
-                <p className="text-base sm:text-lg text-gray-600 dark:text-slate-400">
-                  Master the {testVersion === '2025' ? '128' : '100'} civics questions for your U.S. citizenship journey
+                <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400">
+                  Master the {testVersion === '2025' ? '128' : '100'} civics questions • Join thousands preparing for success
                 </p>
               </div>
 
-              {/* Test Version Selector */}
-              <div className="flex justify-center mb-8">
-                <div className="inline-flex gap-3 bg-white dark:bg-slate-800 rounded-lg p-1.5 shadow-md border border-gray-200 dark:border-slate-700">
+              {/* Quick Action Bar - Compact */}
+              <div className="flex flex-wrap justify-center items-center gap-3 mb-8 max-w-4xl mx-auto">
+                {/* Test Version Toggle */}
+                <div className="inline-flex gap-2 bg-white dark:bg-slate-800 rounded-lg p-1 shadow-md border border-gray-200 dark:border-slate-700">
                   <button
                     onClick={() => {
                       const newVersion = '2008';
                       setTestVersion(newVersion);
                       localStorage.setItem('testVersion', newVersion);
                     }}
-                    className={`px-5 py-2 rounded-md font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded text-xs sm:text-sm font-medium transition-all ${
                       testVersion === '2008'
                         ? 'bg-blue-600 text-white shadow-sm'
                         : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -372,7 +374,7 @@ export default function Home() {
                       setTestVersion(newVersion);
                       localStorage.setItem('testVersion', newVersion);
                     }}
-                    className={`px-5 py-2 rounded-md font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded text-xs sm:text-sm font-medium transition-all ${
                       testVersion === '2025'
                         ? 'bg-blue-600 text-white shadow-sm'
                         : 'text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -381,57 +383,41 @@ export default function Home() {
                     2025 Test
                   </button>
                 </div>
-              </div>
 
-              {/* Two Main Action Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-
-                {/* Study Card */}
+                {/* Quick Action Buttons */}
                 <Link
                   href="/study"
-                  className="group bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 text-center border border-gray-200 dark:border-slate-700 hover:scale-105"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
                 >
-                  <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
-                    <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    Study
-                  </h2>
-                  <p className="text-sm text-gray-600 dark:text-slate-400">
-                    Review all questions with interactive flashcards
-                  </p>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Study Flashcards
                 </Link>
 
-                {/* Test Card */}
                 <button
                   onClick={() => handleVersionSelect(testVersion)}
-                  className="group bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-all p-8 text-center border border-gray-200 dark:border-slate-700 hover:scale-105"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
                 >
-                  <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center group-hover:bg-red-200 dark:group-hover:bg-red-900/50 transition-colors">
-                    <svg className="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    Test
-                  </h2>
-                  <p className="text-sm text-gray-600 dark:text-slate-400">
-                    Take practice tests to assess your knowledge
-                  </p>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  Take Practice Test
                 </button>
 
+                {/* Stats Badge */}
+                {testCount > 0 && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold rounded-lg border border-green-300 dark:border-green-700">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    {testCount} test{testCount !== 1 ? 's' : ''} completed
+                  </div>
+                )}
               </div>
 
-              {/* Quick Stats Summary */}
-              {testCount > 0 && (
-                <div className="mt-8 max-w-md mx-auto text-center p-4 bg-white dark:bg-slate-800 rounded-lg shadow border border-gray-200 dark:border-slate-700">
-                  <span className="text-sm text-gray-600 dark:text-slate-400">
-                    🎯 <strong>{testCount}</strong> test{testCount !== 1 ? 's' : ''} completed
-                  </span>
-                </div>
-              )}
+              {/* MAIN FEATURE: Content Hub - Reddit/Trackitt Style */}
+              <ContentHub />
 
             </div>
           </main>
