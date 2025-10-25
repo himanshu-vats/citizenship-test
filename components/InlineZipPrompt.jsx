@@ -9,6 +9,7 @@ export default function InlineZipPrompt({ onSave, onSkip, currentQuestion }) {
   const [error, setError] = useState('');
 
   const handleSubmit = async () => {
+    // Validate ZIP code format
     if (!/^\d{5}$/.test(zipCode)) {
       setError('Please enter a valid 5-digit ZIP code');
       return;
@@ -22,7 +23,13 @@ export default function InlineZipPrompt({ onSave, onSkip, currentQuestion }) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch information');
+        // Provide more specific error messages
+        if (response.status === 500 && data.error === 'Failed to fetch representative information') {
+          setError(`ZIP code ${zipCode} not found. Please check and try again.`);
+        } else {
+          setError(data.error || 'Failed to fetch information');
+        }
+        return;
       }
 
       // Save to localStorage
@@ -35,7 +42,12 @@ export default function InlineZipPrompt({ onSave, onSkip, currentQuestion }) {
 
       onSave(saveData);
     } catch (err) {
-      setError(err.message || 'Failed to fetch information');
+      // Handle network errors
+      if (err.message.includes('fetch')) {
+        setError('Network error. Please check your connection and try again.');
+      } else {
+        setError(`Unable to validate ZIP code ${zipCode}. Please verify it's correct.`);
+      }
     } finally {
       setLoading(false);
     }
@@ -97,7 +109,14 @@ export default function InlineZipPrompt({ onSave, onSkip, currentQuestion }) {
             </button>
           </div>
           {error && (
-            <p className="text-red-600 mt-2 text-sm font-medium">{error}</p>
+            <div className="mt-2">
+              <p className="text-red-600 text-sm font-medium">{error}</p>
+              {error.includes('not found') && (
+                <p className="text-gray-600 text-xs mt-1">
+                  💡 Tip: Make sure you&apos;re using your current residential ZIP code (e.g., 90210, 10001)
+                </p>
+              )}
+            </div>
           )}
         </div>
 

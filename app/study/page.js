@@ -21,6 +21,10 @@ export default function StudyMode() {
   const [history, setHistory] = useState([]); // For undo functionality
   const [showFilters, setShowFilters] = useState(false); // Toggle for filters
   const [shuffledQuestions, setShuffledQuestions] = useState([]); // Shuffled question list
+  const [showSettings, setShowSettings] = useState(false); // Settings modal
+  const [showHint, setShowHint] = useState(false); // Show hint for current card
+  const [trackProgressEnabled, setTrackProgressEnabled] = useState(true); // Track progress toggle
+  const [textToSpeechEnabled, setTextToSpeechEnabled] = useState(false); // TTS toggle
 
   // Get the appropriate question set
   const allQuestions = testVersion === '2008' ? questions2008 : questions2025;
@@ -79,7 +83,7 @@ export default function StudyMode() {
     const shuffled = [...filtered].sort(() => Math.random() - 0.5);
     setShuffledQuestions(shuffled);
     setCurrentIndex(0); // Reset to first card when questions change
-  }, [testVersion, selectedCategory, showOnlyUnknown, knownQuestions.length]);
+  }, [testVersion, selectedCategory, showOnlyUnknown]); // Removed knownQuestions.length to prevent re-shuffle on Know/Still Learning
 
   // Save to localStorage
   useEffect(() => {
@@ -91,9 +95,6 @@ export default function StudyMode() {
   const handleKnow = () => {
     const questionId = currentQuestion.id;
 
-    // Save state for undo
-    setHistory([...history, { index: currentIndex, action: 'know', questionId, prevKnown: knownQuestions.includes(questionId), prevLearning: stillLearningQuestions.includes(questionId) }]);
-
     // Add to known, remove from still learning
     if (!knownQuestions.includes(questionId)) {
       setKnownQuestions([...knownQuestions, questionId]);
@@ -104,7 +105,17 @@ export default function StudyMode() {
     setSwipeDirection('right');
     setShowAnswer(false); // Reset flip state immediately
     setTimeout(() => {
-      moveToNextCard();
+      // If "show only unstudied" is enabled, remove this card from deck
+      if (showOnlyUnknown) {
+        const updatedQuestions = shuffledQuestions.filter(q => q.id !== questionId);
+        setShuffledQuestions(updatedQuestions);
+        // Keep same index (next card will appear in same position)
+        if (currentIndex >= updatedQuestions.length) {
+          setCurrentIndex(0); // Loop back if we're at the end
+        }
+      } else {
+        moveToNextCard();
+      }
       setSwipeDirection(null);
     }, 300);
   };
@@ -131,35 +142,18 @@ export default function StudyMode() {
     }, 300);
   };
 
-  // Handle undo
-  const handleUndo = () => {
-    if (history.length === 0) return;
-
-    const lastAction = history[history.length - 1];
-    setHistory(history.slice(0, -1));
-
-    // Restore previous state
-    if (lastAction.prevKnown) {
-      if (!knownQuestions.includes(lastAction.questionId)) {
-        setKnownQuestions([...knownQuestions, lastAction.questionId]);
-      }
+  // Handle going to previous card
+  const handlePreviousCard = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+      setShowAnswer(false);
+      setShowHint(false);
     } else {
-      setKnownQuestions(knownQuestions.filter(id => id !== lastAction.questionId));
+      // If at first card, go to last card
+      setCurrentIndex(filteredQuestions.length - 1);
+      setShowAnswer(false);
+      setShowHint(false);
     }
-
-    if (lastAction.prevLearning) {
-      if (!stillLearningQuestions.includes(lastAction.questionId)) {
-        setStillLearningQuestions([...stillLearningQuestions, lastAction.questionId]);
-      }
-    } else {
-      setStillLearningQuestions(stillLearningQuestions.filter(id => id !== lastAction.questionId));
-    }
-
-    // Go back to previous card
-    if (lastAction.index < currentIndex) {
-      setCurrentIndex(lastAction.index);
-    }
-    setShowAnswer(false);
   };
 
   const moveToNextCard = () => {
@@ -168,6 +162,7 @@ export default function StudyMode() {
     } else {
       setCurrentIndex(0);
     }
+    setShowHint(false); // Reset hint for next card
   };
 
   // Calculate counts
@@ -230,18 +225,20 @@ export default function StudyMode() {
     if (!studyStarted) return;
 
     const handleKeyPress = (e) => {
-      if (e.key === 'ArrowLeft') handleStillLearning();
-      if (e.key === 'ArrowRight') handleKnow();
+      if (e.key === 'ArrowLeft') handlePreviousCard();
+      if (e.key === 'ArrowRight') {
+        if (trackProgressEnabled) handleKnow();
+        else moveToNextCard();
+      }
       if (e.key === ' ') {
         e.preventDefault();
         setShowAnswer(!showAnswer);
       }
-      if (e.key === 'u' || e.key === 'U') handleUndo();
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [studyStarted, showAnswer, currentIndex, filteredQuestions.length, history]);
+  }, [studyStarted, showAnswer, currentIndex, filteredQuestions.length, trackProgressEnabled]);
 
   const handleVersionChange = (version) => {
     setTestVersion(version);
@@ -260,12 +257,40 @@ export default function StudyMode() {
     }
   };
 
-  // Handle card flip with animation
+  // Shuffle cards
+  const handleShuffle = () => {
+    const filtered = getFilteredQuestions();
+    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+    setShuffledQuestions(shuffled);
+    setCurrentIndex(0);
+    setShowAnswer(false);
+    setShowHint(false);
+  };
+
+  // Generate hint (partial answer)
+  const getHint = () => {
+    const answer = currentQuestion.answers[0];
+    const words = answer.split(' ');
+    if (words.length === 1) {
+      // Show first letter and length
+      return `${answer[0]}${'_'.repeat(answer.length - 1)} (${answer.length} letters)`;
+    } else {
+      // Show first word and blanks for rest
+      return `${words[0]} ${'_____ '.repeat(words.length - 1)}`;
+    }
+  };
+
+  // Handle card flip with animation (allows flipping back to question)
   const handleFlipCard = () => {
     if (isFlipping) return; // Prevent multiple flips during animation
 
     setIsFlipping(true);
-    setShowAnswer(!showAnswer);
+    setShowAnswer(!showAnswer); // Toggle between question and answer
+
+    // Hide hint when flipping to answer
+    if (!showAnswer) {
+      setShowHint(false);
+    }
 
     // Re-enable clicking after animation completes
     setTimeout(() => {
@@ -412,67 +437,21 @@ export default function StudyMode() {
     <>
       <TopNav />
 
-      <main className="min-h-screen bg-gray-50 dark:bg-slate-900">
-        {/* Header with Filters Button Only */}
-        <div className="px-4 py-4 border-b border-gray-200/50 dark:border-slate-700/50">
-          <div className="max-w-6xl mx-auto flex justify-end">
-            {/* Filter Button */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 font-semibold text-sm px-4 py-2 rounded-lg transition-all flex items-center gap-2 border border-gray-200 dark:border-slate-700 shadow-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-              </svg>
-              Filters
-            </button>
-          </div>
-        </div>
-
-        {/* Filter Panel (Collapsible) */}
-        {showFilters && (
-          <div className="mt-2 p-3 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 space-y-2">
-            {/* Category Filter */}
-            <div>
-              <label className="text-xs font-semibold text-gray-700 dark:text-slate-300 block mb-1">Category</label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => { setSelectedCategory(e.target.value); setCurrentIndex(0); }}
-                className="w-full p-2 text-xs rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-semibold focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category}
-                  </option>
-                ))}
-              </select>
+      <main className="min-h-screen bg-white dark:bg-slate-900 flex flex-col">
+        {/* Minimal Top Bar - Progress (only when tracking is OFF) */}
+        {!trackProgressEnabled && (
+          <div className="flex-shrink-0 px-4 py-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="text-sm font-semibold text-gray-500 dark:text-slate-400">
+                {currentIndex + 1} / {filteredQuestions.length}
+              </div>
             </div>
-
-            {/* Filters */}
-            <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 text-xs font-semibold text-gray-700 dark:text-slate-300 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={showOnlyUnknown}
-                  onChange={(e) => { setShowOnlyUnknown(e.target.checked); setCurrentIndex(0); }}
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                />
-                Show only unstudied
-              </label>
-            </div>
-
-            {/* Reset Progress */}
-            <button
-              onClick={resetProgress}
-              className="w-full py-2 text-xs bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 font-semibold rounded-lg border border-red-200 dark:border-red-700 transition-colors"
-            >
-              Reset All Progress
-            </button>
           </div>
         )}
 
-        {/* Flashcard Container - Fixed max height to keep buttons visible */}
-        <div className="flex items-center justify-center px-3 py-6">
+
+        {/* Flashcard Container - Centered with max width */}
+        <div className="flex-1 flex items-center justify-center px-4 pb-4">
         {filteredQuestions.length === 0 ? (
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 text-center max-w-md border border-gray-200 dark:border-slate-700">
             <div className="text-5xl mb-3">🎉</div>
@@ -490,18 +469,18 @@ export default function StudyMode() {
             </Link>
           </div>
         ) : (
-          <div className="w-full max-w-4xl">
-            {/* Flashcard with 3D Flip - Limited height */}
+          <div className="w-full max-w-3xl">
+            {/* Flashcard with 3D Flip */}
             <div
               id="flashcard"
-              className={`relative w-full rounded-2xl sm:rounded-3xl shadow-xl ${!isFlipping ? 'cursor-pointer' : 'pointer-events-none'} ${
+              className={`relative w-full rounded-3xl shadow-2xl ${!isFlipping ? 'cursor-pointer' : 'pointer-events-none'} ${
                 swipeDirection === 'left' ? 'transform -translate-x-full opacity-0 transition-all duration-300' :
                 swipeDirection === 'right' ? 'transform translate-x-full opacity-0 transition-all duration-300' : ''
               }`}
               onClick={handleFlipCard}
               style={{
                 perspective: '1000px',
-                height: 'clamp(300px, 50vh, 500px)', // Responsive height with max 500px
+                height: 'clamp(350px, 55vh, 550px)',
                 maxWidth: '100%'
               }}
             >
@@ -522,16 +501,44 @@ export default function StudyMode() {
                   }}
                 >
                   {/* Question Content */}
-                  <div className="absolute inset-0 p-4 sm:p-6 flex flex-col items-center justify-center">
-                    <div className="text-center w-full flex flex-col items-center justify-center gap-4">
-                      <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed px-2">
-                        {currentQuestion.question}
-                      </h2>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm rounded-lg border border-blue-200 dark:border-slate-600">
+                  <div className="absolute inset-0 p-4 sm:p-6 flex flex-col">
+                    {/* Get a hint button at top */}
+                    <div className="flex justify-start mb-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowHint(!showHint);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-lg border border-blue-200 dark:border-slate-600 hover:bg-white dark:hover:bg-slate-700 transition-all text-xs sm:text-sm"
+                      >
                         <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
-                        <span className="text-blue-700 dark:text-blue-300 font-medium text-xs sm:text-sm">Tap to flip</span>
+                        <span className="text-blue-700 dark:text-blue-300 font-medium">Get a hint</span>
+                      </button>
+                    </div>
+
+                    {/* Show hint if enabled */}
+                    {showHint && (
+                      <div className="mb-3 px-3 py-2 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 dark:border-yellow-600 rounded-r">
+                        <p className="text-xs sm:text-sm text-yellow-900 dark:text-yellow-200 font-mono">
+                          {getHint()}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Question text centered */}
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="text-center w-full flex flex-col items-center justify-center gap-4">
+                        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed px-2">
+                          {currentQuestion.question}
+                        </h2>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm rounded-lg border border-blue-200 dark:border-slate-600">
+                          <svg className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                          </svg>
+                          <span className="text-blue-700 dark:text-blue-300 font-medium text-xs sm:text-sm">Tap to flip</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -548,8 +555,8 @@ export default function StudyMode() {
                 >
                   {/* Answer Content */}
                   <div className="absolute inset-0 p-4 sm:p-6 flex flex-col items-center justify-center overflow-y-auto">
-                    <div className="text-center w-full flex flex-col items-center justify-center">
-                      <div className="inline-block bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold mb-3 border border-emerald-200 dark:border-emerald-700">
+                    <div className="text-center w-full flex flex-col items-center justify-center gap-3">
+                      <div className="inline-block bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold border border-emerald-200 dark:border-emerald-700">
                         Answer
                       </div>
                       {currentQuestion.answers.length === 1 ? (
@@ -571,71 +578,261 @@ export default function StudyMode() {
                           </p>
                         </div>
                       )}
+
+                      {/* Tap to flip back hint */}
+                      <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm rounded-lg border border-emerald-200 dark:border-emerald-700">
+                        <svg className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span className="text-emerald-700 dark:text-emerald-300 font-medium text-xs sm:text-sm">Tap to see question again</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Know/Still Learning Buttons with Progress Counter - Quizlet Style */}
+            {trackProgressEnabled && (
+              <div className="mt-6 flex items-center justify-center gap-3">
+                <button
+                  onClick={handleStillLearning}
+                  className="px-8 py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold text-sm transition-all active:scale-95"
+                >
+                  Still Learning
+                </button>
+
+                {/* Progress Counter in Middle */}
+                <div className="px-4 py-2 text-gray-600 dark:text-slate-400 font-semibold text-sm">
+                  {currentIndex + 1} / {filteredQuestions.length}
+                </div>
+
+                <button
+                  onClick={handleKnow}
+                  className="px-8 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold text-sm transition-all active:scale-95"
+                >
+                  Know
+                </button>
+              </div>
+            )}
+
+            {/* Bottom Toolbar - Utility Controls */}
+            <div className="mt-6 flex items-center justify-center gap-6">
+              {/* Previous Card (Undo) - Circular arrow like Quizlet */}
+              <button
+                onClick={handlePreviousCard}
+                className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all min-w-[60px]"
+                title="Previous card"
+              >
+                <svg className="w-7 h-7 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                </svg>
+                <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Previous</span>
+              </button>
+
+              {/* Shuffle */}
+              <button
+                onClick={handleShuffle}
+                className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all min-w-[60px]"
+                title="Shuffle"
+              >
+                <svg className="w-7 h-7 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                </svg>
+                <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Shuffle</span>
+              </button>
+
+              {/* Settings */}
+              <button
+                onClick={() => setShowSettings(!showSettings)}
+                className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all min-w-[60px]"
+                title="Settings"
+              >
+                <svg className="w-7 h-7 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Settings</span>
+              </button>
+
+              {/* Fullscreen */}
+              <button
+                onClick={() => document.documentElement.requestFullscreen?.()}
+                className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all min-w-[60px]"
+                title="Fullscreen"
+              >
+                <svg className="w-7 h-7 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Fullscreen</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Bottom Control Bar - Compact Design */}
-      {filteredQuestions.length > 0 && (
-        <div className="flex-shrink-0 bg-white/95 dark:bg-slate-900/95 border-t border-gray-200 dark:border-slate-700 backdrop-blur-sm pb-safe">
-          {/* Static Progress Stats - Always Visible */}
-          <div className="border-b border-gray-200 dark:border-slate-700 px-3 py-1.5">
-            <div className="max-w-3xl mx-auto flex items-center justify-center gap-2 text-xs sm:text-sm">
-              <span className="font-semibold text-amber-700 dark:text-amber-500">{stillLearningCount} Review</span>
-              <span className="text-gray-400 dark:text-slate-600">|</span>
-              <span className="font-bold text-gray-900 dark:text-white text-sm sm:text-base">{currentIndex + 1}/{filteredQuestions.length}</span>
-              <span className="text-gray-400 dark:text-slate-600">|</span>
-              <span className="font-semibold text-emerald-700 dark:text-emerald-500">{knownCount} Know</span>
+      {/* Settings Modal (Quizlet-style) */}
+      {showSettings && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowSettings(false)}>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-slate-700" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Options</h2>
+              <button
+                onClick={() => setShowSettings(false)}
+                className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-all"
+              >
+                <svg className="w-6 h-6 text-gray-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-          </div>
 
-          {/* Main Control Bar */}
-          <div className="px-3 py-2">
-            <div className="max-w-3xl mx-auto flex items-center justify-center gap-2">
-              {/* Undo Button */}
-              <button
-                onClick={handleUndo}
-                disabled={history.length === 0}
-                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all active:scale-95"
-                aria-label="Undo"
-              >
-                <svg className="w-4 h-4 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                </svg>
-              </button>
+            {/* Options */}
+            <div className="space-y-4">
+              {/* Track Progress Toggle */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Track progress</h3>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    Sort your flashcards to keep track of what you know and what you&apos;re still learning. Turn progress tracking off if you want to quickly review your flashcards.
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={trackProgressEnabled}
+                    onChange={(e) => setTrackProgressEnabled(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
 
-              {/* Need Review Button - Orange */}
-              <button
-                onClick={handleStillLearning}
-                className="flex-1 max-w-[160px] h-10 bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800 text-white rounded-lg font-semibold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5"
-                aria-label="Need to review"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span className="text-xs sm:text-sm">Review</span>
-              </button>
+              <hr className="border-gray-200 dark:border-slate-700" />
 
-              {/* Know Button - Green */}
+              {/* Study only unstudied */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Study only unstudied cards</h3>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    Hide cards you&apos;ve marked as &quot;Know&quot;
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={showOnlyUnknown}
+                    onChange={(e) => {
+                      setShowOnlyUnknown(e.target.checked);
+                      setCurrentIndex(0);
+                    }}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <hr className="border-gray-200 dark:border-slate-700" />
+
+              {/* Category Filter */}
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Category</h3>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value);
+                    setCurrentIndex(0);
+                  }}
+                  className="w-full p-2.5 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
+                >
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category === 'all' ? 'All Categories' : category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <hr className="border-gray-200 dark:border-slate-700" />
+
+              {/* Test Version */}
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Test Version</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => handleVersionChange('2008')}
+                    className={`p-2.5 rounded-lg font-semibold text-sm transition-all border ${
+                      testVersion === '2008'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-600 hover:bg-gray-200 dark:hover:bg-slate-600'
+                    }`}
+                  >
+                    2008 (100Q)
+                  </button>
+                  <button
+                    onClick={() => handleVersionChange('2025')}
+                    className={`p-2.5 rounded-lg font-semibold text-sm transition-all border ${
+                      testVersion === '2025'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border-gray-300 dark:border-slate-600 hover:bg-gray-200 dark:hover:bg-slate-600'
+                    }`}
+                  >
+                    2025 (128Q)
+                  </button>
+                </div>
+              </div>
+
+              <hr className="border-gray-200 dark:border-slate-700" />
+
+              {/* Keyboard Shortcuts */}
+              <div>
+                <button
+                  className="w-full text-left font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                  onClick={() => alert('Keyboard Shortcuts:\n\n← Arrow Left: Previous card\n→ Arrow Right: Know (or next card if tracking off)\nSpace: Flip card')}
+                >
+                  View keyboard shortcuts
+                </button>
+              </div>
+
+              <hr className="border-gray-200 dark:border-slate-700" />
+
+              {/* Text to Speech */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Text to speech</h3>
+                  <p className="text-sm text-gray-600 dark:text-slate-400">
+                    Hear questions and answers read aloud
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={textToSpeechEnabled}
+                    onChange={(e) => setTextToSpeechEnabled(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <hr className="border-gray-200 dark:border-slate-700" />
+
+              {/* Restart Flashcards */}
               <button
-                onClick={handleKnow}
-                className="flex-1 max-w-[160px] h-10 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-800 text-white rounded-lg font-semibold transition-all active:scale-95 shadow-sm flex items-center justify-center gap-1.5"
-                aria-label="I know"
+                onClick={() => {
+                  resetProgress();
+                  setShowSettings(false);
+                }}
+                className="w-full text-left font-semibold text-red-600 dark:text-red-400 hover:underline"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-xs sm:text-sm">Know</span>
+                Clear all progress
               </button>
             </div>
           </div>
         </div>
       )}
+
       </main>
     </>
   );

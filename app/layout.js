@@ -1,6 +1,7 @@
 import "./globals.css";
 import { ThemeProvider } from "@/lib/ThemeContext";
 import { Analytics } from "@vercel/analytics/next";
+import FeedbackWidget from "@/components/FeedbackWidget";
 
 export const metadata = {
   metadataBase: new URL('https://civicspass.com'),
@@ -69,6 +70,7 @@ export default function RootLayout({ children }) {
       <body className="antialiased bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors" suppressHydrationWarning>
         <ThemeProvider>
           {children}
+          <FeedbackWidget />
         </ThemeProvider>
         <Analytics />
       </body>
