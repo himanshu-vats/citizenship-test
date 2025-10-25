@@ -103,10 +103,8 @@ className="... bg-blue-600 hover:bg-blue-700 ..."
 // Green: bg-green-600 hover:bg-green-700
 ```
 
-### Disable Screenshot by Default
-```javascript
-const [includeScreenshot, setIncludeScreenshot] = useState(false); // Change to false
-```
+### Screenshot Feature
+Screenshot capture is disabled by default due to html2canvas compatibility issues with Tailwind v4 oklch() color functions. Users can optionally enable it by checking the box, which will attempt to capture the screenshot. If it fails, feedback will still be sent successfully without the screenshot.
 
 ## Email Template
 

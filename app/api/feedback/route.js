@@ -2,11 +2,18 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { feedback, email, screenshot, url, userAgent, timestamp } = body;
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
+    }
 
-    if (!feedback || feedback.trim().length === 0) {
-      return NextResponse.json({ error: 'Feedback is required' }, { status: 400 });
+    const { feedback, email, screenshot, url, userAgent, timestamp } = body || {};
+
+    if (!feedback || typeof feedback !== 'string' || feedback.trim().length === 0) {
+      return NextResponse.json({ error: 'Feedback text is required' }, { status: 400 });
     }
 
     // Use Resend API for sending emails (you'll need to set up Resend.com)

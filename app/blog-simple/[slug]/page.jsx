@@ -1,68 +1,79 @@
-import fs from 'fs';
-import path from 'path';
+import TopNav from '@/components/TopNav';
+import BlogPost from '@/components/BlogPost';
 import { notFound } from 'next/navigation';
-import ArticleWrapper from '@/components/ArticleWrapper';
+
+// Import blog post components
+import N400FilingMistakesContent, {
+  metadata as n400MistakesMetadata,
+  tableOfContents as n400MistakesTOC,
+  relatedPosts as n400MistakesRelated
+} from '../posts/n400-filing-mistakes';
+
+import CompleteN400ProcessContent, {
+  metadata as n400ProcessMetadata,
+  tableOfContents as n400ProcessTOC,
+  relatedPosts as n400ProcessRelated
+} from '../posts/complete-n400-process';
+
+// Map of all blog posts
+const blogPosts = {
+  'n400-filing-mistakes': {
+    metadata: n400MistakesMetadata,
+    Content: N400FilingMistakesContent,
+    tableOfContents: n400MistakesTOC,
+    relatedPosts: n400MistakesRelated
+  },
+  'complete-n400-process': {
+    metadata: n400ProcessMetadata,
+    Content: CompleteN400ProcessContent,
+    tableOfContents: n400ProcessTOC,
+    relatedPosts: n400ProcessRelated
+  }
+};
 
 export async function generateStaticParams() {
-  const articlesDirectory = path.join(process.cwd(), 'articles');
-
-  try {
-    const files = fs.readdirSync(articlesDirectory);
-    return files
-      .filter(file => file.endsWith('.html'))
-      .map(file => ({
-        slug: file.replace('.html', '')
-      }));
-  } catch (error) {
-    return [];
-  }
+  return Object.keys(blogPosts).map(slug => ({ slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const articlesDirectory = path.join(process.cwd(), 'articles');
-  const filePath = path.join(articlesDirectory, `${slug}.html`);
+  const post = blogPosts[slug];
 
-  try {
-    const content = fs.readFileSync(filePath, 'utf8');
-    const titleMatch = content.match(/<title>(.*?)<\/title>/);
-    const descMatch = content.match(/<meta name="description" content="(.*?)"/);
-
-    return {
-      title: titleMatch ? titleMatch[1] : slug,
-      description: descMatch ? descMatch[1] : '',
-    };
-  } catch (error) {
-    return {
-      title: 'Article Not Found',
-    };
+  if (!post) {
+    return { title: 'Post Not Found' };
   }
+
+  return {
+    title: post.metadata.title,
+    description: post.metadata.description,
+  };
 }
 
-export default async function ArticlePage({ params }) {
+export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const articlesDirectory = path.join(process.cwd(), 'articles');
-  const filePath = path.join(articlesDirectory, `${slug}.html`);
+  const post = blogPosts[slug];
 
-  let htmlContent = '';
-  try {
-    htmlContent = fs.readFileSync(filePath, 'utf8');
-  } catch (error) {
+  if (!post) {
     notFound();
   }
 
-  // Extract styles from <head> and content from <body>
-  const styleMatch = htmlContent.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
-  const styles = styleMatch ? styleMatch[0] : '';
+  const { Content, metadata, tableOfContents, relatedPosts } = post;
 
-  const scriptMatch = htmlContent.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
-  const script = scriptMatch ? scriptMatch[0] : '';
-
-  const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-  const bodyContent = bodyMatch ? bodyMatch[1] : htmlContent;
-
-  // Combine styles, body content, and scripts
-  const fullContent = `${styles}\n${bodyContent}\n${script}`;
-
-  return <ArticleWrapper htmlContent={fullContent} slug={slug} />;
+  return (
+    <>
+      <TopNav activeSection="posts" />
+      <main className="min-h-screen bg-white dark:bg-slate-900">
+        <BlogPost
+          title={metadata.title}
+          description={metadata.description}
+          date={metadata.date}
+          readTime={metadata.readTime}
+          category={metadata.category}
+          content={<Content />}
+          tableOfContents={tableOfContents}
+          relatedPosts={relatedPosts}
+        />
+      </main>
+    </>
+  );
 }

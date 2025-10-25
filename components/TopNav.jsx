@@ -14,6 +14,7 @@ export default function TopNav({ activeSection = null, onTestClick = null, onHom
     { label: 'Home', href: '/', id: 'home' },
     { label: 'Study', href: '/study', id: 'study' },
     { label: 'Test', href: '/?startTest=true', id: 'test' },
+    { label: 'Posts', href: '/blog-simple', id: 'posts' },
     { label: 'Stats', href: '/stats', id: 'stats' },
   ];
 
@@ -49,27 +50,30 @@ export default function TopNav({ activeSection = null, onTestClick = null, onHom
   };
 
   return (
-    <nav className="bg-blue-600 dark:bg-blue-700 shadow-md z-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <nav className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 shadow-lg sticky top-0 z-50 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
 
           {/* Logo/Title */}
-          <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl">
-            <span className="text-2xl">🗽</span>
-            <span>CivicsPass.com</span>
+          <Link href="/" className="flex items-center gap-3 text-white font-bold text-xl lg:text-2xl group">
+            <span className="text-3xl lg:text-4xl group-hover:scale-110 transition-transform">🗽</span>
+            <div className="flex flex-col">
+              <span className="leading-tight">CivicsPass.com</span>
+              <span className="text-xs font-normal text-blue-100 dark:text-blue-200 hidden sm:block">U.S. Citizenship Test Prep 2025</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.id}
                 href={item.href}
                 onClick={(e) => handleItemClick(e, item)}
-                className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                className={`px-6 py-3 rounded-xl font-semibold text-base transition-all ${
                   isActive(item)
-                    ? 'bg-white text-blue-600 dark:bg-slate-100 dark:text-blue-700'
-                    : 'text-white hover:bg-blue-700 dark:hover:bg-blue-800'
+                    ? 'bg-white text-blue-600 shadow-md transform scale-105'
+                    : 'text-white hover:bg-white/20 hover:backdrop-blur-sm'
                 }`}
               >
                 {item.label}
@@ -79,24 +83,24 @@ export default function TopNav({ activeSection = null, onTestClick = null, onHom
             {/* Dark Mode Toggle - Desktop */}
             <button
               onClick={toggleTheme}
-              className="ml-2 p-2 text-white hover:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-all"
+              className="ml-3 p-3 text-white hover:bg-white/20 rounded-xl transition-all hover:scale-105"
               aria-label="Toggle dark mode"
             >
-              {theme === 'dark' ? '☀️' : '🌙'}
+              <span className="text-xl">{theme === 'dark' ? '☀️' : '🌙'}</span>
             </button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-all"
+            className="lg:hidden p-3 rounded-xl text-white hover:bg-white/20 transition-all"
             aria-label="Menu"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
               {menuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
@@ -104,7 +108,7 @@ export default function TopNav({ activeSection = null, onTestClick = null, onHom
 
         {/* Mobile Navigation Dropdown */}
         {menuOpen && (
-          <div className="md:hidden pb-4 space-y-2">
+          <div className="lg:hidden pb-6 pt-2 space-y-3 border-t border-white/20">
             {navItems.map((item) => (
               <Link
                 key={item.id}
@@ -113,35 +117,37 @@ export default function TopNav({ activeSection = null, onTestClick = null, onHom
                   handleItemClick(e, item);
                   setMenuOpen(false);
                 }}
-                className={`block px-4 py-3 rounded-lg font-semibold transition-all ${
+                className={`block px-5 py-4 rounded-xl font-semibold text-lg transition-all ${
                   isActive(item)
-                    ? 'bg-white text-blue-600 dark:bg-slate-100 dark:text-blue-700'
-                    : 'text-white hover:bg-blue-700 dark:hover:bg-blue-800'
+                    ? 'bg-white text-blue-600 shadow-md'
+                    : 'text-white hover:bg-white/20'
                 }`}
               >
                 {item.label}
               </Link>
             ))}
 
-            {/* Dark Mode Toggle - Mobile */}
-            <button
-              onClick={() => {
-                toggleTheme();
-                setMenuOpen(false);
-              }}
-              className="w-full text-left px-4 py-3 rounded-lg font-semibold text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-all"
-            >
-              {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
-            </button>
+            <div className="pt-2 border-t border-white/20 space-y-3">
+              {/* Dark Mode Toggle - Mobile */}
+              <button
+                onClick={() => {
+                  toggleTheme();
+                  setMenuOpen(false);
+                }}
+                className="w-full text-left px-5 py-4 rounded-xl font-semibold text-lg text-white hover:bg-white/20 transition-all"
+              >
+                {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+              </button>
 
-            {/* Settings Link - Mobile */}
-            <Link
-              href="/settings"
-              onClick={() => setMenuOpen(false)}
-              className="block px-4 py-3 rounded-lg font-semibold text-white hover:bg-blue-700 dark:hover:bg-blue-800 transition-all"
-            >
-              ⚙️ Settings
-            </Link>
+              {/* Settings Link - Mobile */}
+              <Link
+                href="/settings"
+                onClick={() => setMenuOpen(false)}
+                className="block px-5 py-4 rounded-xl font-semibold text-lg text-white hover:bg-white/20 transition-all"
+              >
+                ⚙️ Settings
+              </Link>
+            </div>
           </div>
         )}
       </div>

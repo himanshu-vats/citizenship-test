@@ -1,40 +1,71 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 
 export default function FeedbackWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [email, setEmail] = useState('');
-  const [includeScreenshot, setIncludeScreenshot] = useState(true);
+  const [includeScreenshot, setIncludeScreenshot] = useState(false); // Disabled by default (html2canvas doesn't support Tailwind v4 oklch colors)
   const [screenshot, setScreenshot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
 
+  // Prevent keyboard shortcuts when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      // Stop all keyboard event propagation when modal is open
+      // This prevents study mode shortcuts (space, arrows) from triggering
+      e.stopPropagation();
+    };
+
+    // Capture phase to intercept before it reaches other listeners
+    document.addEventListener('keydown', handleKeyDown, true);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [isOpen]);
+
   const captureScreenshot = async () => {
     try {
+      // Hide the feedback modal before capturing
+      const modal = document.querySelector('[data-feedback-modal]');
+      if (modal) modal.style.display = 'none';
+
       const canvas = await html2canvas(document.body, {
         allowTaint: true,
         useCORS: true,
         scrollY: -window.scrollY,
         scrollX: -window.scrollX,
         windowWidth: document.documentElement.scrollWidth,
-        windowHeight: document.documentElement.scrollHeight
+        windowHeight: document.documentElement.scrollHeight,
+        ignoreElements: (element) => {
+          // Ignore elements that might cause issues
+          return element.classList?.contains('feedback-widget');
+        }
       });
+
+      // Show modal again
+      if (modal) modal.style.display = '';
+
       return canvas.toDataURL('image/png');
     } catch (error) {
-      console.error('Screenshot capture failed:', error);
+      console.warn('Screenshot capture failed (this is OK, feedback will still be sent):', error.message);
+      // Show modal again if it was hidden
+      const modal = document.querySelector('[data-feedback-modal]');
+      if (modal) modal.style.display = '';
       return null;
     }
   };
 
-  const handleOpen = async () => {
+  const handleOpen = () => {
     setIsOpen(true);
-    if (includeScreenshot) {
-      const screenshotData = await captureScreenshot();
-      setScreenshot(screenshotData);
-    }
+    // Don't auto-capture screenshot on open since it's disabled by default
+    // User can check the box to enable it
   };
 
   const handleClose = () => {
@@ -43,6 +74,15 @@ export default function FeedbackWidget() {
     setEmail('');
     setScreenshot(null);
     setSubmitStatus(null);
+  };
+
+  const handleScreenshotToggle = async (checked) => {
+    setIncludeScreenshot(checked);
+    if (checked && !screenshot) {
+      // Capture screenshot when user enables it
+      const screenshotData = await captureScreenshot();
+      setScreenshot(screenshotData);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -102,9 +142,9 @@ export default function FeedbackWidget() {
 
       {/* Feedback Modal */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={handleClose}>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={handleClose} data-feedback-modal>
           <div
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -126,7 +166,8 @@ export default function FeedbackWidget() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+              <div className="p-6 space-y-4">
               {/* Feedback Text */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
@@ -165,13 +206,13 @@ export default function FeedbackWidget() {
                   type="checkbox"
                   id="includeScreenshot"
                   checked={includeScreenshot}
-                  onChange={(e) => setIncludeScreenshot(e.target.checked)}
+                  onChange={(e) => handleScreenshotToggle(e.target.checked)}
                   className="mt-0.5 w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
                 />
                 <label htmlFor="includeScreenshot" className="flex-1 text-sm cursor-pointer">
-                  <span className="font-semibold text-gray-900 dark:text-white block">Include screenshot</span>
+                  <span className="font-semibold text-gray-900 dark:text-white block">Include screenshot (optional)</span>
                   <span className="text-gray-600 dark:text-slate-400">
-                    Helps us understand the context of your feedback
+                    Capture current page view to help us understand the context
                   </span>
                 </label>
               </div>
@@ -233,6 +274,7 @@ export default function FeedbackWidget() {
                     'Send Feedback'
                   )}
                 </button>
+              </div>
               </div>
             </form>
           </div>

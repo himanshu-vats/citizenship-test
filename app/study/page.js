@@ -630,14 +630,14 @@ export default function StudyMode() {
                 <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Previous</span>
               </button>
 
-              {/* Shuffle */}
+              {/* Shuffle - Quizlet style crossed arrows */}
               <button
                 onClick={handleShuffle}
                 className="flex flex-col items-center gap-1 p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-all min-w-[60px]"
                 title="Shuffle"
               >
                 <svg className="w-7 h-7 text-gray-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 18h6l3-3H3m0-4h8.5l3-3H3m18 11l-4-4m4 4l-4 4m4-4H13m8-6l-4-4m4 4l-4 4m4-4h-4" />
                 </svg>
                 <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Shuffle</span>
               </button>
