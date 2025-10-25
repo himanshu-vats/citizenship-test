@@ -13,23 +13,13 @@ export default function ArticleWrapper({ htmlContent, slug }) {
     setMounted(true);
   }, []);
 
-  // Apply theme to article content
-  useEffect(() => {
-    if (!mounted) return;
-
-    const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme, mounted]);
+  // Force light/dark mode based on user's choice
+  const isDark = mounted && (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches));
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-900">
-        <div className="animate-pulse text-gray-400 dark:text-slate-500 text-center py-12">
+      <div className="min-h-screen bg-white">
+        <div className="animate-pulse text-gray-400 text-center py-12">
           Loading article...
         </div>
       </div>
@@ -38,39 +28,85 @@ export default function ArticleWrapper({ htmlContent, slug }) {
 
   return (
     <div className="relative">
-      {/* Back Navigation Bar - Floating on top */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-slate-700 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+      {/* Minimal Top Navigation */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between">
           <button
             onClick={() => router.push('/')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to Home
+            Back
           </button>
-
-          <div className="flex-1 text-sm text-gray-600 dark:text-gray-400 truncate">
-            Reading: {slug.replace(/-/g, ' ')}
-          </div>
 
           <a
             href="/"
-            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-blue-600 dark:border-blue-500 text-blue-600 dark:text-blue-400 font-semibold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-            </svg>
-            Take Practice Test
+            Practice Test
           </a>
         </div>
       </div>
 
+      {/* Override article's dark mode styles */}
+      <style jsx global>{`
+        /* Force light mode styles */
+        ${!isDark ? `
+          body, .container, .article-container {
+            background: #f8f9fa !important;
+            color: #333 !important;
+          }
+          .sidebar {
+            background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%) !important;
+            color: white !important;
+          }
+          .content {
+            background: white !important;
+            color: #333 !important;
+          }
+          .content h1, .content h2, .content h3 {
+            color: #1e3a8a !important;
+          }
+          .content p, .content li {
+            color: #374151 !important;
+          }
+          .meta {
+            border-bottom-color: #e5e7eb !important;
+          }
+          .intro {
+            background: #eff6ff !important;
+            color: #4b5563 !important;
+          }
+        ` : `
+          /* Dark mode styles */
+          body, .container, .article-container {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+          }
+          .sidebar {
+            background: linear-gradient(180deg, #1e3a8a 0%, #1e293b 100%) !important;
+          }
+          .content {
+            background: #0f172a !important;
+          }
+          .content h1, .content h2, .content h3 {
+            color: #93c5fd !important;
+          }
+          .content p, .content li {
+            color: #cbd5e1 !important;
+          }
+          .intro {
+            background: #1e3a8a20 !important;
+            color: #cbd5e1 !important;
+          }
+        `}
+      `}</style>
+
       {/* Article Content */}
       <div
-        className="pt-16"
-        style={{ paddingTop: '60px' }}
+        className="pt-12"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
     </div>

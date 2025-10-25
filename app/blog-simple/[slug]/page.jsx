@@ -51,10 +51,18 @@ export default async function ArticlePage({ params }) {
     notFound();
   }
 
-  // Remove the original <html>, <head>, and <body> tags since we're embedding this
-  // Keep only the content inside <body>
+  // Extract styles from <head> and content from <body>
+  const styleMatch = htmlContent.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+  const styles = styleMatch ? styleMatch[0] : '';
+
+  const scriptMatch = htmlContent.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+  const script = scriptMatch ? scriptMatch[0] : '';
+
   const bodyMatch = htmlContent.match(/<body[^>]*>([\s\S]*)<\/body>/i);
   const bodyContent = bodyMatch ? bodyMatch[1] : htmlContent;
 
-  return <ArticleWrapper htmlContent={bodyContent} slug={slug} />;
+  // Combine styles, body content, and scripts
+  const fullContent = `${styles}\n${bodyContent}\n${script}`;
+
+  return <ArticleWrapper htmlContent={fullContent} slug={slug} />;
 }
